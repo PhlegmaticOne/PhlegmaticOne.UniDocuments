@@ -3,20 +3,20 @@ using System.Text;
 
 namespace PhlegmaticOne.UniDocuments.Documents.Core.Features.Content;
 
-public class UniDocumentFeatureContent : IUniDocumentFeature
+public class UniDocumentFeatureWordDocumentText : IUniDocumentTextFeature
 {
     private readonly Stream _contentStream;
 
     private Document? _wordDocument;
 
-    public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureFlag.Content;
+    public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureFlag.Text;
 
-    public UniDocumentFeatureContent(Stream stream)
+    public UniDocumentFeatureWordDocumentText(Stream stream)
     {
         _contentStream = stream;
     }
 
-    public string GetDocumentContentAsString()
+    public string GetText()
     {
         if (_wordDocument == null)
         {

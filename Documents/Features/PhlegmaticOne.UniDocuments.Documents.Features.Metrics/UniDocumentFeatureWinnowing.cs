@@ -1,4 +1,4 @@
-﻿using PhlegmaticOne.UniDocuments.Domain.Models.Metrics;
+﻿using PhlegmaticOne.UniDocuments.Documents.Features.Metrics.Models;
 
 namespace PhlegmaticOne.UniDocuments.Documents.Core.Features.Metrics;
 

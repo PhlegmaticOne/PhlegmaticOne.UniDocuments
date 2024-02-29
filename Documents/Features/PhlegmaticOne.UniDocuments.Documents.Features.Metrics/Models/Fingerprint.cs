@@ -1,4 +1,4 @@
-﻿namespace PhlegmaticOne.UniDocuments.Domain.Models.Metrics;
+﻿namespace PhlegmaticOne.UniDocuments.Documents.Features.Metrics.Models;
 
 public class Fingerprint
 {

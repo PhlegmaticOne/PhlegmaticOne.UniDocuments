@@ -2,7 +2,8 @@
 
 public enum UniDocumentFeatureFlag
 {
-    Content = 0,
-    Fingerprint = 1,
-    Winnowing = 2
+    Text = 0,
+    WordDocument = 1,
+    Fingerprint = 2,
+    Winnowing = 3
 }

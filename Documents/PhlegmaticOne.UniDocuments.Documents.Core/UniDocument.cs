@@ -8,6 +8,8 @@ public class UniDocument
 
     public Guid Id { get; }
 
+    public static UniDocument Empty => new(Guid.Empty);
+
     public UniDocument(Guid id)
     {
         Id = id;
@@ -27,9 +29,10 @@ public class UniDocument
         return false;
     }
 
-    public void AddFeature(IUniDocumentFeature feature)
+    public UniDocument AddFeature<T>(T feature) where T : IUniDocumentFeature
     {
-        _features.TryAdd(feature.GetType(), feature);
+        _features.TryAdd(typeof(T), feature);
+        return this;
     }
 
     public bool ContainsFeature(UniDocumentFeatureFlag featureFlag)
