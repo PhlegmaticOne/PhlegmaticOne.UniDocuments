@@ -1,7 +1,7 @@
 ﻿using Microsoft.ML.Transforms;
-using PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Models;
+using PhlegmaticOne.UniDocuments.TextProcessing.Models;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.Text.Stemming;
+namespace PhlegmaticOne.UniDocuments.TextProcessing.Stemming;
 
 [CustomMappingFactoryAttribute(contractName: "Words")]
 public class StemmingCustomAction : CustomMappingFactory<TextOutput, TextOutput>

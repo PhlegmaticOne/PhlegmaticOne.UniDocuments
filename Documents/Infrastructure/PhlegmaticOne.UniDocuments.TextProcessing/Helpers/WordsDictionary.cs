@@ -1,4 +1,4 @@
-﻿namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.Text.Helpers;
+﻿namespace PhlegmaticOne.UniDocuments.TextProcessing.Helpers;
 
 public static class WordsDictionary
 {

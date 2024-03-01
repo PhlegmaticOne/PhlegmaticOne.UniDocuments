@@ -2,12 +2,7 @@
 
 public class Fingerprint
 {
-    private readonly HashSet<FingerprintEntry> _fingerprints;
-
-    public Fingerprint()
-    {
-        _fingerprints = new HashSet<FingerprintEntry>();
-    }
+    private readonly HashSet<FingerprintEntry> _fingerprints = new();
 
     public void AddFingerprint(FingerprintEntry fingerprint)
     {

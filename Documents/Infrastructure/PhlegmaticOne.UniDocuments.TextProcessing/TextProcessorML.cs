@@ -1,9 +1,8 @@
 ﻿using Microsoft.ML;
-using PhlegmaticOne.UniDocuments.Documents.Algorithms.Text;
-using PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Base;
-using PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Models;
+using PhlegmaticOne.UniDocuments.TextProcessing.Base;
+using PhlegmaticOne.UniDocuments.TextProcessing.Models;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing;
+namespace PhlegmaticOne.UniDocuments.TextProcessing;
 
 public class TextProcessorML : ITextPreprocessor
 {

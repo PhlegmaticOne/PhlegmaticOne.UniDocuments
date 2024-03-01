@@ -1,6 +1,6 @@
-﻿using PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Models;
+﻿using PhlegmaticOne.UniDocuments.TextProcessing.Models;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Base;
+namespace PhlegmaticOne.UniDocuments.TextProcessing.Base;
 
 public interface ITextPreprocessor
 {

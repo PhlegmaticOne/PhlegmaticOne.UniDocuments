@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.Text.Stemming;
+namespace PhlegmaticOne.UniDocuments.TextProcessing.Stemming;
 
 public static partial class StemmingRegexes
 {

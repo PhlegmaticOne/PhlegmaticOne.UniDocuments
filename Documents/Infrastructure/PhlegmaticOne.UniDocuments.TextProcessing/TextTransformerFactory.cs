@@ -1,9 +1,9 @@
-﻿using Microsoft.ML.Transforms.Text;
-using Microsoft.ML;
-using PhlegmaticOne.UniDocuments.Documents.Algorithms.Text.Stemming;
-using PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Models;
+﻿using Microsoft.ML;
+using Microsoft.ML.Transforms.Text;
+using PhlegmaticOne.UniDocuments.TextProcessing.Models;
+using PhlegmaticOne.UniDocuments.TextProcessing.Stemming;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.Text;
+namespace PhlegmaticOne.UniDocuments.TextProcessing;
 
 public class TextTransformerFactory
 {

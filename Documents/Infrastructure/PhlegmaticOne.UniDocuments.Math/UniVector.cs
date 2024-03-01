@@ -26,11 +26,30 @@ public class UniVector<T> where T : INumber<T>
         return new UniVector<T>(vector);
     }
 
+    public double EuclideanDistance(UniVector<T> other)
+    {
+        if (other._vector.Length != _vector.Length)
+        {
+            return 0;
+        }
+        
+        var result = T.Zero;
+
+        for (var i = 0; i < _vector.Length; i++)
+        {
+            var value = _vector[i] - other._vector[i];
+            result += value * value;
+        }
+
+        var asDouble = double.CreateSaturating(result);
+        return System.Math.Sqrt(asDouble);
+    }
+
     public double Norm()
     {
         var result = T.Zero;
 
-        for (int i = 0; i < _vector.Length; i++)
+        for (var i = 0; i < _vector.Length; i++)
         {
             result += _vector[i] * _vector[i];
         }
@@ -48,7 +67,7 @@ public class UniVector<T> where T : INumber<T>
 
         var result = T.Zero;
 
-        for (int i = 0; i < other._vector.Length; i++)
+        for (var i = 0; i < other._vector.Length; i++)
         {
             result += _vector[i] * other._vector[i];
         }

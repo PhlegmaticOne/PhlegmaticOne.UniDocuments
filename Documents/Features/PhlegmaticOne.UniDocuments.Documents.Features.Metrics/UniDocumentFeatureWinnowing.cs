@@ -1,6 +1,7 @@
-﻿using PhlegmaticOne.UniDocuments.Documents.Features.Metrics.Models;
+﻿using PhlegmaticOne.UniDocuments.Documents.Core.Features;
+using PhlegmaticOne.UniDocuments.Documents.Features.Metrics.Models;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Core.Features.Metrics;
+namespace PhlegmaticOne.UniDocuments.Documents.Features.Metrics;
 
 public class UniDocumentFeatureWinnowing : IUniDocumentFeature
 {

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Infrastructure\PhlegmaticOne.UniDocuments.Math\PhlegmaticOne.UniDocuments.Math.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\PhlegmaticOne.UniDocuments.TextProcessing\PhlegmaticOne.UniDocuments.TextProcessing.csproj" />
+      <ProjectReference Include="..\..\PhlegmaticOne.UniDocuments.Documents.Core\PhlegmaticOne.UniDocuments.Documents.Core.csproj" />
+    </ItemGroup>
+
+</Project>

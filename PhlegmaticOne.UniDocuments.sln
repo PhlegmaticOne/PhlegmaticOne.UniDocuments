@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.UniDocuments.Math", "Documents\Infrastructure\PhlegmaticOne.UniDocuments.Math\PhlegmaticOne.UniDocuments.Math.csproj", "{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.UniDocuments.Documents.Algorithms.TsSs", "Documents\Algorithms\PhlegmaticOne.UniDocuments.Documents.Algorithms.TsSs\PhlegmaticOne.UniDocuments.Documents.Algorithms.TsSs.csproj", "{D7F2D52E-5DB8-474F-BD92-38779EAA444F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7F2D52E-5DB8-474F-BD92-38779EAA444F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F2D52E-5DB8-474F-BD92-38779EAA444F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F2D52E-5DB8-474F-BD92-38779EAA444F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F2D52E-5DB8-474F-BD92-38779EAA444F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{58E6C525-F5B3-4AA6-AB4B-917D18226AF3} = {EB71A5C5-745E-4914-882D-A2DAC139D23F}
 		{EB71A5C5-745E-4914-882D-A2DAC139D23F} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
 		{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0} = {EB71A5C5-745E-4914-882D-A2DAC139D23F}
+		{D7F2D52E-5DB8-474F-BD92-38779EAA444F} = {3318A837-08A1-4B19-B3FE-E410FE2E36CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}

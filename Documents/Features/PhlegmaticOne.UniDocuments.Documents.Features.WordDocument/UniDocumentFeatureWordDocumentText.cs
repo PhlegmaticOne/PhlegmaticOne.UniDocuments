@@ -1,7 +1,9 @@
-﻿using Aspose.Words;
-using System.Text;
+﻿using System.Text;
+using Aspose.Words;
+using PhlegmaticOne.UniDocuments.Documents.Core.Features;
+using PhlegmaticOne.UniDocuments.Documents.Core.Features.Content;
 
-namespace PhlegmaticOne.UniDocuments.Documents.Core.Features.Content;
+namespace PhlegmaticOne.UniDocuments.Documents.Features.WordDocument;
 
 public class UniDocumentFeatureWordDocumentText : IUniDocumentTextFeature
 {

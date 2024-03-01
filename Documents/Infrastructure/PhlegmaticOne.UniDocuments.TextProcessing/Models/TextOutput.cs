@@ -1,4 +1,4 @@
-﻿namespace PhlegmaticOne.UniDocuments.Documents.Algorithms.TextPreprocessing.Models;
+﻿namespace PhlegmaticOne.UniDocuments.TextProcessing.Models;
 
 public class TextOutput : TextInput
 {
