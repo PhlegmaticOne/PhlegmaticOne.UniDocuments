@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Math\UniDocuments.Text.Math.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Processing\UniDocuments.Text.Processing.csproj" />
+    <ProjectReference Include="..\..\..\UniDocuments.Text.Core\UniDocuments.Text.Core.csproj" />
+    <ProjectReference Include="..\UniDocuments.Text.Plagiarism.Cosine.Data\UniDocuments.Text.Plagiarism.Cosine.Data.csproj" />
+  </ItemGroup>
+
+</Project>
