@@ -26,12 +26,12 @@ public class PlagiarismAlgorithmTsSs : IPlagiarismAlgorithm
             return PlagiarismResultTsSs.Error;
         }
 
-        var proceedOriginalText = _textPreprocessor.ProcessText(new PreprocessorTextInput
+        var proceedOriginalText = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
             Text = originalContent!.GetText()
         });
 
-        var proceedComparingText = _textPreprocessor.ProcessText(new PreprocessorTextInput
+        var proceedComparingText = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
             Text = comparingContent!.GetText()
         });

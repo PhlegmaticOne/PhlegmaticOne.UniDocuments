@@ -4,5 +4,5 @@ namespace UniDocuments.Text.Processing.Preprocessing.Base;
 
 public interface ITextPreprocessor
 {
-    PreprocessorTextOutput ProcessText(PreprocessorTextInput preprocessorTextInput);
+    PreprocessorTextOutput Preprocess(PreprocessorTextInput preprocessorTextInput);
 }

@@ -7,7 +7,7 @@ namespace UniDocuments.Text.Processing.Preprocessing;
 
 public static class TextPreprocessorEngineFactory
 {
-    private const StopWordsRemovingEstimator.Language Language = StopWordsRemovingEstimator.Language.Russian;
+    private const StopWordsRemovingEstimator.Language Language = StopWordsRemovingEstimator.Language.English;
     private const string TextField = nameof(PreprocessorTextInput.Text);
     private const string WordsField = nameof(PreprocessorTextOutput.Words);
 

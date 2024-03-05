@@ -26,11 +26,11 @@ public class FileStorageSql : IFileStorage
         var savedFileName = string.Empty;
         var path = string.Empty;
 
-        using var command = FileSqlCommands.CreateSelectFileCommand(_sqlConnection, fileId);
-        using var transaction = _sqlConnection.BeginTransaction();
+        await using var command = FileSqlCommands.CreateSelectFileCommand(_sqlConnection, fileId);
+        await using var transaction = _sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
-        using (var reader = await command.ExecuteReaderAsync())
+        await using (var reader = await command.ExecuteReaderAsync())
         {
             while (await reader.ReadAsync())
             {
@@ -41,9 +41,10 @@ public class FileStorageSql : IFileStorage
         }
 
         var destinationStream = new MemoryStream();
-        using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
+        
+        await using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
         {
-            source.CopyTo(destinationStream);
+            await source.CopyToAsync(destinationStream);
         }
 
         await command.Transaction.CommitAsync();
@@ -57,11 +58,11 @@ public class FileStorageSql : IFileStorage
         var transactionContext = Array.Empty<byte>();
         var path = string.Empty;
 
-        using var command = FileSqlCommands.CreateInsertFileCommand(_sqlConnection, fileName);
-        using var transaction = _sqlConnection.BeginTransaction();
+        await using var command = FileSqlCommands.CreateInsertFileCommand(_sqlConnection, fileName);
+        await using var transaction = _sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
-        using (var reader = await command.ExecuteReaderAsync())
+        await using (var reader = await command.ExecuteReaderAsync())
         {
             while (await reader.ReadAsync())
             {
@@ -70,9 +71,9 @@ public class FileStorageSql : IFileStorage
             }
         }
 
-        using (var destination = new SqlFileStream(path, transactionContext, FileAccess.Write))
+        await using (var destination = new SqlFileStream(path, transactionContext, FileAccess.Write))
         {
-            using var source = File.OpenRead(fileLocalSaveRequest.LocalFilePath);
+            await using var source = File.OpenRead(fileLocalSaveRequest.LocalFilePath);
             await source.CopyToAsync(destination);
         }
 

@@ -51,6 +51,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiaris
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Matching.Data", "Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Data\UniDocuments.Text.Plagiarism.Matching.Data.csproj", "{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Winnowing", "Winnowing", "{3D45F957-C3B2-4C89-91FA-C5344BCFC69E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Winnowing.Algorithm", "Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Algorithm\UniDocuments.Text.Plagiarism.Winnowing.Algorithm.csproj", "{9609273F-FD84-4218-93FF-8960028A1334}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Winnowing.Data", "Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Data\UniDocuments.Text.Plagiarism.Winnowing.Data.csproj", "{C299332C-FAE1-448C-9D15-166A8A2F1BAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +123,14 @@ Global
 		{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9609273F-FD84-4218-93FF-8960028A1334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9609273F-FD84-4218-93FF-8960028A1334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9609273F-FD84-4218-93FF-8960028A1334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9609273F-FD84-4218-93FF-8960028A1334}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C299332C-FAE1-448C-9D15-166A8A2F1BAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C299332C-FAE1-448C-9D15-166A8A2F1BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C299332C-FAE1-448C-9D15-166A8A2F1BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C299332C-FAE1-448C-9D15-166A8A2F1BAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +157,9 @@ Global
 		{7C527CBE-155B-4B6C-8E83-0A7CC596D06A} = {5D7CAEFD-3BDC-43AE-93C1-3E0BADE1D96E}
 		{C8E98E38-F0B5-4DA3-9545-B4E36E7695A5} = {C14CD351-DD45-4E4D-8DA2-E270834E8941}
 		{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE} = {507C8BBD-4AF3-46F1-A0AC-2C05A61ED4CA}
+		{3D45F957-C3B2-4C89-91FA-C5344BCFC69E} = {3318A837-08A1-4B19-B3FE-E410FE2E36CE}
+		{9609273F-FD84-4218-93FF-8960028A1334} = {3D45F957-C3B2-4C89-91FA-C5344BCFC69E}
+		{C299332C-FAE1-448C-9D15-166A8A2F1BAB} = {3D45F957-C3B2-4C89-91FA-C5344BCFC69E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}

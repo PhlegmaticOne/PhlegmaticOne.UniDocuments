@@ -13,7 +13,7 @@ public class TextPreprocessor : ITextPreprocessor
         _textTransformer = TextPreprocessorEngineFactory.CreateTransformer();
     }
 
-    public PreprocessorTextOutput ProcessText(PreprocessorTextInput preprocessorTextInput)
+    public PreprocessorTextOutput Preprocess(PreprocessorTextInput preprocessorTextInput)
     {
         return _textTransformer.Predict(preprocessorTextInput);
     }

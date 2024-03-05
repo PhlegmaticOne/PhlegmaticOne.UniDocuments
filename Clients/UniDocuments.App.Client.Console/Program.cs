@@ -1,8 +1,6 @@
 ﻿using System.Text;
-using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Features.Content;
-using UniDocuments.Text.Plagiarism.Matching.Algorithm;
-using UniDocuments.Text.Processing.StopWords;
+using UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Algorithm;
+using UniDocuments.Text.Processing.Preprocessing;
 
 Console.OutputEncoding = Encoding.UTF8;
 Console.InputEncoding = Encoding.UTF8;
@@ -13,24 +11,23 @@ var originalText = File.ReadAllText(
 var plagiatedText = File.ReadAllText(
     @"C:\Users\lolol\Downloads\Plagiarism-Detection-master\Plagiarism-Detection-master\data\g0pA_taskb.txt");
 
-var original = UniDocument.Empty
-    .AddFeature<IUniDocumentFeatureText>(new UniDocumentFeatureText(originalText));
+// var original = UniDocument.Empty
+//     .AddFeature<IUniDocumentFeatureText>(new UniDocumentFeatureText(originalText));
+//
+// var comparing = UniDocument.Empty
+//     .AddFeature<IUniDocumentFeatureText>(new UniDocumentFeatureText(plagiatedText));
 
-var comparing = UniDocument.Empty
-    .AddFeature<IUniDocumentFeatureText>(new UniDocumentFeatureText(plagiatedText));
+var preprocessor = new TextPreprocessor();
+var hashAlgorithm = new FingerprintHashCrc32C();
+var algorithm = new TextWinnowing(preprocessor, hashAlgorithm);
 
-var stopWordsLoader = new StopWordsLoaderFile();
-var stopWordsService = new StopWordsService(stopWordsLoader);
-var tokenSource = new CancellationTokenSource();
-await stopWordsService.InitializeAsync(tokenSource.Token);
+var originalWinnowing = algorithm.Winnowing(originalText);
+var plagiatedWinnowing = algorithm.Winnowing(plagiatedText);
 
-var algorithm = new PlagiarismAlgorithmMatching(stopWordsService);
-var result = algorithm.PerformExact(original, comparing);
-
-foreach (var sequence in result.Matches)
+foreach (var winnowingEntry in plagiatedWinnowing)
 {
-    var textOriginal = originalText.Substring(sequence.SourceFragmentStartIndex, sequence.SourceFragmentLength);
-    var textComparing = plagiatedText.Substring(sequence.MatchedFragmentStartIndex, sequence.MatchedFragmentLength);
-    Console.WriteLine(textOriginal);
-    Console.WriteLine(textComparing);
+    if (originalWinnowing.HasFingerprint(winnowingEntry))
+    {
+        Console.WriteLine($"Plagiated: {winnowingEntry}");
+    }
 }

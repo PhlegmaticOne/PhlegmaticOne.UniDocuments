@@ -2,7 +2,7 @@
 
 namespace UniDocuments.App.Data.Files.Sql;
 
-internal class FileSqlCommands
+internal static class FileSqlCommands
 {
     private const string InsertFileCommandText = @"
                     INSERT INTO [uni_documents_db].[dbo].[StudyDocumentsContent]

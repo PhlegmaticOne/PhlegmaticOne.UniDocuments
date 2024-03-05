@@ -56,7 +56,7 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
         return grams;
     }
 
-    private List<MatchEntry> MapBlocksToTextPositions(
+    private static List<MatchEntry> MapBlocksToTextPositions(
         List<SubSequence> matches, List<Gram> originalGrams, List<Gram> comparingGrams)
     {
         MergeMatchingBlocks(matches);
