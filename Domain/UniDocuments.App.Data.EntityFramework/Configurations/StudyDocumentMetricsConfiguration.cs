@@ -17,6 +17,5 @@ public class StudyDocumentMetricsConfiguration : IEntityTypeConfiguration<StudyD
             .HasForeignKey<StudyDocument>(x => x.MetricsId);
 
         builder.Property(x => x.WinnowingData).IsRequired();
-        builder.Property(x => x.FingerprintsData).IsRequired();
     }
 }
