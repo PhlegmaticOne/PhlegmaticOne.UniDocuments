@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Aspose.Words;
-using UniDocuments.Text.Core.Features;
-using UniDocuments.Text.Core.Features.Content;
+using UniDocuments.Text.Features.Core;
+using UniDocuments.Text.Features.Core.Content;
 
 namespace UniDocuments.Text.Features.WordDocument;
 
@@ -9,7 +9,7 @@ public class UniDocumentFeatureWordDocumentFeatureText : IUniDocumentFeatureText
 {
     private readonly Document? _wordDocument;
 
-    public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureFlag.Text;
+    public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureFlag.RawText;
 
     public UniDocumentFeatureWordDocumentFeatureText(Stream stream)
     {

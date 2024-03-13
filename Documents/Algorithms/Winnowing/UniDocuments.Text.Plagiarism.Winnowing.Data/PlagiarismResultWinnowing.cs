@@ -1,15 +1,16 @@
-﻿using UniDocuments.Text.Core.Algorithms;
+﻿using UniDocuments.Text.Features.Fingerprint.Models;
+using UniDocuments.Text.Plagiarism.Algorithms.Core;
 
 namespace UniDocuments.Text.Plagiarism.Winnowing.Data;
 
 public class PlagiarismResultWinnowing : IPlagiarismResult
 {
-    public PlagiarismResultWinnowing(Fingerprint fingerprint, bool isSucceed)
+    public PlagiarismResultWinnowing(DocumentFingerprint fingerprint, bool isSucceed)
     {
         Fingerprint = fingerprint;
         IsSucceed = isSucceed;
     }
 
     public bool IsSucceed { get; }
-    public Fingerprint Fingerprint { get; }
+    public DocumentFingerprint Fingerprint { get; }
 }

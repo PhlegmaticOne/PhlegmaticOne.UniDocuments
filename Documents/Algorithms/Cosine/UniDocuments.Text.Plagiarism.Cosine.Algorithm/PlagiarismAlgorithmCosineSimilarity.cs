@@ -1,46 +1,30 @@
 ﻿using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Algorithms;
-using UniDocuments.Text.Core.Features.Content;
+using UniDocuments.Text.Core.Features;
+using UniDocuments.Text.Features.TextVector;
 using UniDocuments.Text.Math;
+using UniDocuments.Text.Plagiarism.Algorithms.Core;
 using UniDocuments.Text.Plagiarism.Cosine.Data;
-using UniDocuments.Text.Processing.Preprocessing.Base;
-using UniDocuments.Text.Processing.Preprocessing.Models;
-using UniDocuments.Text.Processing.WordsDictionary;
 
 namespace UniDocuments.Text.Plagiarism.Cosine.Algorithm;
 
 public class PlagiarismAlgorithmCosineSimilarity : PlagiarismAlgorithm<PlagiarismResultCosine>
 {
-    private readonly ITextPreprocessor _textPreprocessor;
+    public override PlagiarismAlgorithmFeatureFlag FeatureFlag => PlagiarismAlgorithmCosineFeatureFlag.Instance;
 
-    public PlagiarismAlgorithmCosineSimilarity(ITextPreprocessor textPreprocessor)
+    public override IEnumerable<UniDocumentFeatureFlag> GetRequiredFeatures()
     {
-        _textPreprocessor = textPreprocessor;
+        yield return UniDocumentFeatureTextVectorFlag.Instance;
     }
 
-    public override PlagiarismResultCosine PerformExact(UniDocument original, UniDocument comparing)
+    public override PlagiarismResultCosine PerformExact(UniDocumentEntry entry)
     {
-        if (!comparing.TryGetFeature<IUniDocumentFeatureText>(out var comparingContent) ||
-            !original.TryGetFeature<IUniDocumentFeatureText>(out var originalContent))
+        if (!entry.SharedFeatures.TryGetFeature<UniDocumentFeatureTextVector>(out var textVector))
         {
             return PlagiarismResultCosine.Error;
         }
 
-        var proceedOriginalText = _textPreprocessor.Preprocess(new PreprocessorTextInput
-        {
-            Text = originalContent!.GetText()
-        });
-
-        var proceedComparingText = _textPreprocessor.Preprocess(new PreprocessorTextInput
-        {
-            Text = comparingContent!.GetText()
-        });
-
-        var originalWords = new DocumentWordsDictionary(proceedOriginalText.Words);
-        var comparingWords = new DocumentWordsDictionary(proceedComparingText.Words);
-        var allKeys = originalWords.Merge(comparingWords);
-        var originalVector = UniVector<int>.FromEnumerating(allKeys, w => originalWords.GetWordEntriesCount(w));
-        var comparingVector = UniVector<int>.FromEnumerating(allKeys, w => comparingWords.GetWordEntriesCount(w));
+        var originalVector = textVector!.OriginalVector;
+        var comparingVector = textVector.ComparingVector;
         var metric = originalVector.Cosine(comparingVector);
         return PlagiarismResultCosine.FromCosine(metric);
     }

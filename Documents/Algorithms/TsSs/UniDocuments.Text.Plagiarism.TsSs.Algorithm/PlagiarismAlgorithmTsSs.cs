@@ -1,48 +1,32 @@
 ﻿using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Algorithms;
-using UniDocuments.Text.Core.Features.Content;
+using UniDocuments.Text.Core.Features;
+using UniDocuments.Text.Features.TextVector;
 using UniDocuments.Text.Math;
+using UniDocuments.Text.Plagiarism.Algorithms.Core;
 using UniDocuments.Text.Plagiarism.TsSs.Data;
-using UniDocuments.Text.Processing.Preprocessing.Base;
-using UniDocuments.Text.Processing.Preprocessing.Models;
-using UniDocuments.Text.Processing.WordsDictionary;
 
 namespace UniDocuments.Text.Plagiarism.TsSs.Algorithm;
 
 public class PlagiarismAlgorithmTsSs : IPlagiarismAlgorithm
 {
-    private readonly ITextPreprocessor _textPreprocessor;
+    public PlagiarismAlgorithmFeatureFlag FeatureFlag => PlagiarismAlgorithmTsSsFeatureFlag.Instance;
 
-    public PlagiarismAlgorithmTsSs(ITextPreprocessor textPreprocessor)
+    public IPlagiarismResult Perform(UniDocumentEntry entry)
     {
-        _textPreprocessor = textPreprocessor;
-    }
-    
-    public IPlagiarismResult Perform(UniDocument comparing, UniDocument original)
-    {
-        if (!comparing.TryGetFeature<IUniDocumentFeatureText>(out var comparingContent) ||
-            !original.TryGetFeature<IUniDocumentFeatureText>(out var originalContent))
+        if (!entry.SharedFeatures.TryGetFeature<UniDocumentFeatureTextVector>(out var textVector))
         {
             return PlagiarismResultTsSs.Error;
         }
 
-        var proceedOriginalText = _textPreprocessor.Preprocess(new PreprocessorTextInput
-        {
-            Text = originalContent!.GetText()
-        });
-
-        var proceedComparingText = _textPreprocessor.Preprocess(new PreprocessorTextInput
-        {
-            Text = comparingContent!.GetText()
-        });
-
-        var originalWords = new DocumentWordsDictionary(proceedOriginalText.Words);
-        var comparingWords = new DocumentWordsDictionary(proceedComparingText.Words);
-        var allKeys = originalWords.Merge(comparingWords);
-        var originalVector = UniVector<int>.FromEnumerating(allKeys, w => originalWords.GetWordEntriesCount(w));
-        var comparingVector = UniVector<int>.FromEnumerating(allKeys, w => comparingWords.GetWordEntriesCount(w));
+        var originalVector = textVector!.OriginalVector;
+        var comparingVector = textVector.ComparingVector;
         var metric = CalculateTsSs(originalVector, comparingVector);
         return PlagiarismResultTsSs.FromTsSs(metric);
+    }
+
+    public IEnumerable<UniDocumentFeatureFlag> GetRequiredFeatures()
+    {
+        yield return UniDocumentFeatureTextVectorFlag.Instance;
     }
 
     private static double CalculateTsSs(UniVector<int> original, UniVector<int> comparing)

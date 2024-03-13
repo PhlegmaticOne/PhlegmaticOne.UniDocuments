@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Core.Algorithms;
+﻿using UniDocuments.Text.Plagiarism.Algorithms.Core;
 
 namespace UniDocuments.Text.Plagiarism.TsSs.Data;
 
@@ -15,4 +15,9 @@ public class PlagiarismResultTsSs : IPlagiarismResult
     public static PlagiarismResultTsSs FromTsSs(double tsSsValue) => new(tsSsValue, true);
     public double TsSsValue { get; }
     public bool IsSucceed { get; }
+    
+    public override string ToString()
+    {
+        return $"TS-SS: {TsSsValue:F}";
+    }
 }

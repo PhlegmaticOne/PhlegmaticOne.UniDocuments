@@ -1,8 +1,8 @@
-﻿using UniDocuments.Text.Plagiarism.Winnowing.Data;
+﻿using UniDocuments.Text.Features.Fingerprint.Models;
 
 namespace UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Algorithm;
 
 public interface ITextWinnowing
 {
-    Fingerprint Winnowing(string text);
+    DocumentFingerprint Winnowing(string text);
 }

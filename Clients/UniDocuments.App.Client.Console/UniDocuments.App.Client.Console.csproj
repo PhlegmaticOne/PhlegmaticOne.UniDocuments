@@ -18,8 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Algorithm\UniDocuments.Text.Plagiarism.Cosine.Algorithm.csproj" />
+    <ProjectReference Include="..\..\Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Algorithm\UniDocuments.Text.Plagiarism.Matching.Algorithm.csproj" />
+    <ProjectReference Include="..\..\Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Algorithm\UniDocuments.Text.Plagiarism.TsSs.Algorithm.csproj" />
     <ProjectReference Include="..\..\Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Algorithm\UniDocuments.Text.Plagiarism.Winnowing.Algorithm.csproj" />
+    <ProjectReference Include="..\..\Documents\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj" />
+    <ProjectReference Include="..\..\Documents\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
     <ProjectReference Include="..\..\Documents\Infrastructure\UniDocuments.Text.Processing\UniDocuments.Text.Processing.csproj" />
+    <ProjectReference Include="..\..\Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj" />
     <ProjectReference Include="..\..\Documents\UniDocuments.Text.Core\UniDocuments.Text.Core.csproj" />
   </ItemGroup>
 

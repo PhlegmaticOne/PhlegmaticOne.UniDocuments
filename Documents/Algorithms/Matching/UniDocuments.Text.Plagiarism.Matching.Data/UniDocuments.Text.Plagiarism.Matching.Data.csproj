@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\UniDocuments.Text.Core\UniDocuments.Text.Core.csproj" />
+      <ProjectReference Include="..\..\UniDocuments.Text.Plagiarism.Algorithms.Core\UniDocuments.Text.Plagiarism.Algorithms.Core.csproj" />
     </ItemGroup>
 
 </Project>

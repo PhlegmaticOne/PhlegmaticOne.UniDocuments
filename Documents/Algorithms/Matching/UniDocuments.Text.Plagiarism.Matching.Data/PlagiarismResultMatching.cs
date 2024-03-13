@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Core.Algorithms;
+﻿using UniDocuments.Text.Plagiarism.Algorithms.Core;
 using UniDocuments.Text.Plagiarism.Matching.Data.Models;
 
 namespace UniDocuments.Text.Plagiarism.Matching.Data;
@@ -16,4 +16,9 @@ public class PlagiarismResultMatching : IPlagiarismResult
     public static PlagiarismResultMatching FromBlocks(List<MatchEntry> blocks) => new(blocks, true);
     public List<MatchEntry> Matches { get; }
     public bool IsSucceed { get; }
+    
+    public override string ToString()
+    {
+        return $"Matches: {Matches.Count}";
+    }
 }

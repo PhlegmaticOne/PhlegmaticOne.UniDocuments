@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 
-namespace UniDocuments.Text.Plagiarism.Winnowing.Data;
+namespace UniDocuments.Text.Features.Fingerprint.Models;
 
-public class Fingerprint : IEnumerable<uint>
+public class DocumentFingerprint : IEnumerable<uint>
 {
-    public Fingerprint(HashSet<uint> entries)
+    public DocumentFingerprint(HashSet<uint> entries)
     {
         Entries = entries;
     }

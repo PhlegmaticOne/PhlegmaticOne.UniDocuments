@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Core.Algorithms;
+﻿using UniDocuments.Text.Plagiarism.Algorithms.Core;
 
 namespace UniDocuments.Text.Plagiarism.Cosine.Data;
 
@@ -16,4 +16,9 @@ public class PlagiarismResultCosine : IPlagiarismResult
     
     public bool IsSucceed { get; }
     public double CosineSimilarity { get; }
+
+    public override string ToString()
+    {
+        return $"Cosine: {CosineSimilarity:F}";
+    }
 }

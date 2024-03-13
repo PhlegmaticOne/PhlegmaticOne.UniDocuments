@@ -1,5 +1,5 @@
 ﻿using UniDocuments.Text.Algorithms;
-using UniDocuments.Text.Plagiarism.Winnowing.Data;
+using UniDocuments.Text.Features.Fingerprint.Models;
 using UniDocuments.Text.Processing.Preprocessing.Base;
 using UniDocuments.Text.Processing.Preprocessing.Models;
 
@@ -19,7 +19,7 @@ public class TextWinnowing : ITextWinnowing
         _fingerprintHash = fingerprintHash;
     }
     
-    public Fingerprint Winnowing(string text)
+    public DocumentFingerprint Winnowing(string text)
     {
         var processed = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
@@ -29,7 +29,7 @@ public class TextWinnowing : ITextWinnowing
         var concat = string.Concat(processed.Words);
         var fingerprints = FingerprintText(concat);
         var winnowedFingerprints = WinnowFingerprints(fingerprints);
-        return new Fingerprint(winnowedFingerprints);
+        return new DocumentFingerprint(winnowedFingerprints);
     }
 
     private List<uint> FingerprintText(string text)

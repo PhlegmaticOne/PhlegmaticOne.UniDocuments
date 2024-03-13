@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Core.Algorithms;
+﻿namespace UniDocuments.Text.Plagiarism.Algorithms.Core;
 
 public interface IPlagiarismResult
 {

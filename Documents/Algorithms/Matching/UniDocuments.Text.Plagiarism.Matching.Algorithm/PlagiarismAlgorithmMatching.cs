@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using UniDocuments.Text.Algorithms.SequenceMatching;
 using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Algorithms;
-using UniDocuments.Text.Core.Features.Content;
+using UniDocuments.Text.Core.Features;
+using UniDocuments.Text.Features.Text;
+using UniDocuments.Text.Plagiarism.Algorithms.Core;
 using UniDocuments.Text.Plagiarism.Matching.Algorithm.Grams;
 using UniDocuments.Text.Plagiarism.Matching.Data;
 using UniDocuments.Text.Plagiarism.Matching.Data.Models;
@@ -22,11 +23,18 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
     {
         _stopWordsService = stopWordsService;
     }
-    
-    public override PlagiarismResultMatching PerformExact(UniDocument original, UniDocument comparing)
+
+    public override PlagiarismAlgorithmFeatureFlag FeatureFlag => PlagiarismAlgorithmMatchingFeatureFlag.Instance;
+
+    public override IEnumerable<UniDocumentFeatureFlag> GetRequiredFeatures()
     {
-        if (!comparing.TryGetFeature<IUniDocumentFeatureText>(out var comparingContent) ||
-            !original.TryGetFeature<IUniDocumentFeatureText>(out var originalContent))
+        yield return UniDocumentFeatureTextFlag.Instance;
+    }
+
+    public override PlagiarismResultMatching PerformExact(UniDocumentEntry entry)
+    {
+        if (!entry.Comparing.TryGetFeature<UniDocumentFeatureText>(out var comparingContent) ||
+            !entry.Original.TryGetFeature<UniDocumentFeatureText>(out var originalContent))
         {
             return PlagiarismResultMatching.Error;
         }

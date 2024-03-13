@@ -2,9 +2,9 @@
 
 namespace UniDocuments.Text.Core;
 
-public class UniDocument
+public class UniDocument : IUniDocumentFeaturesCollection
 {
-    private readonly Dictionary<Type, IUniDocumentFeature> _features;
+    private readonly UniDocumentFeaturesCollection _features;
 
     public Guid Id { get; }
 
@@ -13,30 +13,26 @@ public class UniDocument
     public UniDocument(Guid id)
     {
         Id = id;
-        _features = new Dictionary<Type, IUniDocumentFeature>();
+        _features = new UniDocumentFeaturesCollection();
+    }
+
+    public T GetFeature<T>()
+    {
+        return _features.GetFeature<T>();
     }
 
     public bool TryGetFeature<T>(out T? feature) where T : IUniDocumentFeature
     {
-        feature = default;
-
-        if(_features.TryGetValue(typeof(T), out var baseFeature))
-        {
-            feature = (T)baseFeature;
-            return true;
-        }
-
-        return false;
+        return _features.TryGetFeature(out feature);
     }
 
-    public UniDocument AddFeature<T>(T feature) where T : IUniDocumentFeature
+    public void AddFeature(IUniDocumentFeature feature)
     {
-        _features.TryAdd(typeof(T), feature);
-        return this;
+        _features.AddFeature(feature);
     }
 
     public bool ContainsFeature(UniDocumentFeatureFlag featureFlag)
     {
-        return _features.Any(x => x.Value.FeatureFlag == featureFlag);
+        return _features.ContainsFeature(featureFlag);
     }
 }
