@@ -1,7 +1,7 @@
-using System.Text;
-using System.Xml;
-using DocumentFormat.OpenXml.Packaging;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PhlegmaticOne.OperationResults;
+using UniDocuments.App.Application.Loading.Commands;
 
 namespace UniDocuments.App.Api.Controllers;
 
@@ -10,50 +10,19 @@ namespace UniDocuments.App.Api.Controllers;
 public class UniDocumentsController : ControllerBase
 {
     private readonly ILogger<UniDocumentsController> _logger;
+    private readonly IMediator _mediator;
 
-    public UniDocumentsController(ILogger<UniDocumentsController> logger)
+    public UniDocumentsController(ILogger<UniDocumentsController> logger, IMediator mediator)
     {
         _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFile(IFormFile formFile)
+    public async Task<OperationResult> UploadFile(IFormFile formFile)
     {
-        var text = TextFromWord(formFile);
-        await System.IO.File.WriteAllTextAsync(@"C:\Users\lolol\Downloads\test.txt", text);
-        _logger.LogInformation("UploadFile" + formFile.FileName);
-        IActionResult r = Ok(formFile.FileName);
-        return r;
-    }
-
-    private static string TextFromWord(IFormFile formFile)
-    {
-        const string wordmlNamespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
-
-        var textBuilder = new StringBuilder();
-        
-        using (var wdDoc = WordprocessingDocument.Open(formFile.OpenReadStream(), false))
-        {
-            var nt = new NameTable();
-            var nsManager = new XmlNamespaceManager(nt);
-            nsManager.AddNamespace("w", wordmlNamespace);
-
-            var document = new XmlDocument(nt);
-            document.Load(wdDoc.MainDocumentPart.GetStream());
-            
-            var paragraphNodes = document.SelectNodes("//w:p", nsManager);
-            
-            foreach (XmlNode paragraphNode in paragraphNodes)
-            {
-                var textNodes = paragraphNode.SelectNodes(".//w:t", nsManager);
-                
-                foreach (XmlNode textNode in textNodes)
-                {
-                    textBuilder.Append(textNode.InnerText);
-                }
-            }
-        }
-        
-        return textBuilder.ToString();
+        var profileId = Guid.NewGuid();
+        var request = new CommandUploadDocument(profileId, formFile.OpenReadStream());
+        return await _mediator.Send(request);
     }
 }

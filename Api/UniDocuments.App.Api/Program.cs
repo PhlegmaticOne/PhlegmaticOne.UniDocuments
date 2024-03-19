@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMediatR(x =>
+{
+    x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly);
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {

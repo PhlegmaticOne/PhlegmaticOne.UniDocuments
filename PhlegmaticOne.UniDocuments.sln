@@ -75,6 +75,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Features.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Application", "Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj", "{10D42F46-F438-4241-800E-96B1CA92AB73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Application", "Domain\UniDocuments.App.Application\UniDocuments.App.Application.csproj", "{1880663D-7485-4423-8589-3756EBF4C6EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0732877E-5898-4081-97BF-6583ADDFEB6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.OperationResults", "Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj", "{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.OperationResults.Mediatr", "Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj", "{D9E2B3F3-E2C8-4659-98F7-76852202316D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +177,18 @@ Global
 		{10D42F46-F438-4241-800E-96B1CA92AB73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10D42F46-F438-4241-800E-96B1CA92AB73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10D42F46-F438-4241-800E-96B1CA92AB73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1880663D-7485-4423-8589-3756EBF4C6EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1880663D-7485-4423-8589-3756EBF4C6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1880663D-7485-4423-8589-3756EBF4C6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1880663D-7485-4423-8589-3756EBF4C6EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9E2B3F3-E2C8-4659-98F7-76852202316D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9E2B3F3-E2C8-4659-98F7-76852202316D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9E2B3F3-E2C8-4659-98F7-76852202316D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9E2B3F3-E2C8-4659-98F7-76852202316D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,6 +226,9 @@ Global
 		{1E38EB06-5AF8-4A6A-BF1D-BD5BF18B1FAB} = {A5E56C64-118A-4ADB-9A7A-4D46C788B4DE}
 		{4A835CF8-A35A-4E84-B343-97749A087CD6} = {1E38EB06-5AF8-4A6A-BF1D-BD5BF18B1FAB}
 		{10D42F46-F438-4241-800E-96B1CA92AB73} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
+		{1880663D-7485-4423-8589-3756EBF4C6EE} = {6C3C7354-254A-4788-B5DC-9E36C37798F7}
+		{9045F569-6FEF-43DC-AF74-8DBC8707BCC5} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
+		{D9E2B3F3-E2C8-4659-98F7-76852202316D} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}
