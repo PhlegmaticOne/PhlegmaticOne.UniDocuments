@@ -1,55 +1,52 @@
-﻿using UniDocuments.Text.Application;
+﻿using RestSharp;
 using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Features.Factories;
-using UniDocuments.Text.Core.Features.Providers;
 using UniDocuments.Text.Core.Services;
-using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Features.Text.Contracts;
-using UniDocuments.Text.Features.TextVector;
-using UniDocuments.Text.Plagiarism.Algorithms.Core;
-using UniDocuments.Text.Plagiarism.Cosine.Algorithm;
-using UniDocuments.Text.Plagiarism.Matching.Algorithm;
-using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
-using UniDocuments.Text.Processing.Preprocessing;
-using UniDocuments.Text.Processing.StopWords;
 
-var cache = new Cache();
-var preprocessor = new TextPreprocessor();
-var stopWordsService = new StopWordsService(new StopWordsLoaderFile());
-var service = new UniDocumentService(cache);
+const string path = @"C:\Users\lolol\Downloads\test.docx";
+var client = new RestClient("http://localhost:5109");
+    
+var request = new RestRequest("/UniDocuments/UploadFile")
+    .AddFile("formFile", path, "multipart/form-data");
+    
+var response = await client.PostAsync(request);
+Console.WriteLine("response :" + response.Content);
 
-var featureFactories = new List<IUniDocumentFeatureFactory>
-{
-    new UniDocumentFeatureTextFactory(new TextLoader()),
-};
-
-var sharedFeatureFactories = new List<IUniDocumentSharedFeatureFactory>
-{
-    new UniDocumentFeatureTextVectorFactory(preprocessor)
-};
-
-var algorithms = new List<IPlagiarismAlgorithm>
-{
-    new PlagiarismAlgorithmCosineSimilarity(),
-    new PlagiarismAlgorithmTsSs(),
-    new PlagiarismAlgorithmMatching(stopWordsService)
-};
-
-await stopWordsService.InitializeAsync(CancellationToken.None);
-
-var provider = new UniDocumentFeatureProvider(featureFactories, sharedFeatureFactories);
-
-var tasks = new Tasks(service, algorithms, provider);
-
-var result = await tasks.CompareDocuments(Consts.OriginalGuid, Consts.PlagiatedGuid, new[]
-{
-    "CosineSimilarity", "TsSs"
-});
-
-foreach (var plagiarismResult in result.GetResults())
-{
-    Console.WriteLine(plagiarismResult);
-}
+// var stopWordsService = new StopWordsService(new StopWordsLoaderFile());
+// var service = new UniDocumentService(cache);
+//
+// var featureFactories = new List<IUniDocumentFeatureFactory>
+// {
+//     new UniDocumentFeatureTextFactory(new TextLoader()),
+// };
+//
+// var sharedFeatureFactories = new List<IUniDocumentSharedFeatureFactory>
+// {
+//     new UniDocumentFeatureTextVectorFactory(preprocessor)
+// };
+//
+// var algorithms = new List<IPlagiarismAlgorithm>
+// {
+//     new PlagiarismAlgorithmCosineSimilarity(),
+//     new PlagiarismAlgorithmTsSs(),
+//     new PlagiarismAlgorithmMatching(stopWordsService)
+// };
+//
+// await stopWordsService.InitializeAsync(CancellationToken.None);
+//
+// var provider = new UniDocumentFeatureProvider(featureFactories, sharedFeatureFactories);
+//
+// var tasks = new Tasks(service, algorithms, provider);
+//
+// var result = await tasks.CompareDocuments(Consts.OriginalGuid, Consts.PlagiatedGuid, new[]
+// {
+//     "CosineSimilarity", "TsSs"
+// });
+//
+// foreach (var plagiarismResult in result.GetResults())
+// {
+//     Console.WriteLine(plagiarismResult);
+// }
 
 public class Consts
 {

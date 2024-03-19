@@ -14,6 +14,7 @@
     <PackageReference Include="Crc32C.NET" Version="1.0.5" />
     <PackageReference Include="Microsoft.ML" Version="3.0.1" />
     <PackageReference Include="Microsoft.ML.TorchSharp" Version="0.21.1" />
+    <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16" />
     <PackageReference Include="TorchSharp-cpu" Version="0.102.0" />
   </ItemGroup>
 

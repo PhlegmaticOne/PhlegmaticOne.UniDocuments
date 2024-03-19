@@ -1,8 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using UniDocuments.App.Data.EntityFramework.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ApplicationDbContext>(x =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        x.UseInMemoryDatabase("MEMORY");
+    }
+    else
+    {
+        var connectionString = builder.Configuration.GetConnectionString("DbConnection");
+        x.UseSqlServer(connectionString!);
+    }
+});
 
 var app = builder.Build();
 

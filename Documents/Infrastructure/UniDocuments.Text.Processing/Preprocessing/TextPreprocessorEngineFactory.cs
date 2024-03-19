@@ -7,7 +7,7 @@ namespace UniDocuments.Text.Processing.Preprocessing;
 
 public static class TextPreprocessorEngineFactory
 {
-    private const StopWordsRemovingEstimator.Language Language = StopWordsRemovingEstimator.Language.English;
+    private const StopWordsRemovingEstimator.Language Language = StopWordsRemovingEstimator.Language.Russian;
     private const string TextField = nameof(PreprocessorTextInput.Text);
     private const string WordsField = nameof(PreprocessorTextOutput.Words);
 
@@ -20,7 +20,7 @@ public static class TextPreprocessorEngineFactory
         var textTransform = mlContext.Transforms.Text;
 
         var normalizeTextPipeline = textTransform
-            .NormalizeText(TextField, keepPunctuations: false)
+            .NormalizeText(TextField, keepPunctuations: false, keepNumbers: false)
             .Append(textTransform.TokenizeIntoWords(WordsField, TextField))
             .Append(textTransform.RemoveDefaultStopWords(WordsField, language: Language))
             .Append(transforms.CustomMapping(stemmingAction.GetMapping(), contractName: WordsField));

@@ -90,7 +90,7 @@ public static class Stemmer
 
         var temp = part;
 
-        for (int i = 0; i < collection.Count; i++)
+        for (var i = 0; i < collection.Count; i++)
         {
             var groupCollection = collection[i].Groups;
             var c = groupCollection[i].ToString();

@@ -6,6 +6,8 @@ namespace UniDocuments.Text.Processing.Stemming;
 [CustomMappingFactoryAttribute(contractName: nameof(PreprocessorTextOutput.Words))]
 public class StemmingCustomAction : CustomMappingFactory<PreprocessorTextOutput, PreprocessorTextOutput>
 {
+    private const int MinLength = 2;
+    
     public override Action<PreprocessorTextOutput, PreprocessorTextOutput> GetMapping()
     {
         return StemWords;
@@ -14,12 +16,19 @@ public class StemmingCustomAction : CustomMappingFactory<PreprocessorTextOutput,
     private static void StemWords(PreprocessorTextOutput input, PreprocessorTextOutput output)
     {
         var words = input.Words;
+        var result = new List<string>();
 
-        for (int i = 0; i < words.Length; i++)
+        for (var i = 0; i < words.Length; i++)
         {
-            words[i] = Stemmer.Stem(words[i]);
+            var word = words[i];
+
+            if (word.Length > MinLength)
+            {
+                var stemmed = Stemmer.Stem(word);
+                result.Add(stemmed);
+            }
         }
 
-        output.Words = words;
+        output.Words = result.ToArray();
     }
 }
