@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Algorithms", "Algorithms", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Data.EntityFramework", "Domain\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj", "{2BD50DAD-5EEF-498D-8BA9-F0A9EB291863}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Data.Files", "Domain\UniDocuments.App.Data.Files\UniDocuments.App.Data.Files.csproj", "{DF2B32C3-44D5-45DF-946D-47743BD3C27A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Data.FileStorage", "Domain\UniDocuments.App.Data.FileStorage\UniDocuments.App.Data.FileStorage.csproj", "{DF2B32C3-44D5-45DF-946D-47743BD3C27A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Domain", "Domain\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj", "{80AAE361-33AC-4312-AC3B-B1F1389E74D0}"
 EndProject

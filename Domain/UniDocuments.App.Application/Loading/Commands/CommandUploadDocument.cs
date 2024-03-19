@@ -3,6 +3,7 @@ using System.Xml;
 using DocumentFormat.OpenXml.Packaging;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using UniDocuments.App.Domain.FileStorage;
 
 namespace UniDocuments.App.Application.Loading.Commands;
 
@@ -18,9 +19,18 @@ public class CommandUploadDocument : IdentityOperationResultCommand
 
 public class CommandUploadDocumentHandler : IOperationResultCommandHandler<CommandUploadDocument>
 {
-    public Task<OperationResult> Handle(CommandUploadDocument request, CancellationToken cancellationToken)
+    private readonly IFileStorage _fileStorage;
+
+    public CommandUploadDocumentHandler(IFileStorage fileStorage)
     {
-        return Task.FromResult(OperationResult.Success);
+        _fileStorage = fileStorage;
+    }
+    
+    public async Task<OperationResult> Handle(CommandUploadDocument request, CancellationToken cancellationToken)
+    {
+        var saveRequest = new FileSaveRequest(string.Empty, request.DocumentStream);
+        var fileId = await _fileStorage.SaveAsync(saveRequest, cancellationToken);
+        return OperationResult.Successful(fileId);
     }
     
     private static string TextFromWord(Stream formFile)

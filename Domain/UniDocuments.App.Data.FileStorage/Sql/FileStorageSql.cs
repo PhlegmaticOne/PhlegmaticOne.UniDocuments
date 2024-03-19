@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
-using UniDocuments.App.Data.Files.Base;
-using UniDocuments.App.Data.Files.Models;
+using UniDocuments.App.Domain.FileStorage;
 
 namespace UniDocuments.App.Data.Files.Sql;
 
@@ -15,13 +14,9 @@ public class FileStorageSql : IFileStorage
         _sqlConnection.Open();
     }
 
-    public Task<IList<FileLoadResponse>> GetFilesPagedAsync(int pageIndex, int pageSize)
+    public async Task<FileLoadResponse> LoadAsync(FileLoadRequest loadRequest, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<FileLoadResponse> LoadFileAsync(Guid fileId)
-    {
+        var fileId = loadRequest.FileId;
         var transactionContext = Array.Empty<byte>();
         var savedFileName = string.Empty;
         var path = string.Empty;
@@ -30,9 +25,9 @@ public class FileStorageSql : IFileStorage
         await using var transaction = _sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
-        await using (var reader = await command.ExecuteReaderAsync())
+        await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
         {
-            while (await reader.ReadAsync())
+            while (await reader.ReadAsync(cancellationToken))
             {
                 transactionContext = ReadTransactionContext(reader);
                 path = ReadFilePath(reader);
@@ -44,17 +39,17 @@ public class FileStorageSql : IFileStorage
         
         await using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
         {
-            await source.CopyToAsync(destinationStream);
+            await source.CopyToAsync(destinationStream, cancellationToken);
         }
 
-        await command.Transaction.CommitAsync();
+        await command.Transaction.CommitAsync(cancellationToken);
 
         return new FileLoadResponse(fileId, savedFileName, destinationStream);
     }
 
-    public async Task SaveFileAsync(FileLocalSaveRequest fileLocalSaveRequest)
+    public async Task<FileSaveResponse> SaveAsync(FileSaveRequest saveRequest, CancellationToken cancellationToken)
     {
-        var fileName = fileLocalSaveRequest.FileName;
+        var fileName = saveRequest.FileName;
         var transactionContext = Array.Empty<byte>();
         var path = string.Empty;
 
@@ -62,9 +57,9 @@ public class FileStorageSql : IFileStorage
         await using var transaction = _sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
-        await using (var reader = await command.ExecuteReaderAsync())
+        await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
         {
-            while (await reader.ReadAsync())
+            while (await reader.ReadAsync(cancellationToken))
             {
                 transactionContext = ReadTransactionContext(reader);
                 path = ReadFilePath(reader);
@@ -73,11 +68,12 @@ public class FileStorageSql : IFileStorage
 
         await using (var destination = new SqlFileStream(path, transactionContext, FileAccess.Write))
         {
-            await using var source = File.OpenRead(fileLocalSaveRequest.LocalFilePath);
-            await source.CopyToAsync(destination);
+            await using var source = saveRequest.FileStream;
+            await source.CopyToAsync(destination, cancellationToken);
         }
 
-        await command.Transaction.CommitAsync();
+        await command.Transaction.CommitAsync(cancellationToken);
+        return new FileSaveResponse(Guid.Empty);
     }
 
     private static byte[] ReadTransactionContext(SqlDataReader reader) => (byte[])reader["transactionContext"];

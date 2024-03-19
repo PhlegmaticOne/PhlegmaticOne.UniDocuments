@@ -17,6 +17,7 @@
       <ProjectReference Include="..\..\Documents\Infrastructure\UniDocuments.Text.Processing\UniDocuments.Text.Processing.csproj" />
       <ProjectReference Include="..\..\Domain\UniDocuments.App.Application\UniDocuments.App.Application.csproj" />
       <ProjectReference Include="..\..\Domain\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
+      <ProjectReference Include="..\..\Domain\UniDocuments.App.Data.FileStorage\UniDocuments.App.Data.FileStorage.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
     </ItemGroup>
 

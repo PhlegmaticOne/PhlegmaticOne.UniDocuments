@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
+using UniDocuments.App.Data.Files.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddMediatR(x =>
 {
     x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly);
 });
+
+builder.Services.AddFileStorage(() => builder.Environment.IsDevelopment());
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {

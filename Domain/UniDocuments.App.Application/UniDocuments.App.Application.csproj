@@ -14,6 +14,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
+      <ProjectReference Include="..\UniDocuments.App.Data.FileStorage\UniDocuments.App.Data.FileStorage.csproj" />
     </ItemGroup>
 
 </Project>

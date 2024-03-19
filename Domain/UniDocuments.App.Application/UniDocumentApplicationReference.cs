@@ -1,6 +1,3 @@
 ﻿namespace UniDocuments.App.Application;
 
-public static class UniDocumentApplicationReference
-{
-    
-}
+public static class UniDocumentApplicationReference { }
