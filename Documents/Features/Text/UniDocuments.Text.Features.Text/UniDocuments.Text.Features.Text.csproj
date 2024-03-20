@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\UniDocuments.Text.Core\UniDocuments.Text.Core.csproj" />
+      <ProjectReference Include="..\..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 
 </Project>

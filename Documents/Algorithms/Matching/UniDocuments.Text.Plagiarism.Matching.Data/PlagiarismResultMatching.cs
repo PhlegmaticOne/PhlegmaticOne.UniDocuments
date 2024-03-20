@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Plagiarism.Algorithms.Core;
+﻿using UniDocuments.Text.Domain.Algorithms;
 using UniDocuments.Text.Plagiarism.Matching.Data.Models;
 
 namespace UniDocuments.Text.Plagiarism.Matching.Data;

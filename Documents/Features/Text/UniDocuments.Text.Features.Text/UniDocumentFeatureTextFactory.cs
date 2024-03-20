@@ -1,6 +1,6 @@
-﻿using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Features;
-using UniDocuments.Text.Core.Features.Factories;
+﻿using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Features;
+using UniDocuments.Text.Domain.Features.Factories;
 using UniDocuments.Text.Features.Text.Contracts;
 
 namespace UniDocuments.Text.Features.Text;

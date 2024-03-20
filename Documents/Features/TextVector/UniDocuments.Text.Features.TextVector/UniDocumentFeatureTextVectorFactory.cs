@@ -1,11 +1,9 @@
-﻿using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Features;
-using UniDocuments.Text.Core.Features.Factories;
+﻿using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Features;
+using UniDocuments.Text.Domain.Features.Factories;
+using UniDocuments.Text.Domain.Services.Processing;
 using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Math;
-using UniDocuments.Text.Processing.Preprocessing.Base;
-using UniDocuments.Text.Processing.Preprocessing.Models;
-using UniDocuments.Text.Processing.WordsDictionary;
 
 namespace UniDocuments.Text.Features.TextVector;
 

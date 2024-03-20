@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Core.Features;
+﻿using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Math;
 
 namespace UniDocuments.Text.Features.TextVector;

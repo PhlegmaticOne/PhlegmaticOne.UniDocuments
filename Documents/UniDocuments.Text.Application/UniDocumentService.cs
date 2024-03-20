@@ -1,5 +1,5 @@
-﻿using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Services;
+﻿using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Services.Documents;
 
 namespace UniDocuments.Text.Application;
 

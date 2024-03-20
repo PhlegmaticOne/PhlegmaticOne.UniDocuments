@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
-      <ProjectReference Include="..\..\UniDocuments.Text.Plagiarism.Algorithms.Core\UniDocuments.Text.Plagiarism.Algorithms.Core.csproj" />
     </ItemGroup>
 
 </Project>

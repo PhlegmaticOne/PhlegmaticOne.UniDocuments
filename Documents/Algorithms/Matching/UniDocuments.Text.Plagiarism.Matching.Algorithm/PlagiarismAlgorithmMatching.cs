@@ -1,13 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using UniDocuments.Text.Algorithms.SequenceMatching;
-using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Features;
+using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Algorithms;
+using UniDocuments.Text.Domain.Features;
+using UniDocuments.Text.Domain.Services.Processing;
 using UniDocuments.Text.Features.Text;
-using UniDocuments.Text.Plagiarism.Algorithms.Core;
 using UniDocuments.Text.Plagiarism.Matching.Algorithm.Grams;
 using UniDocuments.Text.Plagiarism.Matching.Data;
 using UniDocuments.Text.Plagiarism.Matching.Data.Models;
-using UniDocuments.Text.Processing.StopWords;
 
 namespace UniDocuments.Text.Plagiarism.Matching.Algorithm;
 

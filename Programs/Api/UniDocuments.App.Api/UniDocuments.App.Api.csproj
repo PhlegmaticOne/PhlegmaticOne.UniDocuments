@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.17" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
+      <ProjectReference Include="..\..\..\Application\Services\UniDocuments.App.Services.FileStorage\UniDocuments.App.Services.FileStorage.csproj" />
+      <ProjectReference Include="..\..\..\Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Reading\UniDocuments.Text.Reading.csproj" />
+      <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
+    </ItemGroup>
+
+</Project>

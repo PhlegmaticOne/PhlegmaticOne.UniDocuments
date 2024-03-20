@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Core.Features;
+﻿using UniDocuments.Text.Domain.Features;
 
 namespace UniDocuments.Text.Features.Text;
 

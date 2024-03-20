@@ -1,8 +1,8 @@
-﻿using UniDocuments.Text.Core;
-using UniDocuments.Text.Core.Features;
+﻿using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Algorithms;
+using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Features.TextVector;
 using UniDocuments.Text.Math;
-using UniDocuments.Text.Plagiarism.Algorithms.Core;
 using UniDocuments.Text.Plagiarism.TsSs.Data;
 
 namespace UniDocuments.Text.Plagiarism.TsSs.Algorithm;

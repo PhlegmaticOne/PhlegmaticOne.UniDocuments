@@ -8,8 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj" />
-      <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Processing\UniDocuments.Text.Processing.csproj" />
-      <ProjectReference Include="..\..\UniDocuments.Text.Plagiarism.Algorithms.Core\UniDocuments.Text.Plagiarism.Algorithms.Core.csproj" />
+      <ProjectReference Include="..\..\..\Services\UniDocuments.Text.Processing\UniDocuments.Text.Processing.csproj" />
       <ProjectReference Include="..\UniDocuments.Text.Plagiarism.Winnowing.Data\UniDocuments.Text.Plagiarism.Winnowing.Data.csproj" />
     </ItemGroup>
 
