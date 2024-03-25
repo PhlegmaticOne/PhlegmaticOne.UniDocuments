@@ -17,61 +17,61 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{EB71A5C5-745E-4914-882D-A2DAC139D23F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Math", "Documents\Infrastructure\UniDocuments.Text.Math\UniDocuments.Text.Math.csproj", "{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Math", "Documents\Infrastructure\UniDocuments.Text.Math\UniDocuments.Text.Math.csproj", "{D0EF8E16-6F28-4B4C-A663-0BD8BCD8B3B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Algorithms", "Documents\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj", "{43668585-451E-43C0-9FB7-EF104BFC4488}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Algorithms", "Documents\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj", "{43668585-451E-43C0-9FB7-EF104BFC4488}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cosine", "Cosine", "{5D7CAEFD-3BDC-43AE-93C1-3E0BADE1D96E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Cosine.Algorithm", "Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Algorithm\UniDocuments.Text.Plagiarism.Cosine.Algorithm.csproj", "{395E2440-3BF5-43E7-8991-082C3E7D0DE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.Cosine.Algorithm", "Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Algorithm\UniDocuments.Text.Plagiarism.Cosine.Algorithm.csproj", "{395E2440-3BF5-43E7-8991-082C3E7D0DE0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TsSs", "TsSs", "{C14CD351-DD45-4E4D-8DA2-E270834E8941}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.TsSs.Algorithm", "Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Algorithm\UniDocuments.Text.Plagiarism.TsSs.Algorithm.csproj", "{3A42ECAD-EC21-4B5B-8298-CBB3E69B8D93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.TsSs.Algorithm", "Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Algorithm\UniDocuments.Text.Plagiarism.TsSs.Algorithm.csproj", "{3A42ECAD-EC21-4B5B-8298-CBB3E69B8D93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Matching", "Matching", "{507C8BBD-4AF3-46F1-A0AC-2C05A61ED4CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Matching.Algorithm", "Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Algorithm\UniDocuments.Text.Plagiarism.Matching.Algorithm.csproj", "{397CEE91-281C-46AC-B71C-A9CB34AB4AF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.Matching.Algorithm", "Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Algorithm\UniDocuments.Text.Plagiarism.Matching.Algorithm.csproj", "{397CEE91-281C-46AC-B71C-A9CB34AB4AF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Cosine.Data", "Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Data\UniDocuments.Text.Plagiarism.Cosine.Data.csproj", "{7C527CBE-155B-4B6C-8E83-0A7CC596D06A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.Cosine.Data", "Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Data\UniDocuments.Text.Plagiarism.Cosine.Data.csproj", "{7C527CBE-155B-4B6C-8E83-0A7CC596D06A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.TsSs.Data", "Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Data\UniDocuments.Text.Plagiarism.TsSs.Data.csproj", "{C8E98E38-F0B5-4DA3-9545-B4E36E7695A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.TsSs.Data", "Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Data\UniDocuments.Text.Plagiarism.TsSs.Data.csproj", "{C8E98E38-F0B5-4DA3-9545-B4E36E7695A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Matching.Data", "Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Data\UniDocuments.Text.Plagiarism.Matching.Data.csproj", "{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.Matching.Data", "Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Data\UniDocuments.Text.Plagiarism.Matching.Data.csproj", "{17B00B46-0C5A-42B3-B2E2-BFA4D9B95DDE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Winnowing", "Winnowing", "{3D45F957-C3B2-4C89-91FA-C5344BCFC69E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Winnowing.Algorithm", "Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Algorithm\UniDocuments.Text.Plagiarism.Winnowing.Algorithm.csproj", "{9609273F-FD84-4218-93FF-8960028A1334}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.Winnowing.Algorithm", "Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Algorithm\UniDocuments.Text.Plagiarism.Winnowing.Algorithm.csproj", "{9609273F-FD84-4218-93FF-8960028A1334}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Plagiarism.Winnowing.Data", "Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Data\UniDocuments.Text.Plagiarism.Winnowing.Data.csproj", "{C299332C-FAE1-448C-9D15-166A8A2F1BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Plagiarism.Winnowing.Data", "Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Data\UniDocuments.Text.Plagiarism.Winnowing.Data.csproj", "{C299332C-FAE1-448C-9D15-166A8A2F1BAB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{64E32456-3D4A-42A3-A61F-EAF6D24B3EFB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text", "Text", "{FC2EAE81-7390-4F3A-9108-54DDD657EA23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Features.Text", "Documents\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj", "{3114C8CB-FE22-4F58-9682-BAC015C03656}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Features.Text", "Documents\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj", "{3114C8CB-FE22-4F58-9682-BAC015C03656}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fingerprint", "Fingerprint", "{5C61E47E-506E-4B91-99F8-36E2040C750F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Features.Fingerprint", "Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj", "{FD4A69A8-67C5-4A60-B24C-C84B5D812B84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Features.Fingerprint", "Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj", "{FD4A69A8-67C5-4A60-B24C-C84B5D812B84}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextVector", "TextVector", "{1E38EB06-5AF8-4A6A-BF1D-BD5BF18B1FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Features.TextVector", "Documents\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj", "{4A835CF8-A35A-4E84-B343-97749A087CD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Features.TextVector", "Documents\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj", "{4A835CF8-A35A-4E84-B343-97749A087CD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Application", "Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj", "{10D42F46-F438-4241-800E-96B1CA92AB73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Application", "Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj", "{10D42F46-F438-4241-800E-96B1CA92AB73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0732877E-5898-4081-97BF-6583ADDFEB6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.OperationResults", "Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj", "{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhlegmaticOne.OperationResults", "Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj", "{9045F569-6FEF-43DC-AF74-8DBC8707BCC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.OperationResults.Mediatr", "Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj", "{D9E2B3F3-E2C8-4659-98F7-76852202316D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhlegmaticOne.OperationResults.Mediatr", "Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj", "{D9E2B3F3-E2C8-4659-98F7-76852202316D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C3557AAC-B79D-4433-8349-4E3D2106B9A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Processing", "Documents\Services\UniDocuments.Text.Processing\UniDocuments.Text.Processing.csproj", "{E2D8F9D2-856C-458C-AC7F-F469634C7CE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Services.Preprocessing", "Documents\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj", "{E2D8F9D2-856C-458C-AC7F-F469634C7CE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Reading", "Documents\Services\UniDocuments.Text.Reading\UniDocuments.Text.Reading.csproj", "{842D9378-A8E0-4EC9-8C24-840BBCC028B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Services.StreamReading", "Documents\Services\UniDocuments.Text.Services.StreamReading\UniDocuments.Text.Services.StreamReading.csproj", "{842D9378-A8E0-4EC9-8C24-840BBCC028B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Programs", "Programs", "{D7108C9E-0D63-45EC-8EF5-618ED43D6EB6}"
 EndProject
@@ -79,17 +79,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{F4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C5C64268-C559-4228-B6D6-6D6B3CC0E1E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Api", "Programs\Api\UniDocuments.App.Api\UniDocuments.App.Api.csproj", "{31FDF573-A2CC-4819-9247-0B76491D3304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Api", "Programs\Api\UniDocuments.App.Api\UniDocuments.App.Api.csproj", "{31FDF573-A2CC-4819-9247-0B76491D3304}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Client.Console", "Programs\Clients\UniDocuments.App.Client.Console\UniDocuments.App.Client.Console.csproj", "{BDAFDB80-BBB4-42B0-8B9E-A36634DF63C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Client.Console", "Programs\Clients\UniDocuments.App.Client.Console\UniDocuments.App.Client.Console.csproj", "{BDAFDB80-BBB4-42B0-8B9E-A36634DF63C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Data.EntityFramework", "Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj", "{42891EB7-35C1-441B-8678-0D4F918673FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Data.EntityFramework", "Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj", "{42891EB7-35C1-441B-8678-0D4F918673FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Services.FileStorage", "Application\Services\UniDocuments.App.Services.FileStorage\UniDocuments.App.Services.FileStorage.csproj", "{11621A80-5394-4239-BC0B-F0F367A1854D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Services.FileStorage", "Application\Services\UniDocuments.App.Services.FileStorage\UniDocuments.App.Services.FileStorage.csproj", "{11621A80-5394-4239-BC0B-F0F367A1854D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Application", "Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj", "{C7F8A24C-9571-4FD3-B6D5-705C135CAA82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Application", "Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj", "{C7F8A24C-9571-4FD3-B6D5-705C135CAA82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Domain", "Application\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj", "{6917DFC6-34C3-43A7-883B-5592D62AA944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Domain", "Application\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj", "{6917DFC6-34C3-43A7-883B-5592D62AA944}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Features.Fingerprint.Services", "Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint.Services\UniDocuments.Text.Features.Fingerprint.Services.csproj", "{8080A449-9C81-4CD1-B776-3DEAD0866C9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Services.Documents", "Documents\Services\UniDocuments.Text.Services.Documents\UniDocuments.Text.Services.Documents.csproj", "{50CEEF1C-F721-4F84-B8B3-C9404BF58289}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "UniDocuments.App.Api.Python", "Programs\Api\UniDocuments.App.Api.Python\UniDocuments.App.Api.Python.pyproj", "{58BA84C0-724D-4A28-81CD-28AFF11881F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,11 +203,22 @@ Global
 		{6917DFC6-34C3-43A7-883B-5592D62AA944}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6917DFC6-34C3-43A7-883B-5592D62AA944}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6917DFC6-34C3-43A7-883B-5592D62AA944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8080A449-9C81-4CD1-B776-3DEAD0866C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8080A449-9C81-4CD1-B776-3DEAD0866C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8080A449-9C81-4CD1-B776-3DEAD0866C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8080A449-9C81-4CD1-B776-3DEAD0866C9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50CEEF1C-F721-4F84-B8B3-C9404BF58289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50CEEF1C-F721-4F84-B8B3-C9404BF58289}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50CEEF1C-F721-4F84-B8B3-C9404BF58289}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50CEEF1C-F721-4F84-B8B3-C9404BF58289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58BA84C0-724D-4A28-81CD-28AFF11881F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58BA84C0-724D-4A28-81CD-28AFF11881F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{3B77D7F3-68BB-4459-9611-B82E2E5E39A1} = {D7108C9E-0D63-45EC-8EF5-618ED43D6EB6}
 		{A5E56C64-118A-4ADB-9A7A-4D46C788B4DE} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
 		{3318A837-08A1-4B19-B3FE-E410FE2E36CE} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
 		{ACD49B80-D7C3-47F6-8A5F-E0DC0A4BE2A4} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
@@ -220,6 +237,7 @@ Global
 		{3D45F957-C3B2-4C89-91FA-C5344BCFC69E} = {3318A837-08A1-4B19-B3FE-E410FE2E36CE}
 		{9609273F-FD84-4218-93FF-8960028A1334} = {3D45F957-C3B2-4C89-91FA-C5344BCFC69E}
 		{C299332C-FAE1-448C-9D15-166A8A2F1BAB} = {3D45F957-C3B2-4C89-91FA-C5344BCFC69E}
+		{64E32456-3D4A-42A3-A61F-EAF6D24B3EFB} = {D7108C9E-0D63-45EC-8EF5-618ED43D6EB6}
 		{FC2EAE81-7390-4F3A-9108-54DDD657EA23} = {A5E56C64-118A-4ADB-9A7A-4D46C788B4DE}
 		{3114C8CB-FE22-4F58-9682-BAC015C03656} = {FC2EAE81-7390-4F3A-9108-54DDD657EA23}
 		{5C61E47E-506E-4B91-99F8-36E2040C750F} = {A5E56C64-118A-4ADB-9A7A-4D46C788B4DE}
@@ -232,8 +250,6 @@ Global
 		{C3557AAC-B79D-4433-8349-4E3D2106B9A9} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
 		{E2D8F9D2-856C-458C-AC7F-F469634C7CE2} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{842D9378-A8E0-4EC9-8C24-840BBCC028B9} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
-		{3B77D7F3-68BB-4459-9611-B82E2E5E39A1} = {D7108C9E-0D63-45EC-8EF5-618ED43D6EB6}
-		{64E32456-3D4A-42A3-A61F-EAF6D24B3EFB} = {D7108C9E-0D63-45EC-8EF5-618ED43D6EB6}
 		{F42CE5AC-1305-4FFE-A637-A86A91242D5C} = {6C3C7354-254A-4788-B5DC-9E36C37798F7}
 		{C5C64268-C559-4228-B6D6-6D6B3CC0E1E4} = {6C3C7354-254A-4788-B5DC-9E36C37798F7}
 		{31FDF573-A2CC-4819-9247-0B76491D3304} = {64E32456-3D4A-42A3-A61F-EAF6D24B3EFB}
@@ -242,6 +258,9 @@ Global
 		{11621A80-5394-4239-BC0B-F0F367A1854D} = {F42CE5AC-1305-4FFE-A637-A86A91242D5C}
 		{C7F8A24C-9571-4FD3-B6D5-705C135CAA82} = {6C3C7354-254A-4788-B5DC-9E36C37798F7}
 		{6917DFC6-34C3-43A7-883B-5592D62AA944} = {6C3C7354-254A-4788-B5DC-9E36C37798F7}
+		{8080A449-9C81-4CD1-B776-3DEAD0866C9F} = {5C61E47E-506E-4B91-99F8-36E2040C750F}
+		{50CEEF1C-F721-4F84-B8B3-C9404BF58289} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
+		{58BA84C0-724D-4A28-81CD-28AFF11881F4} = {64E32456-3D4A-42A3-A61F-EAF6D24B3EFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}

@@ -1,12 +1,20 @@
-﻿using System.Collections;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace UniDocuments.Text.Features.Fingerprint.Models;
 
-public class DocumentFingerprint : IEnumerable<uint>
+[SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+public class DocumentFingerprint
 {
     public DocumentFingerprint(HashSet<uint> entries)
     {
         Entries = entries;
+    }
+
+    public static DocumentFingerprint FromBytes(byte[] bytes)
+    {
+        var decoded = new uint[bytes.Length / 4];
+        Buffer.BlockCopy(bytes, 0, decoded, 0, bytes.Length);
+        return new DocumentFingerprint(decoded.ToHashSet());
     }
 
     public HashSet<uint> Entries { get; set; }
@@ -15,14 +23,9 @@ public class DocumentFingerprint : IEnumerable<uint>
     {
         return Entries.Contains(fingerprint);
     }
-    
-    public IEnumerator<uint> GetEnumerator()
-    {
-        return Entries.GetEnumerator();
-    }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    public byte[] ToByteArray()
     {
-        return ((IEnumerable)this).GetEnumerator();
+        return Entries.SelectMany(o => BitConverter.GetBytes(o)).ToArray();
     }
 }

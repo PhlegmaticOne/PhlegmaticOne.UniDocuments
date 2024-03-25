@@ -16,9 +16,9 @@ public class UniDocumentFeatureTextFactory : IUniDocumentFeatureFactory
     
     public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureTextFlag.Instance;
     
-    public async Task<IUniDocumentFeature> CreateFeature(UniDocument document)
+    public async Task<IUniDocumentFeature> CreateFeature(UniDocument document, CancellationToken cancellationToken)
     {
-        var text = await _documentTextLoader.LoadTextAsync(document.Id);
+        var text = await _documentTextLoader.LoadTextAsync(document.Id, cancellationToken);
         return new UniDocumentFeatureText(text);
     }
 }

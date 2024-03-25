@@ -24,13 +24,14 @@ public class Tasks
     public async Task<UniDocumentsCompareResult> CompareDocuments(
         Guid comparingDocumentId, Guid originalDocumentId, IEnumerable<string> algorithms)
     {
+        var ct = new CancellationTokenSource().Token;
         var result = new UniDocumentsCompareResult();
         var targetAlgorithms = GetTargetAlgorithms(algorithms);
         var features = GetRequiredFeatures(targetAlgorithms);
-        var comparingDocument = await _uniDocumentsService.GetDocumentAsync(comparingDocumentId);
-        var originalDocument = await _uniDocumentsService.GetDocumentAsync(originalDocumentId);
+        var comparingDocument = await _uniDocumentsService.GetAsync(comparingDocumentId, ct);
+        var originalDocument = await _uniDocumentsService.GetAsync(originalDocumentId, ct);
         var entry = new UniDocumentEntry(comparingDocument, originalDocument);
-        await _featureProvider.SetupFeatures(features, entry);
+        await _featureProvider.SetupFeatures(features, entry, ct);
         
         foreach (var algorithm in targetAlgorithms)
         {

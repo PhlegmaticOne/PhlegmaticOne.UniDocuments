@@ -2,5 +2,6 @@
 
 public interface IUniDocumentsService
 {
-    Task<UniDocument> GetDocumentAsync(Guid id);
+    Task<UniDocument> GetAsync(Guid id, CancellationToken cancellationToken);
+    Task SaveAsync(UniDocument document, CancellationToken cancellationToken);
 }

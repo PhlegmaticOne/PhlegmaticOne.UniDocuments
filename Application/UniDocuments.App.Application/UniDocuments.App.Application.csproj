@@ -12,9 +12,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
       <ProjectReference Include="..\..\Documents\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
+      <ProjectReference Include="..\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj" />
     </ItemGroup>
 

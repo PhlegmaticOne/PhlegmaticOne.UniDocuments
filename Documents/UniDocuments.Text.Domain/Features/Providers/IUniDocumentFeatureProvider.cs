@@ -2,5 +2,5 @@
 
 public interface IUniDocumentFeatureProvider
 {
-    Task SetupFeatures(IEnumerable<UniDocumentFeatureFlag> featureFlag, UniDocumentEntry entry);
+    Task SetupFeatures(IEnumerable<UniDocumentFeatureFlag> featureFlag, UniDocumentEntry entry, CancellationToken cancellationToken);
 }

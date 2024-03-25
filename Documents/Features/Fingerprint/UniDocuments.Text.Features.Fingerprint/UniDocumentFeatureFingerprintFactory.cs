@@ -1,24 +1,25 @@
 ﻿using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Domain.Features.Factories;
-using UniDocuments.Text.Features.Fingerprint.Contracts;
+using UniDocuments.Text.Features.Fingerprint.Services;
 
 namespace UniDocuments.Text.Features.Fingerprint;
 
 public class UniDocumentFeatureFingerprintFactory : IUniDocumentFeatureFactory
 {
-    private readonly IDocumentFingerprintLoader _fingerprintLoader;
+    private readonly IFingerprintsContainer _fingerprintsContainer;
 
-    public UniDocumentFeatureFingerprintFactory(IDocumentFingerprintLoader fingerprintLoader)
+    public UniDocumentFeatureFingerprintFactory(IFingerprintsContainer fingerprintsContainer)
     {
-        _fingerprintLoader = fingerprintLoader;
+        _fingerprintsContainer = fingerprintsContainer;
     }
     
     public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureFingerprintFlag.Instance;
     
-    public async Task<IUniDocumentFeature> CreateFeature(UniDocument document)
+    public Task<IUniDocumentFeature> CreateFeature(UniDocument document, CancellationToken cancellationToken)
     {
-        var fingerprint = await _fingerprintLoader.LoadFingerprintAsync(document.Id);
-        return new UniDocumentFeatureFingerprint(fingerprint);
+        var fingerprint = _fingerprintsContainer.Get(document.Id);
+        IUniDocumentFeature result = new UniDocumentFeatureFingerprint(fingerprint!);
+        return Task.FromResult(result);
     }
 }

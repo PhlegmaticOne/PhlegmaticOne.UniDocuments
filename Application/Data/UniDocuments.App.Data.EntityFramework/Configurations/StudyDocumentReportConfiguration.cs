@@ -13,8 +13,8 @@ public class StudyDocumentReportConfiguration : IEntityTypeConfiguration<StudyDo
         builder.HasKey(t => t.Id);
 
         builder.HasOne(x => x.Document)
-            .WithOne(x => x.Report)
-            .HasForeignKey<StudyDocument>(x => x.ReportId);
+            .WithMany(x => x.Reports)
+            .HasForeignKey(x => x.DocumentId);
 
         builder.Property(x => x.Description).IsRequired();
     }

@@ -1,7 +1,7 @@
 ﻿using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Domain.Features.Factories;
-using UniDocuments.Text.Domain.Services.Processing;
+using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Math;
 
@@ -17,7 +17,7 @@ public class UniDocumentFeatureTextVectorFactory : IUniDocumentSharedFeatureFact
     }
     
     public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureTextVectorFlag.Instance;
-    public Task<IUniDocumentFeature> CreateFeature(UniDocumentEntry documentEntry)
+    public Task<IUniDocumentFeature> CreateFeature(UniDocumentEntry documentEntry, CancellationToken cancellationToken)
     {
         var originalWords = CreateDocumentDictionary(documentEntry.Original);
         var comparingWords = CreateDocumentDictionary(documentEntry.Comparing);
@@ -37,7 +37,7 @@ public class UniDocumentFeatureTextVectorFactory : IUniDocumentSharedFeatureFact
         
         var proceedText = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = textFeature.GetText()
+            Text = textFeature.Text
         });
         
         return new DocumentWordsDictionary(proceedText.Words);

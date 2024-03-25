@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PhlegmaticOne.OperationResults;
-using UniDocuments.App.Application.Loading.Commands;
+using UniDocuments.App.Application.Uploading.Commands;
 
 namespace UniDocuments.App.Api.Controllers;
 
@@ -22,7 +22,8 @@ public class UniDocumentsController : ControllerBase
     public async Task<OperationResult> UploadFile(IFormFile formFile)
     {
         var profileId = Guid.NewGuid();
-        var request = new CommandUploadDocument(profileId, formFile.OpenReadStream());
+        var activityId = Guid.NewGuid();
+        var request = new CommandUploadDocument(profileId, activityId, formFile.OpenReadStream());
         return await _mediator.Send(request);
     }
 }

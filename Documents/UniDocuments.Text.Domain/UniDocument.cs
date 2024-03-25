@@ -15,6 +15,20 @@ public class UniDocument : IUniDocumentFeaturesCollection
         Id = id;
         _features = new UniDocumentFeaturesCollection();
     }
+    
+    public UniDocument(Guid id, params IUniDocumentFeature[] startFeatures) : this(id)
+    {
+        foreach (var startFeature in startFeatures)
+        {
+            AddFeature(startFeature);
+        }
+    }
+
+    public UniDocument WithFeature(IUniDocumentFeature feature)
+    {
+        AddFeature(feature);
+        return this;
+    }
 
     public T GetFeature<T>()
     {

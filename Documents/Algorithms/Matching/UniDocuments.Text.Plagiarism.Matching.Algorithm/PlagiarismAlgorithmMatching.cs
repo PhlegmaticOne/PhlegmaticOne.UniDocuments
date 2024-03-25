@@ -3,7 +3,7 @@ using UniDocuments.Text.Algorithms.SequenceMatching;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Algorithms;
 using UniDocuments.Text.Domain.Features;
-using UniDocuments.Text.Domain.Services.Processing;
+using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Plagiarism.Matching.Algorithm.Grams;
 using UniDocuments.Text.Plagiarism.Matching.Data;
@@ -39,8 +39,8 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
             return PlagiarismResultMatching.Error;
         }
 
-        var originalGrams = CreateGrams(originalContent!.GetText(), N);
-        var comparingGrams = CreateGrams(comparingContent!.GetText(), N);
+        var originalGrams = CreateGrams(originalContent!.Text, N);
+        var comparingGrams = CreateGrams(comparingContent!.Text, N);
         var matchingBlocks = originalGrams.GetMatchingBlocks(comparingGrams).ToList();
         var mergedBlocks = MapBlocksToTextPositions(matchingBlocks, originalGrams, comparingGrams);
         return PlagiarismResultMatching.FromBlocks(mergedBlocks);

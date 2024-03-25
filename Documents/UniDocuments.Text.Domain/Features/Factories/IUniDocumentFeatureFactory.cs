@@ -3,5 +3,5 @@
 public interface IUniDocumentFeatureFactory
 {
     UniDocumentFeatureFlag FeatureFlag { get; }
-    Task<IUniDocumentFeature> CreateFeature(UniDocument document);
+    Task<IUniDocumentFeature> CreateFeature(UniDocument document, CancellationToken cancellationToken);
 }

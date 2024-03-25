@@ -2,5 +2,5 @@
 
 public interface IDocumentTextLoader
 {
-    Task<string> LoadTextAsync(Guid documentId);
+    Task<string> LoadTextAsync(Guid documentId, CancellationToken cancellationToken);
 }

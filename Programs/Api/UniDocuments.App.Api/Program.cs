@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Services.FileStorage.DependencyInjection;
-using UniDocuments.Text.Domain.Services.Reading;
-using UniDocuments.Text.Reading;
+using UniDocuments.Text.Domain.Services.StreamReading;
+using UniDocuments.Text.Services.StreamReading;
 
 var builder = WebApplication.CreateBuilder(args);
 
