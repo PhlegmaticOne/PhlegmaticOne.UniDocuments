@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Plagiarism.Winnowing.Algorithm;
+﻿namespace UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Hash;
 
 public interface IFingerprintHash
 {

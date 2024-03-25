@@ -1,6 +1,7 @@
 ﻿using UniDocuments.Text.Algorithms;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Features.Fingerprint.Models;
+using UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Hash;
 
 namespace UniDocuments.Text.Plagiarism.Winnowing.Algorithm;
 

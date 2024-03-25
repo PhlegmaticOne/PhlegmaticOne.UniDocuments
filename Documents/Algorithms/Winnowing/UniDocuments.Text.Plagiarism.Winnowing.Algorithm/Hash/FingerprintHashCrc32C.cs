@@ -1,6 +1,6 @@
 ﻿using UniDocuments.Text.Algorithms.Hashing;
 
-namespace UniDocuments.Text.Plagiarism.Winnowing.Algorithm;
+namespace UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Hash;
 
 public class FingerprintHashCrc32C : IFingerprintHash
 {

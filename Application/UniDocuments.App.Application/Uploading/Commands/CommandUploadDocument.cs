@@ -47,12 +47,9 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     
     public async Task<OperationResult> Handle(CommandUploadDocument request, CancellationToken cancellationToken)
     {
-        var stream = request.DocumentStream;
-        var saveRequest = new FileSaveRequest(string.Empty, stream);
-        var saveResponse = await _fileStorage.SaveAsync(saveRequest, cancellationToken);
-        var documentId = saveResponse.FileId;
+        var documentId = await SaveDocumentAsync(request, cancellationToken);
         
-        var content = await _streamContentReader.ReadAsync(stream, cancellationToken);
+        var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
         var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
 
         var document = new UniDocument(documentId, new UniDocumentFeatureFingerprint(fingerprint));
@@ -70,5 +67,13 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         await _dbContext.SaveChangesAsync(cancellationToken);
         
         return OperationResult.Successful(documentId);
+    }
+
+    private async Task<Guid> SaveDocumentAsync(CommandUploadDocument request, CancellationToken cancellationToken)
+    {
+        var stream = request.DocumentStream;
+        var saveRequest = new FileSaveRequest(string.Empty, stream);
+        var saveResponse = await _fileStorage.SaveAsync(saveRequest, cancellationToken);
+        return saveResponse.FileId;
     }
 }

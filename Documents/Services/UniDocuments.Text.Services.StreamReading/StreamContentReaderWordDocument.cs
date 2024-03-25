@@ -30,7 +30,12 @@ public class StreamContentReaderWordDocument : IStreamContentReader
                 
                 foreach (XmlNode textNode in textNodes!)
                 {
-                    textBuilder.Append(textNode.InnerText);
+                    var text = textNode.InnerText;
+
+                    if (string.IsNullOrWhiteSpace(text) == false)
+                    {
+                        textBuilder.Append(text).Append(' ');
+                    }
                 }
             }
         }
