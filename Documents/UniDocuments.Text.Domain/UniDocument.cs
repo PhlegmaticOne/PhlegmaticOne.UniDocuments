@@ -2,7 +2,7 @@
 
 namespace UniDocuments.Text.Domain;
 
-public class UniDocument : IUniDocumentFeaturesCollection
+public class UniDocument : IEquatable<UniDocument>, IUniDocumentFeaturesCollection
 {
     private readonly UniDocumentFeaturesCollection _features;
 
@@ -48,5 +48,25 @@ public class UniDocument : IUniDocumentFeaturesCollection
     public bool ContainsFeature(UniDocumentFeatureFlag featureFlag)
     {
         return _features.ContainsFeature(featureFlag);
+    }
+
+    public bool Equals(UniDocument? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Id.Equals(other.Id);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((UniDocument)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
     }
 }

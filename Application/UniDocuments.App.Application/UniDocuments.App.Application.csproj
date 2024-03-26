@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
+      <ProjectReference Include="..\..\Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj" />
       <ProjectReference Include="..\..\Documents\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />

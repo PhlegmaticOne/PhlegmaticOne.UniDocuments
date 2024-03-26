@@ -4,34 +4,35 @@ using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Domain.Features.Providers;
 using UniDocuments.Text.Domain.Services.Documents;
 
-namespace UniDocuments.Text.Application;
+namespace UniDocuments.Text.Application.Similarity;
 
-public class Tasks
+public class DocumentSimilarityService : IDocumentSimilarityService
 {
     private readonly IUniDocumentsService _uniDocumentsService;
     private readonly IUniDocumentFeatureProvider _featureProvider;
     private readonly Dictionary<PlagiarismAlgorithmFeatureFlag, IPlagiarismAlgorithm> _plagiarismAlgorithms;
 
-    public Tasks(IUniDocumentsService uniDocumentsService,
-        IList<IPlagiarismAlgorithm> plagiarismAlgorithms,
+    public DocumentSimilarityService(IUniDocumentsService uniDocumentsService,
+        IEnumerable<IPlagiarismAlgorithm> plagiarismAlgorithms,
         IUniDocumentFeatureProvider featureProvider)
     {
         _uniDocumentsService = uniDocumentsService;
         _featureProvider = featureProvider;
         _plagiarismAlgorithms = plagiarismAlgorithms.ToDictionary(x => x.FeatureFlag, x => x);
     }
-    
-    public async Task<UniDocumentsCompareResult> CompareDocuments(
-        Guid comparingDocumentId, Guid originalDocumentId, IEnumerable<string> algorithms)
+
+    public async Task<UniDocumentsCompareResult> CompareAsync(
+        UniDocumentsCompareRequest request, CancellationToken cancellationToken)
     {
-        var ct = new CancellationTokenSource().Token;
         var result = new UniDocumentsCompareResult();
-        var targetAlgorithms = GetTargetAlgorithms(algorithms);
+        var targetAlgorithms = GetTargetAlgorithms(request.Algorithms);
         var features = GetRequiredFeatures(targetAlgorithms);
-        var comparingDocument = await _uniDocumentsService.GetAsync(comparingDocumentId, ct);
-        var originalDocument = await _uniDocumentsService.GetAsync(originalDocumentId, ct);
+        var comparingDocument = await _uniDocumentsService
+            .GetAsync(request.ComparingDocumentId, cancellationToken);
+        var originalDocument = await _uniDocumentsService
+            .GetAsync(request.OriginalDocumentId, cancellationToken);
         var entry = new UniDocumentEntry(comparingDocument, originalDocument);
-        await _featureProvider.SetupFeatures(features, entry, ct);
+        await _featureProvider.SetupFeatures(features, entry, cancellationToken);
         
         foreach (var algorithm in targetAlgorithms)
         {

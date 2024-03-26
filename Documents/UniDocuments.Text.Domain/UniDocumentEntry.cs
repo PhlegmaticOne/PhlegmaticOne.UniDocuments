@@ -7,6 +7,7 @@ public class UniDocumentEntry
     public UniDocument Comparing { get; }
     public UniDocument Original { get; }
     public UniDocumentFeaturesCollection SharedFeatures { get; }
+    public bool HasEqualDocuments => Comparing.Equals(Original);
 
     public UniDocumentEntry(UniDocument comparing, UniDocument original)
     {

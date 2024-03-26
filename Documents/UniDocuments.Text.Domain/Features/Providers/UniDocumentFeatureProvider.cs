@@ -35,7 +35,11 @@ public class UniDocumentFeatureProvider : IUniDocumentFeatureProvider
                 }
 
                 EnsureFeatureExists(entry.Comparing, featureFlag, comparingContainer, cancellationToken);
-                EnsureFeatureExists(entry.Original, featureFlag, originalContainer, cancellationToken);
+
+                if (entry.HasEqualDocuments == false)
+                {
+                    EnsureFeatureExists(entry.Original, featureFlag, originalContainer, cancellationToken);
+                }
             }
 
             await Task.WhenAll(

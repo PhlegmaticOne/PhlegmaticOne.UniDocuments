@@ -1,9 +1,18 @@
-﻿namespace UniDocuments.Text.Domain.Algorithms;
+﻿using Newtonsoft.Json;
+
+namespace UniDocuments.Text.Domain.Algorithms;
 
 [Serializable]
 public class UniDocumentsCompareResult
 {
-    private readonly List<IPlagiarismResult> _plagiarismResults;
+    [JsonProperty("result")]
+    private List<IPlagiarismResult> _plagiarismResults;
+    
+    [JsonConstructor]
+    public UniDocumentsCompareResult(List<IPlagiarismResult> plagiarismResults)
+    {
+        _plagiarismResults = plagiarismResults;
+    }
     
     public UniDocumentsCompareResult()
     {

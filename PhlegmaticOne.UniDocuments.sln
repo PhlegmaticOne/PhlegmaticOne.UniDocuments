@@ -97,6 +97,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Services.
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "UniDocuments.App.Api.Python", "Programs\Api\UniDocuments.App.Api.Python\UniDocuments.App.Api.Python.pyproj", "{58BA84C0-724D-4A28-81CD-28AFF11881F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Features.Text.Services", "Documents\Features\Text\UniDocuments.Text.Features.Text.Services\UniDocuments.Text.Features.Text.Services.csproj", "{D8F205D8-CCF2-4E88-BDE8-56E0E858C954}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,10 @@ Global
 		{50CEEF1C-F721-4F84-B8B3-C9404BF58289}.Release|Any CPU.Build.0 = Release|Any CPU
 		{58BA84C0-724D-4A28-81CD-28AFF11881F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{58BA84C0-724D-4A28-81CD-28AFF11881F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F205D8-CCF2-4E88-BDE8-56E0E858C954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F205D8-CCF2-4E88-BDE8-56E0E858C954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F205D8-CCF2-4E88-BDE8-56E0E858C954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F205D8-CCF2-4E88-BDE8-56E0E858C954}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,6 +267,7 @@ Global
 		{8080A449-9C81-4CD1-B776-3DEAD0866C9F} = {5C61E47E-506E-4B91-99F8-36E2040C750F}
 		{50CEEF1C-F721-4F84-B8B3-C9404BF58289} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{58BA84C0-724D-4A28-81CD-28AFF11881F4} = {64E32456-3D4A-42A3-A61F-EAF6D24B3EFB}
+		{D8F205D8-CCF2-4E88-BDE8-56E0E858C954} = {FC2EAE81-7390-4F3A-9108-54DDD657EA23}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}
