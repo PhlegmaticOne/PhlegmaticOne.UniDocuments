@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Keras.NET" Version="3.8.5" />
     <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16" />
   </ItemGroup>
 

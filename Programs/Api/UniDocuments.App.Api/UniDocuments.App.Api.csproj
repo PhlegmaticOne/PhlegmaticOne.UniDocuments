@@ -25,9 +25,14 @@
       <ProjectReference Include="..\..\..\Documents\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj" />
       <ProjectReference Include="..\..\..\Documents\Features\Text\UniDocuments.Text.Features.Text.Services\UniDocuments.Text.Features.Text.Services.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Documents\UniDocuments.Text.Services.Documents.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Neural\UniDocuments.Text.Services.Neural.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.StreamReading\UniDocuments.Text.Services.StreamReading.csproj" />
       <ProjectReference Include="..\..\..\Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj" />
       <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Content\Models\" />
     </ItemGroup>
 
 </Project>

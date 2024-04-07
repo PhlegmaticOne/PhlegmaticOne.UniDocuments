@@ -16,6 +16,7 @@ using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
 using UniDocuments.Text.Plagiarism.Winnowing.Algorithm;
 using UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Hash;
 using UniDocuments.Text.Services.Documents;
+using UniDocuments.Text.Services.Neural;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.StreamReading;
@@ -38,6 +39,7 @@ builder.Services.AddDocumentTextLoader();
 builder.Services.AddTextWinnowing(b => b.UseHashAlgorithm<FingerprintHashCrc32C>());
 builder.Services.AddFingerprintService();
 builder.Services.AddUniDocumentsService();
+builder.Services.AddNeural();
 
 builder.Services.AddDocumentAlgorithms(algorithmsBuilder =>
 {
