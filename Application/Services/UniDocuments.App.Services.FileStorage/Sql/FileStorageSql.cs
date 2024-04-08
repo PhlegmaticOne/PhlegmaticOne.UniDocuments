@@ -1,17 +1,17 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
 using UniDocuments.App.Domain.Services.FileStorage;
+using UniDocuments.App.Services.FileStorage.Sql.Connection;
 
 namespace UniDocuments.App.Services.FileStorage.Sql;
 
 public class FileStorageSql : IFileStorage
 {
-    private readonly SqlConnection _sqlConnection;
+    private readonly ISqlConnectionProvider _sqlConnectionProvider;
 
-    public FileStorageSql(string connectionString)
+    public FileStorageSql(ISqlConnectionProvider sqlConnectionProvider)
     {
-        _sqlConnection = new SqlConnection(connectionString);
-        _sqlConnection.Open();
+        _sqlConnectionProvider = sqlConnectionProvider;
     }
 
     public async Task<FileLoadResponse> LoadAsync(FileLoadRequest loadRequest, CancellationToken cancellationToken)
@@ -20,9 +20,10 @@ public class FileStorageSql : IFileStorage
         var transactionContext = Array.Empty<byte>();
         var savedFileName = string.Empty;
         var path = string.Empty;
+        var sqlConnection = _sqlConnectionProvider.Connection;
 
-        await using var command = FileSqlCommands.CreateSelectFileCommand(_sqlConnection, fileId);
-        await using var transaction = _sqlConnection.BeginTransaction();
+        await using var command = FileSqlCommands.CreateSelectFileCommand(sqlConnection, fileId);
+        await using var transaction = sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
         await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
@@ -52,9 +53,10 @@ public class FileStorageSql : IFileStorage
         var fileName = saveRequest.FileName;
         var transactionContext = Array.Empty<byte>();
         var path = string.Empty;
+        var sqlConnection = _sqlConnectionProvider.Connection;
 
-        await using var command = FileSqlCommands.CreateInsertFileCommand(_sqlConnection, fileName);
-        await using var transaction = _sqlConnection.BeginTransaction();
+        await using var command = FileSqlCommands.CreateInsertFileCommand(sqlConnection, fileName);
+        await using var transaction = sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
         await using (var reader = await command.ExecuteReaderAsync(cancellationToken))

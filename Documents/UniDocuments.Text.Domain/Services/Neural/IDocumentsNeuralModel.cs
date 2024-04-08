@@ -4,6 +4,6 @@ public interface IDocumentsNeuralModel
 {
     Task SaveAsync(string path);
     Task LoadAsync(string path);
-    Task TrainAsync(IDocumentsNeuralModelSource documentsNeuralModelSource);
+    Task TrainAsync(IDocumentsNeuralSource source);
     Task<string> FindSimilarAsync(string text);
 }

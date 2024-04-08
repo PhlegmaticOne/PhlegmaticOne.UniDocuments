@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Xml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
@@ -7,40 +6,25 @@ namespace UniDocuments.Text.Services.StreamReading;
 
 public class StreamContentReaderWordDocument : IStreamContentReader
 {
-    private const string WordmlNamespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
-
-    public Task<string> ReadAsync(Stream stream, CancellationToken cancellationToken)
+    public Task<StreamContentReadResult> ReadAsync(Stream stream, CancellationToken cancellationToken)
     {
-        var textBuilder = new StringBuilder();
+        var result = new StreamContentReadResult();
         
         using (var wordDocument = WordprocessingDocument.Open(stream, false))
         {
-            var nameTable = new NameTable();
-            var namespaceManager = new XmlNamespaceManager(nameTable);
-            namespaceManager.AddNamespace("w", WordmlNamespace);
+            var body = wordDocument.MainDocumentPart.Document.Body;
 
-            var document = new XmlDocument(nameTable);
-            document.Load(wordDocument.MainDocumentPart.GetStream());
-            
-            var paragraphNodes = document.SelectNodes("//w:p", namespaceManager);
-            
-            foreach (XmlNode paragraphNode in paragraphNodes!)
+            foreach (OpenXmlElement xmlElement in body.ChildElements)
             {
-                var textNodes = paragraphNode.SelectNodes(".//w:t", namespaceManager);
+                var text = xmlElement.InnerText;
                 
-                foreach (XmlNode textNode in textNodes!)
+                if (string.IsNullOrWhiteSpace(text) == false)
                 {
-                    var text = textNode.InnerText;
-
-                    if (string.IsNullOrWhiteSpace(text) == false)
-                    {
-                        textBuilder.Append(text).Append(' ');
-                    }
+                    result.AddParagraph(text);
                 }
             }
         }
         
-        var result = textBuilder.ToString();
         return Task.FromResult(result);
     }
 }

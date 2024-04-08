@@ -2,7 +2,7 @@
 
 namespace UniDocuments.App.Services.FileStorage.InMemory;
 
-public class FileStorageInMemory : IFileStorage
+public class FileStorageInMemory : IFileStorage, IFileStorageIndexable
 {
     private class FileLoadResponsePrepared
     {
@@ -25,6 +25,17 @@ public class FileStorageInMemory : IFileStorage
     }
     
     private readonly Dictionary<Guid, FileLoadResponsePrepared> _fileContents = new();
+
+    public int StorageSize => _fileContents.Count;
+
+    public FileLoadResponse Load(int documentIndex)
+    {
+        var fileId = _fileContents.ElementAt(documentIndex).Key;
+        
+        return _fileContents.TryGetValue(fileId, out var fileLoadResponsePrepared) ? 
+            fileLoadResponsePrepared.ToFileLoadResponse() : 
+            FileLoadResponse.NoContent();
+    }
 
     public Task<FileLoadResponse> LoadAsync(FileLoadRequest loadRequest, CancellationToken cancellationToken)
     {

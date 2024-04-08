@@ -20,6 +20,6 @@ public class DocumentTextLoader : IDocumentTextLoader
         var request = new FileLoadRequest(documentId);
         var response = await _fileStorage.LoadAsync(request, cancellationToken);
         var text = await _streamContentReader.ReadAsync(response.FileStream!, cancellationToken);
-        return text;
+        return text.ToRawText();
     }
 }

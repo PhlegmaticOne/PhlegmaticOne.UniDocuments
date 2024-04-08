@@ -3,15 +3,19 @@ using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.Text.Services.Neural.Services;
 
-public class DocumentNeuralModelService : IDocumentsNeuralModel
+public class DocumentNeuralModel : IDocumentsNeuralModel
 {
     private const string BasePath = @"C:\Users\lolol\Downloads\t\{0}.txt";
     private const string PythonScriptName = "document_model";
+
+    private readonly IDocumentNeuralDataHandler _dataHandler;
+    
     private dynamic _script = null!;
     private dynamic _model = null!;
     
-    public DocumentNeuralModelService()
+    public DocumentNeuralModel(IDocumentNeuralDataHandler dataHandler)
     {
+        _dataHandler = dataHandler;
         PythonEngine.Initialize();
         PythonEngine.BeginAllowThreads();
     }
@@ -29,14 +33,14 @@ public class DocumentNeuralModelService : IDocumentsNeuralModel
         return Task.CompletedTask;
     }
 
-    public Task TrainAsync(IDocumentsNeuralModelSource documentsNeuralModelSource)
+    public Task TrainAsync(IDocumentsNeuralSource source)
     {
         using (Py.GIL())
         {
             _script = Py.Import(PythonScriptName);
-            _model = _script.train(documentsNeuralModelSource);
+            _model = _script.train(source, _dataHandler);
         }
-
+        
         return Task.CompletedTask;
     }
 

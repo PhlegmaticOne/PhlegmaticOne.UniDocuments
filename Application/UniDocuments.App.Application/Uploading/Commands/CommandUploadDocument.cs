@@ -49,7 +49,8 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     {
         var documentId = await SaveDocumentAsync(request, cancellationToken);
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
-        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
+        var rawText = content.ToRawText();
+        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, rawText, cancellationToken);
 
         var document = new UniDocument(documentId, new UniDocumentFeatureFingerprint(fingerprint));
         await _uniDocumentsService.SaveAsync(document, cancellationToken);

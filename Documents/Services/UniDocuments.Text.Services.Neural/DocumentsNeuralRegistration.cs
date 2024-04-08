@@ -8,8 +8,9 @@ public static class DocumentsNeuralRegistration
 {
     public static IServiceCollection AddNeural(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton<IDocumentsNeuralModel, DocumentNeuralModelService>();
-        serviceCollection.AddSingleton<IDocumentsNeuralModelSource, DocumentNeuralModelSourceFile>();
+        serviceCollection.AddSingleton<IDocumentsNeuralModel, DocumentNeuralModel>();
+        serviceCollection.AddSingleton<IDocumentsNeuralSource, DocumentNeuralSourceInMemory>();
+        serviceCollection.AddSingleton<IDocumentNeuralDataHandler, DocumentNeuralDataHandler>();
         return serviceCollection;
     }
  }
