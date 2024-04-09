@@ -1,27 +1,23 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
-using UniDocuments.Text.Application.Similarity;
-using UniDocuments.Text.Domain.Algorithms;
+using UniDocuments.Text.Domain.Services.Similarity;
+using UniDocuments.Text.Domain.Services.Similarity.Request;
+using UniDocuments.Text.Domain.Services.Similarity.Response;
 
 namespace UniDocuments.App.Application.Comparing.Queries;
 
-public class QueryCompareDocuments : IdentityOperationResultQuery<UniDocumentsCompareResult>
+public class QueryCompareDocuments : IdentityOperationResultQuery<UniDocumentsCompareResponse>
 {
-    public Guid ComparingDocumentId { get; }
-    public Guid OriginalDocumentId { get; }
-    public List<string> Algorithms { get; }
+    public UniDocumentsCompareRequest Request { get; }
 
-    public QueryCompareDocuments(Guid profileId, Guid comparingDocumentId,
-        Guid originalDocumentId, List<string> algorithms) : base(profileId)
+    public QueryCompareDocuments(Guid profileId, UniDocumentsCompareRequest request) : base(profileId)
     {
-        ComparingDocumentId = comparingDocumentId;
-        OriginalDocumentId = originalDocumentId;
-        Algorithms = algorithms;
+        Request = request;
     }
 }
 
 public class CommandCompareDocumentsHandler :
-    IOperationResultQueryHandler<QueryCompareDocuments, UniDocumentsCompareResult>
+    IOperationResultQueryHandler<QueryCompareDocuments, UniDocumentsCompareResponse>
 {
     private readonly IDocumentSimilarityService _similarityService;
 
@@ -30,21 +26,17 @@ public class CommandCompareDocumentsHandler :
         _similarityService = similarityService;
     }
     
-    public async Task<OperationResult<UniDocumentsCompareResult>> Handle(
+    public async Task<OperationResult<UniDocumentsCompareResponse>> Handle(
         QueryCompareDocuments request, CancellationToken cancellationToken)
     {
         try
         {
-            var compareRequest = new UniDocumentsCompareRequest(
-                request.ComparingDocumentId, request.OriginalDocumentId, request.Algorithms);
-            
-            var result = await _similarityService.CompareAsync(compareRequest, cancellationToken);
-            
+            var result = await _similarityService.CompareAsync(request.Request, cancellationToken);
             return OperationResult.Successful(result);
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<UniDocumentsCompareResult>(e.Message);
+            return OperationResult.Failed<UniDocumentsCompareResponse>(e.Message);
         }
     }
 }

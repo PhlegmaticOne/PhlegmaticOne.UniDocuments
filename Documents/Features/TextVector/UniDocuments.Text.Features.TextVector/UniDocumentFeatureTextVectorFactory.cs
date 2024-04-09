@@ -37,7 +37,7 @@ public class UniDocumentFeatureTextVectorFactory : IUniDocumentSharedFeatureFact
         
         var proceedText = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = textFeature.Text
+            Text = textFeature.Content.ToRawText()
         });
         
         return new DocumentWordsDictionary(proceedText.Words);

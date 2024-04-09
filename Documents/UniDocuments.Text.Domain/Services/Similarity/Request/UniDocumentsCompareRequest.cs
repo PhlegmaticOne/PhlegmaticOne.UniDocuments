@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Application.Similarity;
+﻿namespace UniDocuments.Text.Domain.Services.Similarity.Request;
 
 public record UniDocumentsCompareRequest(
     Guid OriginalDocumentId,

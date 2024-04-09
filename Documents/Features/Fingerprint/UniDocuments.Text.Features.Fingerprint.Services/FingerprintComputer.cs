@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Features.Fingerprint.Models;
+﻿using UniDocuments.Text.Domain.Services.StreamReading;
+using UniDocuments.Text.Features.Fingerprint.Models;
 using UniDocuments.Text.Plagiarism.Winnowing.Algorithm;
 
 namespace UniDocuments.Text.Features.Fingerprint.Services;
@@ -15,7 +16,7 @@ public class FingerprintComputer : IFingerprintComputer
     }
     
     public Task<DocumentFingerprint> ComputeAsync(
-        Guid documentId, string text, CancellationToken cancellationToken)
+        Guid documentId, StreamContentReadResult text, CancellationToken cancellationToken)
     {
         var fingerprint = _textWinnowing.Winnowing(text);
         _container.AddOrReplace(documentId, fingerprint);

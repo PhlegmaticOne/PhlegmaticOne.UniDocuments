@@ -1,10 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using UniDocuments.App.Api.Controllers;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Services.FileStorage.DependencyInjection;
 using UniDocuments.Text.Application;
+using UniDocuments.Text.Application.Mapper;
+using UniDocuments.Text.Application.Searching;
 using UniDocuments.Text.Application.Similarity;
+using UniDocuments.Text.Domain.Services.Common;
 using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.SavePath;
+using UniDocuments.Text.Domain.Services.Searching;
+using UniDocuments.Text.Domain.Services.Similarity;
 using UniDocuments.Text.Features.Fingerprint;
 using UniDocuments.Text.Features.Fingerprint.Services;
 using UniDocuments.Text.Features.Text;
@@ -23,7 +30,7 @@ using UniDocuments.Text.Services.StreamReading;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly));
@@ -40,6 +47,7 @@ builder.Services.AddTextWinnowing(b => b.UseHashAlgorithm<FingerprintHashCrc32C>
 builder.Services.AddFingerprintService();
 builder.Services.AddUniDocumentsService();
 builder.Services.AddNeural();
+builder.Services.AddSingleton<ISavePathProvider, SavePathProvider>();
 
 builder.Services.AddDocumentAlgorithms(algorithmsBuilder =>
 {
@@ -52,9 +60,19 @@ builder.Services.AddDocumentAlgorithms(algorithmsBuilder =>
         .UseAlgorithm<PlagiarismAlgorithmCosineSimilarity>()
         .UseAlgorithm<PlagiarismAlgorithmMatching>()
         .UseAlgorithm<PlagiarismAlgorithmTsSs>();
-    
+
     algorithmsBuilder
-        .UseService<IDocumentSimilarityService, DocumentSimilarityService>();
+        .UseService<IDocumentSimilarityService, DocumentSimilarityService>()
+        .UseService<IPlagiarismSearcher, PlagiarismSearcher>();
+
+    if (builder.Environment.IsDevelopment())
+    {
+        algorithmsBuilder.UseService<IDocumentsMapper, DocumentsMapperInMemory>();
+    }
+    else
+    {
+        algorithmsBuilder.UseService<IDocumentsMapper, DocumentsMapperSql>();
+    }
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>

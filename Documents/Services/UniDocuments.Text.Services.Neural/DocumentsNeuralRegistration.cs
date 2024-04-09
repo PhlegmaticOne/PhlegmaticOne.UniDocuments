@@ -10,7 +10,7 @@ public static class DocumentsNeuralRegistration
     {
         serviceCollection.AddSingleton<IDocumentsNeuralModel, DocumentNeuralModel>();
         serviceCollection.AddSingleton<IDocumentsNeuralSource, DocumentNeuralSourceInMemory>();
-        serviceCollection.AddSingleton<IDocumentNeuralDataHandler, DocumentNeuralDataHandler>();
+        serviceCollection.AddSingleton<IDocumentsNeuralDataHandler, DocumentsNeuralDataHandler>();
         return serviceCollection;
     }
  }

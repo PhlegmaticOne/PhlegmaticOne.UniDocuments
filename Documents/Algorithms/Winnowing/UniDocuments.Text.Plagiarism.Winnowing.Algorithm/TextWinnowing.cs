@@ -1,5 +1,6 @@
 ﻿using UniDocuments.Text.Algorithms;
 using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Features.Fingerprint.Models;
 using UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Hash;
 
@@ -19,11 +20,11 @@ public class TextWinnowing : ITextWinnowing
         _fingerprintHash = fingerprintHash;
     }
     
-    public DocumentFingerprint Winnowing(string text)
+    public DocumentFingerprint Winnowing(StreamContentReadResult text)
     {
         var processed = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = text
+            Text = text.ToRawText()
         });
 
         var concat = string.Concat(processed.Words);

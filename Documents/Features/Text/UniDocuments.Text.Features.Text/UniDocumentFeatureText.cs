@@ -1,15 +1,16 @@
 ﻿using UniDocuments.Text.Domain.Features;
+using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.Text.Features.Text;
 
 public class UniDocumentFeatureText : IUniDocumentFeature
 {
-    public UniDocumentFeatureText(string text)
+    public UniDocumentFeatureText(StreamContentReadResult content)
     {
-        Text = text;
+        Content = content;
     }
     
-    public string Text { get; }
+    public StreamContentReadResult Content { get; }
 
     public UniDocumentFeatureFlag FeatureFlag => UniDocumentFeatureTextFlag.Instance;
 }

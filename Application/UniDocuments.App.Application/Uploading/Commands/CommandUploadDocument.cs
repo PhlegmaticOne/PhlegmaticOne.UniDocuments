@@ -4,6 +4,7 @@ using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Services.FileStorage;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Services.Common;
 using UniDocuments.Text.Domain.Services.Documents;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Features.Fingerprint;
@@ -29,6 +30,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     private readonly IStreamContentReader _streamContentReader;
     private readonly IFingerprintComputer _fingerprintComputer;
     private readonly IUniDocumentsService _uniDocumentsService;
+    private readonly IDocumentsMapper _documentsMapper;
     private readonly ApplicationDbContext _dbContext;
 
     public CommandUploadDocumentHandler(
@@ -36,12 +38,14 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         IStreamContentReader streamContentReader,
         IFingerprintComputer fingerprintComputer,
         IUniDocumentsService uniDocumentsService,
+        IDocumentsMapper documentsMapper,
         ApplicationDbContext dbContext)
     {
         _fileStorage = fileStorage;
         _streamContentReader = streamContentReader;
         _fingerprintComputer = fingerprintComputer;
         _uniDocumentsService = uniDocumentsService;
+        _documentsMapper = documentsMapper;
         _dbContext = dbContext;
     }
     
@@ -49,8 +53,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     {
         var documentId = await SaveDocumentAsync(request, cancellationToken);
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
-        var rawText = content.ToRawText();
-        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, rawText, cancellationToken);
+        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
 
         var document = new UniDocument(documentId, new UniDocumentFeatureFingerprint(fingerprint));
         await _uniDocumentsService.SaveAsync(document, cancellationToken);
@@ -74,6 +77,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var stream = request.DocumentStream;
         var saveRequest = new FileSaveRequest("test", stream);
         var saveResponse = await _fileStorage.SaveAsync(saveRequest, cancellationToken);
+        _documentsMapper.AddMap(saveResponse.FileId, saveRequest.FileName);
         return saveResponse.FileId;
     }
 }

@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
       <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj" />
       <ProjectReference Include="..\..\..\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj" />
-      <ProjectReference Include="..\UniDocuments.Text.Plagiarism.Winnowing.Data\UniDocuments.Text.Plagiarism.Winnowing.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>

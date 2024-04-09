@@ -8,6 +8,7 @@ public static class FingerprintServiceInstaller
     {
         serviceCollection.AddSingleton<IFingerprintsContainer, FingerprintsContainer>();
         serviceCollection.AddSingleton<IFingerprintComputer, FingerprintComputer>();
+        serviceCollection.AddSingleton<IFingerprintSearcher, FingerprintSearcher>();
         return serviceCollection;
     }
 }

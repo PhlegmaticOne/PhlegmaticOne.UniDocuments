@@ -39,8 +39,8 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
             return PlagiarismResultMatching.Error;
         }
 
-        var originalGrams = CreateGrams(originalContent!.Text, N);
-        var comparingGrams = CreateGrams(comparingContent!.Text, N);
+        var originalGrams = CreateGrams(originalContent!.Content.ToRawText(), N);
+        var comparingGrams = CreateGrams(comparingContent!.Content.ToRawText(), N);
         var matchingBlocks = originalGrams.GetMatchingBlocks(comparingGrams).ToList();
         var mergedBlocks = MapBlocksToTextPositions(matchingBlocks, originalGrams, comparingGrams);
         return PlagiarismResultMatching.FromBlocks(mergedBlocks);

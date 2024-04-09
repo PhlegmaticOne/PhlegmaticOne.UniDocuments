@@ -8,12 +8,12 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
     private const string BasePath = @"C:\Users\lolol\Downloads\t\{0}.txt";
     private const string PythonScriptName = "document_model";
 
-    private readonly IDocumentNeuralDataHandler _dataHandler;
+    private readonly IDocumentsNeuralDataHandler _dataHandler;
     
     private dynamic _script = null!;
     private dynamic _model = null!;
     
-    public DocumentNeuralModel(IDocumentNeuralDataHandler dataHandler)
+    public DocumentNeuralModel(IDocumentsNeuralDataHandler dataHandler)
     {
         _dataHandler = dataHandler;
         PythonEngine.Initialize();

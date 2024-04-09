@@ -1,6 +1,8 @@
-﻿namespace UniDocuments.Text.Features.Text.Contracts;
+﻿using UniDocuments.Text.Domain.Services.StreamReading;
+
+namespace UniDocuments.Text.Features.Text.Contracts;
 
 public interface IDocumentTextLoader
 {
-    Task<string> LoadTextAsync(Guid documentId, CancellationToken cancellationToken);
+    Task<StreamContentReadResult> LoadTextAsync(Guid documentId, CancellationToken cancellationToken);
 }

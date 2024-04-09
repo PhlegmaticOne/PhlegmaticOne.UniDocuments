@@ -1,20 +1,21 @@
 ﻿using Newtonsoft.Json;
+using UniDocuments.Text.Domain.Algorithms;
 
-namespace UniDocuments.Text.Domain.Algorithms;
+namespace UniDocuments.Text.Domain.Services.Similarity.Response;
 
 [Serializable]
-public class UniDocumentsCompareResult
+public class UniDocumentsCompareResponse
 {
     [JsonProperty("result")]
     private List<IPlagiarismResult> _plagiarismResults;
     
     [JsonConstructor]
-    public UniDocumentsCompareResult(List<IPlagiarismResult> plagiarismResults)
+    public UniDocumentsCompareResponse(List<IPlagiarismResult> plagiarismResults)
     {
         _plagiarismResults = plagiarismResults;
     }
     
-    public UniDocumentsCompareResult()
+    public UniDocumentsCompareResponse()
     {
         _plagiarismResults = new List<IPlagiarismResult>();
     }

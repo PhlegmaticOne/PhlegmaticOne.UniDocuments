@@ -62,6 +62,7 @@ def train(source, data_handler):
 
     model.build_vocab(tagged_documents)
     model.train(tagged_documents, total_examples=model.corpus_count, epochs=model.epochs)
+    data_handler.OnTrainComplete()
     return model
 
 

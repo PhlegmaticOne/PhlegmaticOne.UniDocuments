@@ -15,11 +15,10 @@ public class DocumentTextLoader : IDocumentTextLoader
         _streamContentReader = streamContentReader;
     }
     
-    public async Task<string> LoadTextAsync(Guid documentId, CancellationToken cancellationToken)
+    public async Task<StreamContentReadResult> LoadTextAsync(Guid documentId, CancellationToken cancellationToken)
     {
         var request = new FileLoadRequest(documentId);
         var response = await _fileStorage.LoadAsync(request, cancellationToken);
-        var text = await _streamContentReader.ReadAsync(response.FileStream!, cancellationToken);
-        return text.ToRawText();
+        return await _streamContentReader.ReadAsync(response.FileStream!, cancellationToken);
     }
 }

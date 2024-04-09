@@ -19,6 +19,13 @@ public class DocumentFingerprint
 
     public HashSet<uint> Entries { get; set; }
 
+    public int GetSharedPrintsCount(DocumentFingerprint other)
+    {
+        var copy = Entries.ToHashSet();
+        copy.IntersectWith(other.Entries);
+        return copy.Count;
+    }
+
     public bool HasFingerprint(uint fingerprint)
     {
         return Entries.Contains(fingerprint);
