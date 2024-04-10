@@ -5,5 +5,5 @@ namespace UniDocuments.Text.Domain.Services.Searching;
 
 public interface IPlagiarismSearcher : IDocumentService
 {
-    Task<PlagiarismSearchResponse> SearchAsync(PlagiarismSearchRequest request);
+    Task<PlagiarismSearchResponse> SearchAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken);
 }

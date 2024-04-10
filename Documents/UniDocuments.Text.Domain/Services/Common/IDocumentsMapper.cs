@@ -2,7 +2,7 @@
 
 public interface IDocumentsMapper : IDocumentService
 {
-    Task InitializeAsync();
+    Task InitializeAsync(CancellationToken cancellationToken);
     string GetDocumentName(Guid documentId);
     void AddMap(Guid documentId, string documentName);
 }

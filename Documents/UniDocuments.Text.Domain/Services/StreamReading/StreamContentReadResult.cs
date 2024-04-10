@@ -17,8 +17,8 @@ public class StreamContentReadResult
         Paragraphs.Add(new RawParagraph(id, content));
     }
 
-    public string ToRawText()
+    public string ToRawText(char separator = ' ')
     {
-        return string.Join(' ', Paragraphs);
+        return string.Join(separator, Paragraphs);
     }
 }

@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Application\Services\UniDocuments.App.Services.FileStorage\UniDocuments.App.Services.FileStorage.csproj" />
+      <ProjectReference Include="..\..\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
       <ProjectReference Include="..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 

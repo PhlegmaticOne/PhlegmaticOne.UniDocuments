@@ -28,6 +28,7 @@ public class QuerySearchPlagiarismHandler : IRequestHandler<QuerySearchPlagiaris
     
     public Task<PlagiarismSearchResponse> Handle(QuerySearchPlagiarism request, CancellationToken cancellationToken)
     {
-        return _plagiarismSearcher.SearchAsync(new PlagiarismSearchRequest(request.DocumentId, request.TopN));
+        var searchRequest = new PlagiarismSearchRequest(request.DocumentId, request.TopN); 
+        return _plagiarismSearcher.SearchAsync(searchRequest, cancellationToken);
     }
 }

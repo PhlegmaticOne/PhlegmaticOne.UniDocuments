@@ -20,12 +20,12 @@ public class DocumentsMapperSql : IDocumentsMapper
         _sqlConnectionProvider = sqlConnectionProvider;
     }
     
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         await using var command = CreateSelectAllFilesCommand(_sqlConnectionProvider.Connection);
-        var reader = await command.ExecuteReaderAsync();
+        var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-        while (await reader.ReadAsync())
+        while (await reader.ReadAsync(cancellationToken))
         {
             var id = ReadFileId(reader);
             var name = ReadFileName(reader);

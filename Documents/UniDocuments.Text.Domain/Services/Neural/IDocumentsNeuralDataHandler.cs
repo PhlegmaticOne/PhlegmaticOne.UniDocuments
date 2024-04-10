@@ -1,4 +1,5 @@
 ﻿using UniDocuments.Text.Domain.Services.Common;
+using UniDocuments.Text.Domain.Services.Neural.Models;
 
 namespace UniDocuments.Text.Domain.Services.Neural;
 

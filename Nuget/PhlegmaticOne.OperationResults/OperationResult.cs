@@ -11,6 +11,11 @@ public class OperationResult
         IsSuccess = true
     };
 
+    public virtual object? GetResult()
+    {
+        return null;
+    }
+
     public static OperationResult<T> Successful<T>(T result)
     {
         return new()
@@ -45,4 +50,9 @@ public class OperationResult
 public class OperationResult<T> : OperationResult
 {
     public T? Result { get; init; }
+
+    public override object? GetResult()
+    {
+        return Result;
+    }
 }

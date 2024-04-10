@@ -70,6 +70,11 @@ def load(path):
     return Doc2Vec.load(path)
 
 
-def infer(model, text):
-    vec = model.infer_vector(preprocess_and_tokenize(text))
-    return model.docvecs.most_similar(vec, topn=5)
+def infer(model, text, top_n):
+    preprocess = preprocess_and_tokenize(text)
+    
+    if len(preprocess) < 10:
+        return None
+    
+    vec = model.infer_vector(preprocess)
+    return model.docvecs.most_similar(vec, topn=top_n)

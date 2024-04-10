@@ -1,19 +1,24 @@
 ﻿using Newtonsoft.Json;
 using UniDocuments.Text.Domain.Services.Common;
 using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Services.Neural.Models;
 using UniDocuments.Text.Domain.Services.SavePath;
 
 namespace UniDocuments.Text.Services.Neural.Services;
 
 public class DocumentsNeuralDataHandler : IDocumentsNeuralDataHandler
 {
+    private const string SaveFileName = "documents_mapping.json";
+    
     private readonly ISavePathProvider _savePathProvider;
+    private readonly IDocumentsMapper _documentsMapper;
 
     private Dictionary<int, ParagraphSaveData> _paragraphsToDocumentsMap;
 
-    public DocumentsNeuralDataHandler(ISavePathProvider savePathProvider)
+    public DocumentsNeuralDataHandler(ISavePathProvider savePathProvider, IDocumentsMapper documentsMapper)
     {
         _savePathProvider = savePathProvider;
+        _documentsMapper = documentsMapper;
         _paragraphsToDocumentsMap = new Dictionary<int, ParagraphSaveData>();
     }
 
@@ -25,7 +30,9 @@ public class DocumentsNeuralDataHandler : IDocumentsNeuralDataHandler
 
     public ParagraphSaveData GetSaveData(int id)
     {
-        return _paragraphsToDocumentsMap[id];
+        var data = _paragraphsToDocumentsMap[id];
+        data.DocumentName = _documentsMapper.GetDocumentName(data.DocumentId);
+        return data;
     }
 
     public void OnTrainDataSetup(RawDocument document, RawParagraph paragraph)
@@ -39,7 +46,7 @@ public class DocumentsNeuralDataHandler : IDocumentsNeuralDataHandler
 
     public void OnTrainComplete()
     {
-        var path = _savePathProvider.SavePath;
+        var path = Path.Combine(_savePathProvider.SavePath, SaveFileName);
         var json = JsonConvert.SerializeObject(_paragraphsToDocumentsMap);
         File.WriteAllText(path, json);
     }

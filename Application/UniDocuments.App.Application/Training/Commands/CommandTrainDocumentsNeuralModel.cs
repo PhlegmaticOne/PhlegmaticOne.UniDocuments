@@ -28,7 +28,7 @@ public class CommandTrainDocumentsNeuralModelHandler : IRequestHandler<CommandTr
     
     public async Task Handle(CommandTrainDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
-        await _documentsNeuralModel.TrainAsync(_documentsNeuralSource);
-        await _documentsNeuralModel.SaveAsync(request.SavePath);
+        await _documentsNeuralModel.TrainAsync(_documentsNeuralSource, cancellationToken);
+        await _documentsNeuralModel.SaveAsync(request.SavePath, cancellationToken);
     }
 }

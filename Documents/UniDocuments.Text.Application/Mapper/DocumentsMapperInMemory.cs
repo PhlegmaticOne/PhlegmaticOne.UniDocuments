@@ -6,7 +6,7 @@ public class DocumentsMapperInMemory : IDocumentsMapper
 {
     private readonly Dictionary<Guid, string> _documentsMap = new();
     
-    public Task InitializeAsync()
+    public Task InitializeAsync(CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
     }

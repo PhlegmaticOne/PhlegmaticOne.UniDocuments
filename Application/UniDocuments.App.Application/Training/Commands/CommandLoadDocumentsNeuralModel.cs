@@ -24,6 +24,6 @@ public class CommandLoadDocumentsNeuralModelHandler : IRequestHandler<CommandLoa
     
     public Task Handle(CommandLoadDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
-        return _documentsNeuralModel.LoadAsync(request.SavePath);
+        return _documentsNeuralModel.LoadAsync(request.SavePath, cancellationToken);
     }
 }

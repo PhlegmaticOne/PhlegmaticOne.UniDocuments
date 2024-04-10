@@ -27,9 +27,9 @@ public class FingerprintSearcher : IFingerprintSearcher
         _documentsMapper = documentsMapper;
     }
     
-    public Task<List<DocumentSearchData>> SearchTopAsync(Guid documentId, int topN)
+    public Task<List<DocumentSearchData>> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken)
     {
-        return Task.Run(() => ComputeTopFingerprints(documentId, topN));
+        return Task.Run(() => ComputeTopFingerprints(documentId, topN), cancellationToken);
     }
 
     private List<DocumentSearchData> ComputeTopFingerprints(Guid documentId, int topN)
