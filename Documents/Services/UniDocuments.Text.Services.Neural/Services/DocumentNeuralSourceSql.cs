@@ -1,9 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
-using UniDocuments.App.Services.FileStorage.Sql.Connection;
-using UniDocuments.Text.Domain.Services.Common;
+using UniDocuments.Text.Domain.Services.FileStorage;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.StreamReading;
+using UniDocuments.Text.Domain.Shared;
 
 namespace UniDocuments.Text.Services.Neural.Services;
 

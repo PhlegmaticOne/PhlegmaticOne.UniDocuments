@@ -8,12 +8,9 @@
 
     <ItemGroup>
       <PackageReference Include="Keras.NET" Version="3.8.5" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Application\Services\UniDocuments.App.Services.FileStorage\UniDocuments.App.Services.FileStorage.csproj" />
       <ProjectReference Include="..\..\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
       <ProjectReference Include="..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>

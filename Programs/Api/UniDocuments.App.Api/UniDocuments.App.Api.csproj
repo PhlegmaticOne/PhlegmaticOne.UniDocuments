@@ -16,19 +16,22 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
-      <ProjectReference Include="..\..\..\Application\Services\UniDocuments.App.Services.FileStorage\UniDocuments.App.Services.FileStorage.csproj" />
       <ProjectReference Include="..\..\..\Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj" />
       <ProjectReference Include="..\..\..\Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Algorithm\UniDocuments.Text.Plagiarism.Cosine.Algorithm.csproj" />
       <ProjectReference Include="..\..\..\Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Algorithm\UniDocuments.Text.Plagiarism.Matching.Algorithm.csproj" />
       <ProjectReference Include="..\..\..\Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Algorithm\UniDocuments.Text.Plagiarism.TsSs.Algorithm.csproj" />
-      <ProjectReference Include="..\..\..\Documents\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Algorithm\UniDocuments.Text.Plagiarism.Winnowing.Algorithm.csproj" />
       <ProjectReference Include="..\..\..\Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint.Services\UniDocuments.Text.Features.Fingerprint.Services.csproj" />
       <ProjectReference Include="..\..\..\Documents\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj" />
       <ProjectReference Include="..\..\..\Documents\Features\Text\UniDocuments.Text.Features.Text.Services\UniDocuments.Text.Features.Text.Services.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers.PlagiarismSearching\UniDocuments.Text.Providers.PlagiarismSearching.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers.Similarity\UniDocuments.Text.Providers.Similarity.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.DocumentNameMapping\UniDocuments.Text.Services.DocumentNameMapping.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Documents\UniDocuments.Text.Services.Documents.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.FileStorage\UniDocuments.Text.Services.FileStorage.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Neural\UniDocuments.Text.Services.Neural.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.StreamReading\UniDocuments.Text.Services.StreamReading.csproj" />
-      <ProjectReference Include="..\..\..\Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj" />
+      <ProjectReference Include="..\..\..\Documents\UniDocuments.Text.Root\UniDocuments.Text.Root.csproj" />
       <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
     </ItemGroup>
 

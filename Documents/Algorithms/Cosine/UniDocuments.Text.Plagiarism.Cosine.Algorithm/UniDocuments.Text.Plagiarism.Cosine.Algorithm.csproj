@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj" />
-    <ProjectReference Include="..\..\..\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
     <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Math\UniDocuments.Text.Math.csproj" />
     <ProjectReference Include="..\UniDocuments.Text.Plagiarism.Cosine.Data\UniDocuments.Text.Plagiarism.Cosine.Data.csproj" />
   </ItemGroup>

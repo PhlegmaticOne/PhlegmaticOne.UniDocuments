@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Math\UniDocuments.Text.Math.csproj" />
-      <ProjectReference Include="..\..\..\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj" />
       <ProjectReference Include="..\..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
       <ProjectReference Include="..\..\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
     </ItemGroup>

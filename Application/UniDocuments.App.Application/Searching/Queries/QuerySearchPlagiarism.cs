@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using UniDocuments.Text.Domain.Services.Searching;
-using UniDocuments.Text.Domain.Services.Searching.Request;
-using UniDocuments.Text.Domain.Services.Searching.Response;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
 namespace UniDocuments.App.Application.Searching.Queries;
 
@@ -19,16 +19,16 @@ public class QuerySearchPlagiarism : IRequest<PlagiarismSearchResponse>
 
 public class QuerySearchPlagiarismHandler : IRequestHandler<QuerySearchPlagiarism, PlagiarismSearchResponse>
 {
-    private readonly IPlagiarismSearcher _plagiarismSearcher;
+    private readonly IPlagiarismFinder _plagiarismFinder;
 
-    public QuerySearchPlagiarismHandler(IPlagiarismSearcher plagiarismSearcher)
+    public QuerySearchPlagiarismHandler(IPlagiarismFinder plagiarismFinder)
     {
-        _plagiarismSearcher = plagiarismSearcher;
+        _plagiarismFinder = plagiarismFinder;
     }
     
     public Task<PlagiarismSearchResponse> Handle(QuerySearchPlagiarism request, CancellationToken cancellationToken)
     {
         var searchRequest = new PlagiarismSearchRequest(request.DocumentId, request.TopN); 
-        return _plagiarismSearcher.SearchAsync(searchRequest, cancellationToken);
+        return _plagiarismFinder.SearchAsync(searchRequest, cancellationToken);
     }
 }

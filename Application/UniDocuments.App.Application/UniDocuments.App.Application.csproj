@@ -8,13 +8,11 @@
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="12.2.0" />
-      <PackageReference Include="Open-XML-SDK" Version="2.9.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
       <ProjectReference Include="..\..\Documents\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
-      <ProjectReference Include="..\..\Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj" />
       <ProjectReference Include="..\..\Documents\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />

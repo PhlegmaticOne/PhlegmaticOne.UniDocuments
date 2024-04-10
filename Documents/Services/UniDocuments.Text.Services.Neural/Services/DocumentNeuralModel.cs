@@ -1,7 +1,7 @@
 ﻿using Python.Runtime;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Requests;
-using UniDocuments.Text.Domain.Services.Searching.Response;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.Text.Services.Neural.Services;
@@ -48,7 +48,7 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
     }
 
     public Task<List<ParagraphPlagiarismData>> FindSimilarAsync(
-        FindPlagiarismRequest request, CancellationToken cancellationToken)
+        NeuralSearchPlagiarismRequest request, CancellationToken cancellationToken)
     {
         var result = new List<ParagraphPlagiarismData>();
 

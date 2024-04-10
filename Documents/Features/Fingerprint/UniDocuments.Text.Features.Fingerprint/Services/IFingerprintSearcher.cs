@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Domain.Services.Searching.Response;
+﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
 namespace UniDocuments.Text.Features.Fingerprint.Services;
 

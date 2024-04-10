@@ -432,9 +432,5 @@ public class StopWordsLoaderFile : IStopWordsLoader
     {
         var result = StopWords.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         return Task.FromResult(result);
-        var directory = new DirectoryInfo(Environment.CurrentDirectory);
-        var directoryPath = directory.Parent!.Parent!.Parent!.FullName;
-        var path = Path.Combine(directoryPath, StopWordsPath);
-        return File.ReadAllLinesAsync(path, cancellationToken);
     }
 }

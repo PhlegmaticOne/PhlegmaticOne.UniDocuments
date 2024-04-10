@@ -1,5 +1,5 @@
-﻿using UniDocuments.Text.Domain.Services.Common;
-using UniDocuments.Text.Domain.Services.Searching.Response;
+﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
+using UniDocuments.Text.Domain.Services.DocumentNameMapping;
 
 namespace UniDocuments.Text.Features.Fingerprint.Services;
 
@@ -19,12 +19,12 @@ public class FingerprintSearcher : IFingerprintSearcher
     }
     
     private readonly IFingerprintsContainer _fingerprintsContainer;
-    private readonly IDocumentsMapper _documentsMapper;
+    private readonly IDocumentToNameMapper _documentToNameMapper;
 
-    public FingerprintSearcher(IFingerprintsContainer fingerprintsContainer, IDocumentsMapper documentsMapper)
+    public FingerprintSearcher(IFingerprintsContainer fingerprintsContainer, IDocumentToNameMapper documentToNameMapper)
     {
         _fingerprintsContainer = fingerprintsContainer;
-        _documentsMapper = documentsMapper;
+        _documentToNameMapper = documentToNameMapper;
     }
     
     public Task<List<DocumentSearchData>> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken)
@@ -70,7 +70,7 @@ public class FingerprintSearcher : IFingerprintSearcher
         return topNFingerprints.Where(x => x.SharedCount != 0).Select(x => new DocumentSearchData
         {
             Id = x.DocumentId,
-            Name = _documentsMapper.GetDocumentName(x.DocumentId)
+            Name = _documentToNameMapper.GetDocumentName(x.DocumentId)
         }).ToList();
     }
 

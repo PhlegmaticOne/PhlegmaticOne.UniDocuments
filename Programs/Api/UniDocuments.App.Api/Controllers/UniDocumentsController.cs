@@ -4,8 +4,8 @@ using UniDocuments.App.Application.Comparing.Queries;
 using UniDocuments.App.Application.Searching.Queries;
 using UniDocuments.App.Application.Training.Commands;
 using UniDocuments.App.Application.Uploading.Commands;
+using UniDocuments.Text.Domain.Providers.Similarity.Requests;
 using UniDocuments.Text.Domain.Services.SavePath;
-using UniDocuments.Text.Domain.Services.Similarity.Request;
 
 namespace UniDocuments.App.Api.Controllers;
 
@@ -33,7 +33,7 @@ public class UniDocumentsController : ControllerBase
     }
 
     [HttpPost("Compare")]
-    public async Task<IActionResult> Compare(UniDocumentsCompareRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Compare(DocumentsSimilarityRequest request, CancellationToken cancellationToken)
     {
         var profileId = Guid.NewGuid();
         var query = new QueryCompareDocuments(profileId, request);

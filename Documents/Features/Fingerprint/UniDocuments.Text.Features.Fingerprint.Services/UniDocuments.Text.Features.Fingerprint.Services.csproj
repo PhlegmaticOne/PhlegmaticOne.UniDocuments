@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Algorithms\Winnowing\UniDocuments.Text.Plagiarism.Winnowing.Algorithm\UniDocuments.Text.Plagiarism.Winnowing.Algorithm.csproj" />
+      <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj" />
       <ProjectReference Include="..\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
     </ItemGroup>
 

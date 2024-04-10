@@ -5,8 +5,7 @@ namespace UniDocuments.Text.Features.Fingerprint.Services;
 public class FingerprintsContainer : IFingerprintsContainer
 {
     private readonly Dictionary<Guid, DocumentFingerprint?> _fingerprints = new();
-
-
+    
     public IReadOnlyDictionary<Guid, DocumentFingerprint?> GetAll()
     {
         return _fingerprints;

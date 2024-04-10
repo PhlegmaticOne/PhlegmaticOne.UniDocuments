@@ -2,10 +2,11 @@
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Domain.Services.FileStorage;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Domain.Services.Common;
+using UniDocuments.Text.Domain.Services.DocumentNameMapping;
 using UniDocuments.Text.Domain.Services.Documents;
+using UniDocuments.Text.Domain.Services.FileStorage;
+using UniDocuments.Text.Domain.Services.FileStorage.Requests;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Features.Fingerprint;
 using UniDocuments.Text.Features.Fingerprint.Services;
@@ -30,7 +31,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     private readonly IStreamContentReader _streamContentReader;
     private readonly IFingerprintComputer _fingerprintComputer;
     private readonly IUniDocumentsService _uniDocumentsService;
-    private readonly IDocumentsMapper _documentsMapper;
+    private readonly IDocumentToNameMapper _documentToNameMapper;
     private readonly ApplicationDbContext _dbContext;
 
     public CommandUploadDocumentHandler(
@@ -38,14 +39,14 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         IStreamContentReader streamContentReader,
         IFingerprintComputer fingerprintComputer,
         IUniDocumentsService uniDocumentsService,
-        IDocumentsMapper documentsMapper,
+        IDocumentToNameMapper documentToNameMapper,
         ApplicationDbContext dbContext)
     {
         _fileStorage = fileStorage;
         _streamContentReader = streamContentReader;
         _fingerprintComputer = fingerprintComputer;
         _uniDocumentsService = uniDocumentsService;
-        _documentsMapper = documentsMapper;
+        _documentToNameMapper = documentToNameMapper;
         _dbContext = dbContext;
     }
     
@@ -77,7 +78,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var stream = request.DocumentStream;
         var saveRequest = new FileSaveRequest("test", stream);
         var saveResponse = await _fileStorage.SaveAsync(saveRequest, cancellationToken);
-        _documentsMapper.AddMap(saveResponse.FileId, saveRequest.FileName);
+        _documentToNameMapper.AddMap(saveResponse.FileId, saveRequest.FileName);
         return saveResponse.FileId;
     }
 }

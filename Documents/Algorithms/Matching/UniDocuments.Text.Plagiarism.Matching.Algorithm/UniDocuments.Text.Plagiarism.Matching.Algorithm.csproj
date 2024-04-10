@@ -9,7 +9,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
       <ProjectReference Include="..\..\..\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj" />
-      <ProjectReference Include="..\..\..\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj" />
       <ProjectReference Include="..\UniDocuments.Text.Plagiarism.Matching.Data\UniDocuments.Text.Plagiarism.Matching.Data.csproj" />
     </ItemGroup>
 

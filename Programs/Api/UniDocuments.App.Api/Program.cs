@@ -2,30 +2,23 @@ using Microsoft.EntityFrameworkCore;
 using UniDocuments.App.Api.Controllers;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
-using UniDocuments.App.Services.FileStorage.DependencyInjection;
-using UniDocuments.Text.Application;
-using UniDocuments.Text.Application.Mapper;
-using UniDocuments.Text.Application.Searching;
-using UniDocuments.Text.Application.Similarity;
-using UniDocuments.Text.Domain.Services.Common;
 using UniDocuments.Text.Domain.Services.Preprocessing;
-using UniDocuments.Text.Domain.Services.SavePath;
-using UniDocuments.Text.Domain.Services.Searching;
-using UniDocuments.Text.Domain.Services.Similarity;
-using UniDocuments.Text.Features.Fingerprint;
 using UniDocuments.Text.Features.Fingerprint.Services;
-using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Features.Text.Services;
-using UniDocuments.Text.Features.TextVector;
 using UniDocuments.Text.Plagiarism.Cosine.Algorithm;
 using UniDocuments.Text.Plagiarism.Matching.Algorithm;
 using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
-using UniDocuments.Text.Plagiarism.Winnowing.Algorithm;
-using UniDocuments.Text.Plagiarism.Winnowing.Algorithm.Hash;
+using UniDocuments.Text.Providers.PlagiarismSearching;
+using UniDocuments.Text.Providers.Similarity;
+using UniDocuments.Text.Root;
+using UniDocuments.Text.Services.DocumentNameMapping;
 using UniDocuments.Text.Services.Documents;
-using UniDocuments.Text.Services.Neural;
+using UniDocuments.Text.Services.FileStorage.InMemory;
+using UniDocuments.Text.Services.FileStorage.Sql;
+using UniDocuments.Text.Services.Neural.Services;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
+using UniDocuments.Text.Services.Preprocessing.StopWords;
 using UniDocuments.Text.Services.StreamReading;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,44 +28,60 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly));
 
-builder.Services.AddFileStorage(() => builder.Environment.IsDevelopment());
-builder.Services.AddStreamContentReader();
-builder.Services.AddTextPreprocessor(b =>
+builder.Services.AddDocumentsApplication(appBuilder =>
 {
-    b.UseStopWordsService();
-    b.UseStemmer<Stemmer>();
-});
-builder.Services.AddDocumentTextLoader();
-builder.Services.AddTextWinnowing(b => b.UseHashAlgorithm<FingerprintHashCrc32C>());
-builder.Services.AddFingerprintService();
-builder.Services.AddUniDocumentsService();
-builder.Services.AddNeural();
-builder.Services.AddSingleton<ISavePathProvider, SavePathProvider>();
-
-builder.Services.AddDocumentAlgorithms(algorithmsBuilder =>
-{
-    algorithmsBuilder
-        .UseFeature<UniDocumentFeatureTextFactory>()
-        .UseFeature<UniDocumentFeatureFingerprintFactory>()
-        .UseSharedFeature<UniDocumentFeatureTextVectorFactory>();
-
-    algorithmsBuilder
+    var isDevelopment = builder.Environment.IsDevelopment();
+    
+    appBuilder
         .UseAlgorithm<PlagiarismAlgorithmCosineSimilarity>()
         .UseAlgorithm<PlagiarismAlgorithmMatching>()
         .UseAlgorithm<PlagiarismAlgorithmTsSs>();
-
-    algorithmsBuilder
-        .UseService<IDocumentSimilarityService, DocumentSimilarityService>()
-        .UseService<IPlagiarismSearcher, PlagiarismSearcher>();
-
-    if (builder.Environment.IsDevelopment())
+    
+    appBuilder.UseTextVectorFeature();
+    
+    appBuilder.UseTextFeature(b =>
     {
-        algorithmsBuilder.UseService<IDocumentsMapper, DocumentsMapperInMemory>();
-    }
-    else
+        b.UseTextLoader<DocumentTextLoader>();
+    });
+
+    appBuilder.UseFingerprintFeature(b =>
     {
-        algorithmsBuilder.UseService<IDocumentsMapper, DocumentsMapperSql>();
-    }
+        b.UseFingerprintAlgorithm<FingerprintWinnowingAlgorithm>();
+        b.UseFingerprintContainer<FingerprintsContainer>();
+        b.UseFingerprintComputer<FingerprintComputer>();
+        b.UseFingerprintHash<FingerprintHashCrc32C>();
+        b.UseFingerprintSearcher<FingerprintSearcher>();
+    });
+
+    appBuilder.UseDocumentsService<UniDocumentsService>(b =>
+    {
+        b.UseDocumentsCache<UniDocumentsCache>();
+    });
+    
+    appBuilder.UseFileStorage<FileStorageInMemory, FileStorageSql>(isDevelopment, b =>
+    {
+        b.UseSqlConnectionProvider<SqlConnectionProvider>();
+    });
+    
+    appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>
+    {
+        b.UseStemmer<Stemmer>();
+        b.UseStopWordsLoader<StopWordsLoaderFile>();
+        b.UseStopWordsService<StopWordsService>();
+    });
+    
+    appBuilder.UseNeuralModel<DocumentNeuralModel>(b =>
+    {
+        b.UseDataHandler<DocumentsNeuralDataHandler>();
+        b.UseDataSource<DocumentNeuralSourceInMemory, DocumentNeuralSourceSql>(isDevelopment);
+    });
+    
+    appBuilder.UseDocumentNameMapper<DocumentToNameMapperInMemory, DocumentToNameMapperSql>(isDevelopment);
+    appBuilder.UseSavePathProvider<SavePathProvider>();
+    appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>();
+    
+    appBuilder.UsePlagiarismFinder<PlagiarismFinder>();
+    appBuilder.UseSimilarityFinder<DocumentsSimilarityFinder>();
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>

@@ -1,4 +1,5 @@
-﻿using UniDocuments.App.Domain.Services.FileStorage;
+﻿using UniDocuments.Text.Domain.Services.FileStorage;
+using UniDocuments.Text.Domain.Services.FileStorage.Requests;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Features.Text.Contracts;
 

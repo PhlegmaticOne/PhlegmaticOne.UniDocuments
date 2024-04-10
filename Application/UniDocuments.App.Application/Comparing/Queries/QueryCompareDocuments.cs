@@ -1,42 +1,42 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
-using UniDocuments.Text.Domain.Services.Similarity;
-using UniDocuments.Text.Domain.Services.Similarity.Request;
-using UniDocuments.Text.Domain.Services.Similarity.Response;
+using UniDocuments.Text.Domain.Providers.Similarity;
+using UniDocuments.Text.Domain.Providers.Similarity.Requests;
+using UniDocuments.Text.Domain.Providers.Similarity.Responses;
 
 namespace UniDocuments.App.Application.Comparing.Queries;
 
-public class QueryCompareDocuments : IdentityOperationResultQuery<UniDocumentsCompareResponse>
+public class QueryCompareDocuments : IdentityOperationResultQuery<DocumentsSimilarityResponse>
 {
-    public UniDocumentsCompareRequest Request { get; }
+    public DocumentsSimilarityRequest Request { get; }
 
-    public QueryCompareDocuments(Guid profileId, UniDocumentsCompareRequest request) : base(profileId)
+    public QueryCompareDocuments(Guid profileId, DocumentsSimilarityRequest request) : base(profileId)
     {
         Request = request;
     }
 }
 
 public class CommandCompareDocumentsHandler :
-    IOperationResultQueryHandler<QueryCompareDocuments, UniDocumentsCompareResponse>
+    IOperationResultQueryHandler<QueryCompareDocuments, DocumentsSimilarityResponse>
 {
-    private readonly IDocumentSimilarityService _similarityService;
+    private readonly IDocumentsSimilarityFinder _similarityFinder;
 
-    public CommandCompareDocumentsHandler(IDocumentSimilarityService similarityService)
+    public CommandCompareDocumentsHandler(IDocumentsSimilarityFinder similarityFinder)
     {
-        _similarityService = similarityService;
+        _similarityFinder = similarityFinder;
     }
     
-    public async Task<OperationResult<UniDocumentsCompareResponse>> Handle(
+    public async Task<OperationResult<DocumentsSimilarityResponse>> Handle(
         QueryCompareDocuments request, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await _similarityService.CompareAsync(request.Request, cancellationToken);
+            var result = await _similarityFinder.CompareAsync(request.Request, cancellationToken);
             return OperationResult.Successful(result);
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<UniDocumentsCompareResponse>(e.Message);
+            return OperationResult.Failed<DocumentsSimilarityResponse>(e.Message);
         }
     }
 }
