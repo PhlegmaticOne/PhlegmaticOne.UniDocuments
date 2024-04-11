@@ -19,6 +19,7 @@
       <ProjectReference Include="..\..\..\Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj" />
       <ProjectReference Include="..\..\..\Documents\Algorithms\Cosine\UniDocuments.Text.Plagiarism.Cosine.Algorithm\UniDocuments.Text.Plagiarism.Cosine.Algorithm.csproj" />
       <ProjectReference Include="..\..\..\Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Algorithm\UniDocuments.Text.Plagiarism.Matching.Algorithm.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Algorithms\Matching\UniDocuments.Text.Plagiarism.Matching.Services\UniDocuments.Text.Plagiarism.Matching.Services.csproj" />
       <ProjectReference Include="..\..\..\Documents\Algorithms\TsSs\UniDocuments.Text.Plagiarism.TsSs.Algorithm\UniDocuments.Text.Plagiarism.TsSs.Algorithm.csproj" />
       <ProjectReference Include="..\..\..\Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint.Services\UniDocuments.Text.Features.Fingerprint.Services.csproj" />
       <ProjectReference Include="..\..\..\Documents\Features\TextVector\UniDocuments.Text.Features.TextVector\UniDocuments.Text.Features.TextVector.csproj" />

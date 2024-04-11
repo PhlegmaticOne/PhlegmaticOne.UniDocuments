@@ -7,16 +7,18 @@ namespace UniDocuments.Text.Features.Fingerprint.Services;
 
 public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
 {
-    private const int Gram = 30;
-    private const int Window = 64;
-    
     private readonly ITextPreprocessor _textPreprocessor;
     private readonly IFingerprintHash _fingerprintHash;
+    private readonly IFingerprintOptionsProvider _optionsProvider;
 
-    public FingerprintWinnowingAlgorithm(ITextPreprocessor textPreprocessor, IFingerprintHash fingerprintHash)
+    public FingerprintWinnowingAlgorithm(
+        ITextPreprocessor textPreprocessor, 
+        IFingerprintHash fingerprintHash,
+        IFingerprintOptionsProvider optionsProvider)
     {
         _textPreprocessor = textPreprocessor;
         _fingerprintHash = fingerprintHash;
+        _optionsProvider = optionsProvider;
     }
     
     public DocumentFingerprint Fingerprint(StreamContentReadResult text)
@@ -26,33 +28,34 @@ public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
             Text = text.ToRawText()
         });
 
+        var options = _optionsProvider.GetOptions();
         var concat = string.Concat(processed.Words);
-        var fingerprints = FingerprintText(concat);
-        var winnowedFingerprints = WinnowFingerprints(fingerprints);
+        var fingerprints = FingerprintText(concat, options.GramSize);
+        var winnowedFingerprints = WinnowFingerprints(fingerprints, options.WindowSize);
         return new DocumentFingerprint(winnowedFingerprints);
     }
 
-    private List<uint> FingerprintText(string text)
+    private List<uint> FingerprintText(string text, int gramSize)
     {
         var fingerprints = new List<uint>();
 
-        for (var i = 0; i < text.Length - Gram + 1; i++)
+        for (var i = 0; i < text.Length - gramSize + 1; i++)
         {
-            var hash = _fingerprintHash.GetHash(text, i, Gram);
+            var hash = _fingerprintHash.GetHash(text, i, gramSize);
             fingerprints.Add(hash);
         }
 
         return fingerprints;
     }
 
-    private static HashSet<uint> WinnowFingerprints(List<uint> fingerprints)
+    private static HashSet<uint> WinnowFingerprints(List<uint> fingerprints, int windowSize)
     {
         var window = new HashSet<uint>();
         var previousMin = 0;
             
-        for (var i = 0; i < fingerprints.Count - Window; i++)
+        for (var i = 0; i < fingerprints.Count - windowSize; i++)
         {
-            var minIndexInRange = fingerprints.GetMinIndexInRange(i, i + Window);
+            var minIndexInRange = fingerprints.GetMinIndexInRange(i, i + windowSize);
             var currentMin = i + minIndexInRange;
 
             if (currentMin != previousMin)

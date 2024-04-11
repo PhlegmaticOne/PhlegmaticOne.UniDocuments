@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Features.Fingerprint.Services;
 using UniDocuments.Text.Features.Text.Contracts;
 
@@ -36,5 +37,11 @@ public class FingerprintFeatureInstallBuilder
     public void UseFingerprintAlgorithm<T>() where T : class, IFingerprintAlgorithm
     {
         _serviceCollection.AddSingleton<IFingerprintAlgorithm, T>();
+    }
+    
+    public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, IFingerprintOptionsProvider
+    {
+        _serviceCollection.AddSingleton<IFingerprintOptionsProvider, T>();
+        _serviceCollection.Configure<FingerprintOptions>(configuration.GetSection(nameof(FingerprintOptions)));
     }
 }

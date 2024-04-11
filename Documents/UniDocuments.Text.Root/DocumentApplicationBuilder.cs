@@ -14,7 +14,9 @@ using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Features.Fingerprint;
 using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Features.TextVector;
+using UniDocuments.Text.Plagiarism.Matching.Algorithm;
 using UniDocuments.Text.Root.Builders;
+using UniDocuments.Text.Root.Builders.Algorithms;
 using UniDocuments.Text.Root.Builders.Features;
 
 namespace UniDocuments.Text.Root;
@@ -29,10 +31,9 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IUniDocumentFeatureProvider, UniDocumentFeatureProvider>();
     }
 
-    public DocumentApplicationBuilder UseAlgorithm<T>() where T : class, IPlagiarismAlgorithm
+    public void UseAlgorithm<T>() where T : class, IPlagiarismAlgorithm
     {
-        _serviceCollection.AddSingleton<IPlagiarismAlgorithm, T>();
-        return this;
+        _serviceCollection.AddScoped<IPlagiarismAlgorithm, T>();
     }
 
     public void UseFingerprintFeature(Action<FingerprintFeatureInstallBuilder> action)
@@ -52,12 +53,6 @@ public class DocumentApplicationBuilder
         var builder = new TextFeatureInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<IUniDocumentFeatureFactory, UniDocumentFeatureTextFactory>();
         action(builder);
-    }
-        
-    public DocumentApplicationBuilder UseSharedFeature<T>() where T : class, IUniDocumentSharedFeatureFactory
-    {
-        _serviceCollection.AddSingleton<IUniDocumentSharedFeatureFactory, T>();
-        return this;
     }
 
     public void UseDocumentNameMapper<TDev, TProd>(bool isDevelopment) 
@@ -126,11 +121,18 @@ public class DocumentApplicationBuilder
     
     public void UseSimilarityFinder<T>() where T : class, IDocumentsSimilarityFinder
     {
-        _serviceCollection.AddSingleton<IDocumentsSimilarityFinder, T>();
+        _serviceCollection.AddScoped<IDocumentsSimilarityFinder, T>();
     }
     
     public void UsePlagiarismFinder<T>() where T : class, IPlagiarismFinder
     {
         _serviceCollection.AddSingleton<IPlagiarismFinder, T>();
+    }
+
+    public void UseMatchingAlgorithm(Action<MatchingInstallBuilder> action)
+    {
+        var builder = new MatchingInstallBuilder(_serviceCollection);
+        UseAlgorithm<PlagiarismAlgorithmMatching>();
+        action(builder);
     }
 }

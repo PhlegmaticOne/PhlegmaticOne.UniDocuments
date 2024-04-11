@@ -1,6 +1,7 @@
 ﻿using Python.Runtime;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Services.Neural.Options;
 using UniDocuments.Text.Domain.Services.Neural.Requests;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
@@ -12,13 +13,15 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
     private const string ModelName = "model.bin";
 
     private readonly IDocumentsNeuralDataHandler _dataHandler;
-    
+    private readonly IDocumentNeuralOptionsProvider _optionsProvider;
+
     private dynamic _script = null!;
     private dynamic _model = null!;
     
-    public DocumentNeuralModel(IDocumentsNeuralDataHandler dataHandler)
+    public DocumentNeuralModel(IDocumentsNeuralDataHandler dataHandler, IDocumentNeuralOptionsProvider optionsProvider)
     {
         _dataHandler = dataHandler;
+        _optionsProvider = optionsProvider;
         PythonEngine.Initialize();
         PythonEngine.BeginAllowThreads();
     }
@@ -38,10 +41,12 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
 
     public Task TrainAsync(IDocumentsNeuralSource source, CancellationToken cancellationToken)
     {
+        var options = _optionsProvider.GetOptions();
+
         using (Py.GIL())
         {
             _script = Py.Import(PythonScriptName);
-            _model = _script.train(source, _dataHandler);
+            _model = _script.train(source, options, _dataHandler);
         }
         
         return Task.CompletedTask;
@@ -51,13 +56,14 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
         NeuralSearchPlagiarismRequest request, CancellationToken cancellationToken)
     {
         var result = new List<ParagraphPlagiarismData>();
+        var options = _optionsProvider.GetOptions();
 
         using (Py.GIL())
         {
             foreach (var rawParagraph in request.Content.Paragraphs)
             {
                 var text = rawParagraph.Content;
-                var infer = _script.infer(_model, text, request.TopN);
+                var infer = _script.infer(_model, options, text, request.TopN);
 
                 if (((object)infer).ToPython().IsNone())
                 {

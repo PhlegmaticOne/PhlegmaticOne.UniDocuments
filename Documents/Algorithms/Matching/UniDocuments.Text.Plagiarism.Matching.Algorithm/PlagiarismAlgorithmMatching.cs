@@ -6,6 +6,7 @@ using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Features.Text;
 using UniDocuments.Text.Plagiarism.Matching.Algorithm.Grams;
+using UniDocuments.Text.Plagiarism.Matching.Algorithm.Services;
 using UniDocuments.Text.Plagiarism.Matching.Data;
 using UniDocuments.Text.Plagiarism.Matching.Data.Models;
 
@@ -13,15 +14,13 @@ namespace UniDocuments.Text.Plagiarism.Matching.Algorithm;
 
 public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<PlagiarismResultMatching>
 {
-    private const int N = 3;
-    private const int Threshold = 8;
-    private const int MinDistance = 8;
-    
     private readonly IStopWordsService _stopWordsService;
+    private readonly IMatchingOptionsProvider _optionsProvider;
 
-    public PlagiarismAlgorithmMatching(IStopWordsService stopWordsService)
+    public PlagiarismAlgorithmMatching(IStopWordsService stopWordsService, IMatchingOptionsProvider optionsProvider)
     {
         _stopWordsService = stopWordsService;
+        _optionsProvider = optionsProvider;
     }
 
     public override PlagiarismAlgorithmFeatureFlag FeatureFlag => PlagiarismAlgorithmMatchingFeatureFlag.Instance;
@@ -39,15 +38,17 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
             return PlagiarismResultMatching.Error;
         }
 
-        var originalGrams = CreateGrams(originalContent!.Content.ToRawText(), N);
-        var comparingGrams = CreateGrams(comparingContent!.Content.ToRawText(), N);
+        var options = _optionsProvider.GetOptions();
+        var originalGrams = CreateGrams(originalContent!.Content.ToRawText(), options);
+        var comparingGrams = CreateGrams(comparingContent!.Content.ToRawText(), options);
         var matchingBlocks = originalGrams.GetMatchingBlocks(comparingGrams).ToList();
-        var mergedBlocks = MapBlocksToTextPositions(matchingBlocks, originalGrams, comparingGrams);
+        var mergedBlocks = MapBlocksToTextPositions(matchingBlocks, originalGrams, comparingGrams, options);
         return PlagiarismResultMatching.FromBlocks(mergedBlocks);
     }
 
-    private List<Gram> CreateGrams(string text, int n)
+    private List<Gram> CreateGrams(string text, MatchingOptions options)
     {
+        var n = options.NGram;
         var grams = new List<Gram>();
         
         var words = WordsRegex().Matches(text)
@@ -65,15 +66,15 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
     }
 
     private static List<MatchEntry> MapBlocksToTextPositions(
-        List<SubSequence> matches, List<Gram> originalGrams, List<Gram> comparingGrams)
+        List<SubSequence> matches, List<Gram> originalGrams, List<Gram> comparingGrams, MatchingOptions options)
     {
-        MergeMatchingBlocks(matches);
+        MergeMatchingBlocks(matches, options);
         
         var result = new List<MatchEntry>();
 
         foreach (var match in matches)
         {
-            if (IsMatchValuable(match) == false)
+            if (IsMatchValuable(match, options) == false)
             {
                 continue;
             }
@@ -91,20 +92,22 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
         return result;
     }
 
-    private static void MergeMatchingBlocks(IList<SubSequence> matches)
+    private static void MergeMatchingBlocks(IList<SubSequence> matches, MatchingOptions options)
     {
         if (matches.Count == 1)
         {
             return;
         }
 
+        var minDistance = options.MinDistance;
+        
         for (var i = matches.Count - 1; i > 0; i--)
         {
             var previous = matches[i - 1];
             var current = matches[i];
 
-            if (previous.RightIndex + previous.RightLength + MinDistance >= current.RightIndex &&
-                previous.LeftIndex + previous.LeftLength + MinDistance >= current.LeftIndex)
+            if (previous.RightIndex + previous.RightLength + minDistance >= current.RightIndex &&
+                previous.LeftIndex + previous.LeftLength + minDistance >= current.LeftIndex)
             {
                 previous.RightLength = current.RightIndex - previous.RightIndex + current.RightLength;
                 previous.LeftLength = current.LeftIndex - previous.LeftIndex + current.LeftLength;
@@ -114,9 +117,9 @@ public partial class PlagiarismAlgorithmMatching : PlagiarismAlgorithm<Plagiaris
         }
     }
 
-    private static bool IsMatchValuable(in SubSequence match)
+    private static bool IsMatchValuable(in SubSequence match, MatchingOptions options)
     {
-        return match.Size > Threshold;
+        return match.Size > options.Threshold;
     }
 
     [GeneratedRegex("[^\\s\\.,\\?\\/\\\\#!$%\\^&\\*;:{}=\\-_`~()\\\"]{2,}")]

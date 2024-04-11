@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Services.Neural.Options;
 
 namespace UniDocuments.Text.Root.Builders;
 
@@ -29,5 +31,11 @@ public class DocumentsNeuralInstallBuilder
     public void UseDataHandler<T>() where T : class, IDocumentsNeuralDataHandler
     {
         _serviceCollection.AddSingleton<IDocumentsNeuralDataHandler, T>();
+    }
+    
+    public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, IDocumentNeuralOptionsProvider
+    {
+        _serviceCollection.AddSingleton<IDocumentNeuralOptionsProvider, T>();
+        _serviceCollection.Configure<DocumentNeuralOptions>(configuration.GetSection(nameof(DocumentNeuralOptions)));
     }
 }

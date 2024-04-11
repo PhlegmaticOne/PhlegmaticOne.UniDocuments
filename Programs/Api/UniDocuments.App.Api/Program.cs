@@ -7,6 +7,7 @@ using UniDocuments.Text.Features.Fingerprint.Services;
 using UniDocuments.Text.Features.Text.Services;
 using UniDocuments.Text.Plagiarism.Cosine.Algorithm;
 using UniDocuments.Text.Plagiarism.Matching.Algorithm;
+using UniDocuments.Text.Plagiarism.Matching.Services;
 using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
 using UniDocuments.Text.Providers.PlagiarismSearching;
 using UniDocuments.Text.Providers.Similarity;
@@ -32,10 +33,14 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 {
     var isDevelopment = builder.Environment.IsDevelopment();
     
-    appBuilder
-        .UseAlgorithm<PlagiarismAlgorithmCosineSimilarity>()
-        .UseAlgorithm<PlagiarismAlgorithmMatching>()
-        .UseAlgorithm<PlagiarismAlgorithmTsSs>();
+    appBuilder.UseAlgorithm<PlagiarismAlgorithmCosineSimilarity>();
+    
+    appBuilder.UseAlgorithm<PlagiarismAlgorithmTsSs>();
+    
+    appBuilder.UseMatchingAlgorithm(b =>
+    {
+        b.UseOptionsProvider<MatchingOptionsProvider>(builder.Configuration);
+    });
     
     appBuilder.UseTextVectorFeature();
     
@@ -51,6 +56,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseFingerprintComputer<FingerprintComputer>();
         b.UseFingerprintHash<FingerprintHashCrc32C>();
         b.UseFingerprintSearcher<FingerprintSearcher>();
+        b.UseOptionsProvider<FingerprintOptionsProvider>(builder.Configuration);
     });
 
     appBuilder.UseDocumentsService<UniDocumentsService>(b =>
@@ -74,6 +80,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     {
         b.UseDataHandler<DocumentsNeuralDataHandler>();
         b.UseDataSource<DocumentNeuralSourceInMemory, DocumentNeuralSourceSql>(isDevelopment);
+        b.UseOptionsProvider<DocumentNeuralOptionsProvider>(builder.Configuration);
     });
     
     appBuilder.UseDocumentNameMapper<DocumentToNameMapperInMemory, DocumentToNameMapperSql>(isDevelopment);
