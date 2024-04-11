@@ -32,7 +32,7 @@ public class UniDocumentsController : ControllerBase
         return new JsonResult(result.GetResult());
     }
 
-    [HttpPost("Compare")]
+    [HttpGet("Compare")]
     public async Task<IActionResult> Compare(DocumentsSimilarityRequest request, CancellationToken cancellationToken)
     {
         var profileId = Guid.NewGuid();
