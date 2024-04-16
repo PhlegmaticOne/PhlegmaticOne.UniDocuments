@@ -6,7 +6,7 @@ using UniDocuments.Text.Domain.Providers.Similarity.Responses;
 
 namespace UniDocuments.App.Application.Comparing.Queries;
 
-public class QueryCompareDocuments : IdentityOperationResultQuery<DocumentsSimilarityResponse>
+public class QueryCompareDocuments : IdentityOperationResultQuery<SimilarityResponse>
 {
     public DocumentsSimilarityRequest Request { get; }
 
@@ -17,7 +17,7 @@ public class QueryCompareDocuments : IdentityOperationResultQuery<DocumentsSimil
 }
 
 public class CommandCompareDocumentsHandler :
-    IOperationResultQueryHandler<QueryCompareDocuments, DocumentsSimilarityResponse>
+    IOperationResultQueryHandler<QueryCompareDocuments, SimilarityResponse>
 {
     private readonly IDocumentsSimilarityFinder _similarityFinder;
 
@@ -26,7 +26,7 @@ public class CommandCompareDocumentsHandler :
         _similarityFinder = similarityFinder;
     }
     
-    public async Task<OperationResult<DocumentsSimilarityResponse>> Handle(
+    public async Task<OperationResult<SimilarityResponse>> Handle(
         QueryCompareDocuments request, CancellationToken cancellationToken)
     {
         try
@@ -36,7 +36,7 @@ public class CommandCompareDocumentsHandler :
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<DocumentsSimilarityResponse>(e.Message);
+            return OperationResult.Failed<SimilarityResponse>(e.Message);
         }
     }
 }

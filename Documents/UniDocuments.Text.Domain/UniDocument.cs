@@ -9,7 +9,7 @@ public class UniDocument : IEquatable<UniDocument>, IUniDocumentFeaturesCollecti
     public Guid Id { get; }
 
     public static UniDocument Empty => new(Guid.Empty);
-
+    
     public UniDocument(Guid id)
     {
         Id = id;

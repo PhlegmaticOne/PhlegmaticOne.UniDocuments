@@ -5,6 +5,8 @@ namespace UniDocuments.Text.Domain.Providers.Similarity;
 
 public interface IDocumentsSimilarityFinder
 {
-    Task<DocumentsSimilarityResponse> CompareAsync(
+    Task<SimilarityResponse> CompareAsync(
         DocumentsSimilarityRequest request, CancellationToken cancellationToken);
+    Task<List<SimilarityResponse>> CompareAsync(
+        TextsSimilarityRequest request, CancellationToken cancellationToken);
 }

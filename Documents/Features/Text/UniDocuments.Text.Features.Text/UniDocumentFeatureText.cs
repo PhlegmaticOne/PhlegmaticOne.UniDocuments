@@ -9,6 +9,11 @@ public class UniDocumentFeatureText : IUniDocumentFeature
     {
         Content = content;
     }
+
+    public static UniDocumentFeatureText FromString(string value)
+    {
+        return new UniDocumentFeatureText(StreamContentReadResult.FromString(value));
+    }
     
     public StreamContentReadResult Content { get; }
 

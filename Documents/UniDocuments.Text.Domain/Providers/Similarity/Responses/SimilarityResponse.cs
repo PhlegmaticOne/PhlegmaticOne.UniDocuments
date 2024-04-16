@@ -4,18 +4,18 @@ using UniDocuments.Text.Domain.Algorithms;
 namespace UniDocuments.Text.Domain.Providers.Similarity.Responses;
 
 [Serializable]
-public class DocumentsSimilarityResponse
+public class SimilarityResponse
 {
     [JsonProperty("result")]
     private List<IPlagiarismResult> _plagiarismResults;
     
     [JsonConstructor]
-    public DocumentsSimilarityResponse(List<IPlagiarismResult> plagiarismResults)
+    public SimilarityResponse(List<IPlagiarismResult> plagiarismResults)
     {
         _plagiarismResults = plagiarismResults;
     }
     
-    public DocumentsSimilarityResponse()
+    public SimilarityResponse()
     {
         _plagiarismResults = new List<IPlagiarismResult>();
     }
