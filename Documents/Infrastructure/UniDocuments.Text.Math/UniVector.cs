@@ -44,6 +44,14 @@ public class UniVector<T> where T : INumber<T>
         var asDouble = double.CreateSaturating(result);
         return System.Math.Sqrt(asDouble);
     }
+    
+    public double Cosine(UniVector<T> other)
+    {
+        var dot = Dot(other);
+        var size = Norm();
+        var otherSize = other.Norm();
+        return double.CreateSaturating(dot) / (size * otherSize);
+    }
 
     public double Norm()
     {

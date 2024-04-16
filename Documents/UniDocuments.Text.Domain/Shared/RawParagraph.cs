@@ -11,6 +11,11 @@ public class RawParagraph
         OriginalId = originalId;
         Content = content;
     }
+
+    public int GetWordsCountApproximate()
+    {
+        return Content.Count(x => x == ' ') + 1;
+    }
     
     public override string ToString()
     {

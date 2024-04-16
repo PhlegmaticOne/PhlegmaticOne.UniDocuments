@@ -3,6 +3,7 @@
 namespace UniDocuments.Text.Features.Fingerprint.Models;
 
 [SuppressMessage("ReSharper", "ConvertClosureToMethodGroup")]
+[Serializable]
 public class DocumentFingerprint
 {
     public DocumentFingerprint(HashSet<uint> entries)
@@ -24,6 +25,15 @@ public class DocumentFingerprint
         var copy = Entries.ToHashSet();
         copy.IntersectWith(other.Entries);
         return copy.Count;
+    }
+
+    public double CalculateJaccard(DocumentFingerprint other)
+    {
+        var intersection = Entries.ToHashSet();
+        var union = Entries.ToHashSet();
+        intersection.IntersectWith(other.Entries);
+        union.UnionWith(other.Entries);
+        return (double)intersection.Count / union.Count;
     }
 
     public bool HasFingerprint(uint fingerprint)

@@ -23,15 +23,17 @@ public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
     
     public DocumentFingerprint Fingerprint(StreamContentReadResult text)
     {
+        var options = _optionsProvider.GetOptions();
+
         var processed = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = text.ToRawText()
+            Text = text.ToRawTextWithMinLength(options.MinWords)
         });
 
-        var options = _optionsProvider.GetOptions();
         var concat = string.Concat(processed.Words);
-        var fingerprints = FingerprintText(concat, options.GramSize);
-        var winnowedFingerprints = WinnowFingerprints(fingerprints, options.WindowSize);
+        var levelOptions = options.GetMatchingOptions(processed.Words.Length);
+        var fingerprints = FingerprintText(concat, levelOptions.GramSize);
+        var winnowedFingerprints = WinnowFingerprints(fingerprints, levelOptions.WindowSize);
         return new DocumentFingerprint(winnowedFingerprints);
     }
 
