@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using PhlegmaticOne.JwtTokensGeneration.Options;
 using UniDocuments.App.Api.Controllers;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
@@ -6,7 +9,6 @@ using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Features.Fingerprint.Services;
 using UniDocuments.Text.Features.Text.Services;
 using UniDocuments.Text.Plagiarism.Cosine.Algorithm;
-using UniDocuments.Text.Plagiarism.Matching.Algorithm;
 using UniDocuments.Text.Plagiarism.Matching.Services;
 using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
 using UniDocuments.Text.Providers.PlagiarismSearching;
@@ -24,6 +26,33 @@ using UniDocuments.Text.Services.Preprocessing.StopWords;
 using UniDocuments.Text.Services.StreamReading;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var configuration = builder.Configuration;
+var jwtSecrets = configuration.GetSection("JwtSecrets");
+var jwtOptions = new SymmetricKeyJwtOptions(jwtSecrets["Issuer"]!,
+    jwtSecrets["Audience"]!,
+    int.Parse(jwtSecrets["ExpirationDurationInMinutes"]!),
+    jwtSecrets["SecretKey"]!);
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.SaveToken = true;
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtOptions.Issuer,
+        ValidAudience = jwtOptions.Audience,
+        IssuerSigningKey = jwtOptions.GetSecretKey(),
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();

@@ -2,7 +2,6 @@
 using UniDocuments.Text.Domain.Algorithms;
 using UniDocuments.Text.Domain.Features;
 using UniDocuments.Text.Features.TextVector;
-using UniDocuments.Text.Math;
 using UniDocuments.Text.Plagiarism.Cosine.Data;
 
 namespace UniDocuments.Text.Plagiarism.Cosine.Algorithm;

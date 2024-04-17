@@ -1,3 +1,1 @@
-﻿using Python.Runtime;
-
-Console.WriteLine("Hello");
+﻿Console.WriteLine("Hello");

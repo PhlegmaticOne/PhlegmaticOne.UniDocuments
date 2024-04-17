@@ -14,8 +14,11 @@
       <ProjectReference Include="..\..\Documents\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
       <ProjectReference Include="..\..\Documents\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
       <ProjectReference Include="..\..\Documents\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
+      <ProjectReference Include="..\..\Nuget\PhlegmaticOne.JwtTokensGeneration\PhlegmaticOne.JwtTokensGeneration.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
+      <ProjectReference Include="..\..\Nuget\PhlegmaticOne.PasswordHasher\PhlegmaticOne.PasswordHasher.csproj" />
+      <ProjectReference Include="..\..\Shared\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
       <ProjectReference Include="..\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj" />
     </ItemGroup>

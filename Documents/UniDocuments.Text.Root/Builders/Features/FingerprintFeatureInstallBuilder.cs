@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Features.Fingerprint.Services;
-using UniDocuments.Text.Features.Text.Contracts;
 
 namespace UniDocuments.Text.Root.Builders.Features;
 

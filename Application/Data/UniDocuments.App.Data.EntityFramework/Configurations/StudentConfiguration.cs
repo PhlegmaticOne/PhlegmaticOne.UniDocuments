@@ -20,6 +20,10 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
             .IsRequired()
             .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);
 
+        builder.Property(x => x.Password).IsRequired();
+
+        builder.Property(x => x.UserName).IsRequired();
+
         builder.HasIndex(x => x.LastName);
 
         builder.HasOne(x => x.Group)
