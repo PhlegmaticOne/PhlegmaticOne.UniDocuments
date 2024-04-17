@@ -1,25 +1,25 @@
 ﻿using Newtonsoft.Json;
-using UniDocuments.Text.Domain.Services.DocumentNameMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Models;
 using UniDocuments.Text.Domain.Services.SavePath;
 using UniDocuments.Text.Domain.Shared;
 
-namespace UniDocuments.Text.Services.Neural.Services;
+namespace UniDocuments.Text.Services.Neural.Models;
 
 public class DocumentsNeuralDataHandler : IDocumentsNeuralDataHandler
 {
     private const string SaveFileName = "documents_mapping.json";
     
     private readonly ISavePathProvider _savePathProvider;
-    private readonly IDocumentToNameMapper _documentToNameMapper;
+    private readonly IDocumentMapper _documentMapper;
 
     private Dictionary<int, ParagraphNeuralSaveData> _paragraphsToDocumentsMap;
 
-    public DocumentsNeuralDataHandler(ISavePathProvider savePathProvider, IDocumentToNameMapper documentToNameMapper)
+    public DocumentsNeuralDataHandler(ISavePathProvider savePathProvider, IDocumentMapper documentMapper)
     {
         _savePathProvider = savePathProvider;
-        _documentToNameMapper = documentToNameMapper;
+        _documentMapper = documentMapper;
         _paragraphsToDocumentsMap = new Dictionary<int, ParagraphNeuralSaveData>();
     }
 
@@ -32,7 +32,7 @@ public class DocumentsNeuralDataHandler : IDocumentsNeuralDataHandler
     public ParagraphNeuralSaveData GetSaveData(int id)
     {
         var data = _paragraphsToDocumentsMap[id];
-        data.DocumentName = _documentToNameMapper.GetDocumentName(data.DocumentId);
+        data.DocumentName = _documentMapper.GetDocumentName(data.DocumentId);
         return data;
     }
 

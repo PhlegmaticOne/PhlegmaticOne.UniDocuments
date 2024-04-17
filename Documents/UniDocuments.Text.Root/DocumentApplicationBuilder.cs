@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Features.Factories;
 using UniDocuments.Text.Domain.Features.Providers;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.Similarity;
-using UniDocuments.Text.Domain.Services.DocumentNameMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Documents;
 using UniDocuments.Text.Domain.Services.FileStorage;
 using UniDocuments.Text.Domain.Services.Neural;
@@ -56,16 +56,16 @@ public class DocumentApplicationBuilder
     }
 
     public void UseDocumentNameMapper<TDev, TProd>(bool isDevelopment) 
-        where TDev : class, IDocumentToNameMapper
-        where TProd : class, IDocumentToNameMapper
+        where TDev : class, IDocumentMapper
+        where TProd : class, IDocumentMapper
     {
         if (isDevelopment)
         {
-            _serviceCollection.AddSingleton<IDocumentToNameMapper, TDev>();
+            _serviceCollection.AddSingleton<IDocumentMapper, TDev>();
         }
         else
         {
-            _serviceCollection.AddSingleton<IDocumentToNameMapper, TProd>();
+            _serviceCollection.AddSingleton<IDocumentMapper, TProd>();
         }
     }
         

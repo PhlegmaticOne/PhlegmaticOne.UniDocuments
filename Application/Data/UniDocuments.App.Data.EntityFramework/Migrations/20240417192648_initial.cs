@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UniDocuments.App.Data.EntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,18 +36,6 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudyActivities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StudyDocumentReports",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudyDocumentReports", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,7 +90,7 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     DateLoaded = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReportId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    WinnowingData = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,10 +107,23 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                         principalTable: "StudyActivities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudyDocumentReports",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudyDocumentReports", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StudyDocuments_StudyDocumentReports_ReportId",
-                        column: x => x.ReportId,
-                        principalTable: "StudyDocumentReports",
+                        name: "FK_StudyDocumentReports_StudyDocuments_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "StudyDocuments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -153,15 +154,14 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudyDocumentReports_DocumentId",
+                table: "StudyDocumentReports",
+                column: "DocumentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudyDocuments_ActivityId",
                 table: "StudyDocuments",
                 column: "ActivityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudyDocuments_ReportId",
-                table: "StudyDocuments",
-                column: "ReportId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudyDocuments_StudentId",
@@ -176,6 +176,9 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 name: "GroupStudyActivity");
 
             migrationBuilder.DropTable(
+                name: "StudyDocumentReports");
+
+            migrationBuilder.DropTable(
                 name: "StudyDocuments");
 
             migrationBuilder.DropTable(
@@ -183,9 +186,6 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudyActivities");
-
-            migrationBuilder.DropTable(
-                name: "StudyDocumentReports");
 
             migrationBuilder.DropTable(
                 name: "Groups");

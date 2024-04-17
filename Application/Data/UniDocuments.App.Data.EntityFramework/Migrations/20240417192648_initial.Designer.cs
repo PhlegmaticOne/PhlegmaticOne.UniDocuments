@@ -12,8 +12,8 @@ using UniDocuments.App.Data.EntityFramework.Context;
 namespace UniDocuments.App.Data.EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240307183506_remove_fingerprint_data")]
-    partial class remove_fingerprint_data
+    [Migration("20240417192648_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,43 +126,20 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     b.Property<DateTime>("DateLoaded")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("MetricsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ReportId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("WinnowingData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityId");
 
-                    b.HasIndex("MetricsId")
-                        .IsUnique();
-
-                    b.HasIndex("ReportId")
-                        .IsUnique();
-
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudyDocuments", (string)null);
-                });
-
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentMetrics", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("WinnowingData")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StudyDocumentMetrics", (string)null);
                 });
 
             modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentReport", b =>
@@ -175,7 +152,12 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
 
                     b.ToTable("StudyDocumentReports", (string)null);
                 });
@@ -214,18 +196,6 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UniDocuments.App.Domain.Models.StudyDocumentMetrics", "Metrics")
-                        .WithOne("Document")
-                        .HasForeignKey("UniDocuments.App.Domain.Models.StudyDocument", "MetricsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UniDocuments.App.Domain.Models.StudyDocumentReport", "Report")
-                        .WithOne("Document")
-                        .HasForeignKey("UniDocuments.App.Domain.Models.StudyDocument", "ReportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("UniDocuments.App.Domain.Models.Student", "Student")
                         .WithMany("Documents")
                         .HasForeignKey("StudentId")
@@ -234,11 +204,18 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
 
                     b.Navigation("Activity");
 
-                    b.Navigation("Metrics");
-
-                    b.Navigation("Report");
-
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentReport", b =>
+                {
+                    b.HasOne("UniDocuments.App.Domain.Models.StudyDocument", "Document")
+                        .WithMany("Reports")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("UniDocuments.App.Domain.Models.Group", b =>
@@ -256,16 +233,9 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     b.Navigation("Documents");
                 });
 
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentMetrics", b =>
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocument", b =>
                 {
-                    b.Navigation("Document")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentReport", b =>
-                {
-                    b.Navigation("Document")
-                        .IsRequired();
+                    b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
         }

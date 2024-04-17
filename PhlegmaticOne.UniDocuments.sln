@@ -89,7 +89,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.FileStorage", "Documents\Services\UniDocuments.Text.Services.FileStorage\UniDocuments.Text.Services.FileStorage.csproj", "{5C2A8251-C1E6-4081-B27F-6231F2DD0E62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.DocumentNameMapping", "Documents\Services\UniDocuments.Text.Services.DocumentNameMapping\UniDocuments.Text.Services.DocumentNameMapping.csproj", "{9324423B-6119-4ED8-84FC-09DF270D4300}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.DocumentMapping", "Documents\Services\UniDocuments.Text.Services.DocumentMapping\UniDocuments.Text.Services.DocumentMapping.csproj", "{9324423B-6119-4ED8-84FC-09DF270D4300}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{EC951D49-BF44-47BE-AB0D-2149B118DA65}"
 EndProject

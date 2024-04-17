@@ -7,7 +7,7 @@ namespace UniDocuments.App.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TextComparingController
+public class TextComparingController : ControllerBase
 {
     private readonly IMediator _mediator;
 

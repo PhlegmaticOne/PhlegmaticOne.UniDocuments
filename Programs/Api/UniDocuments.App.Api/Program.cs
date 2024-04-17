@@ -12,10 +12,11 @@ using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
 using UniDocuments.Text.Providers.PlagiarismSearching;
 using UniDocuments.Text.Providers.Similarity;
 using UniDocuments.Text.Root;
-using UniDocuments.Text.Services.DocumentNameMapping;
+using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.Documents;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
+using UniDocuments.Text.Services.Neural.Models;
 using UniDocuments.Text.Services.Neural.Services;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
@@ -83,7 +84,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseOptionsProvider<DocumentNeuralOptionsProvider>(builder.Configuration);
     });
     
-    appBuilder.UseDocumentNameMapper<DocumentToNameMapperInMemory, DocumentToNameMapperSql>(isDevelopment);
+    appBuilder.UseDocumentNameMapper<DocumentMapperInMemory, DocumentMapperSql>(isDevelopment);
     appBuilder.UseSavePathProvider<SavePathProvider>();
     appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>();
     

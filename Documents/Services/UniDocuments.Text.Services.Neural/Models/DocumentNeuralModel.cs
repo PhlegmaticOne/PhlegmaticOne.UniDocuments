@@ -3,9 +3,8 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Options;
 using UniDocuments.Text.Domain.Services.Neural.Requests;
-using UniDocuments.Text.Domain.Services.StreamReading;
 
-namespace UniDocuments.Text.Services.Neural.Services;
+namespace UniDocuments.Text.Services.Neural.Models;
 
 public class DocumentNeuralModel : IDocumentsNeuralModel
 {
