@@ -115,6 +115,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.App.Services", "Application\Services\UniDocuments.App.Services\UniDocuments.App.Services.csproj", "{A08F4209-F1A6-4187-B990-DB8075473092}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.PythonTasks", "Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj", "{F709AD19-0FB3-4DA6-9DEF-1505C8C08134}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -265,6 +267,10 @@ Global
 		{A08F4209-F1A6-4187-B990-DB8075473092}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A08F4209-F1A6-4187-B990-DB8075473092}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A08F4209-F1A6-4187-B990-DB8075473092}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F709AD19-0FB3-4DA6-9DEF-1505C8C08134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F709AD19-0FB3-4DA6-9DEF-1505C8C08134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F709AD19-0FB3-4DA6-9DEF-1505C8C08134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F709AD19-0FB3-4DA6-9DEF-1505C8C08134}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -321,6 +327,7 @@ Global
 		{B90638EB-7BE6-4913-B2FA-8B73A1BD67EC} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
 		{9AD3CA7F-5D9C-431B-8007-00A335AB77B9} = {6C3C7354-254A-4788-B5DC-9E36C37798F7}
 		{A08F4209-F1A6-4187-B990-DB8075473092} = {9AD3CA7F-5D9C-431B-8007-00A335AB77B9}
+		{F709AD19-0FB3-4DA6-9DEF-1505C8C08134} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}
