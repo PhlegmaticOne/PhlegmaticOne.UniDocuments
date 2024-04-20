@@ -20,11 +20,11 @@ public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
         _fingerprintHash = fingerprintHash;
     }
     
-    public TextFingerprint Fingerprint(UniDocumentContent text, FingerprintOptions options)
+    public TextFingerprint Fingerprint(UniDocumentContent content, FingerprintOptions options)
     {
         var processed = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = text.ToRawTextWithMinLength(options.MinWords)
+            Text = content.ToRawTextWithMinLength(options.MinWords)
         });
 
         var concat = string.Concat(processed.Words);

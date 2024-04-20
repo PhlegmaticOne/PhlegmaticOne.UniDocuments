@@ -5,7 +5,7 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Documents;
-using UniDocuments.Text.Domain.Services.FileStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Domain.Services.SavePath;
@@ -31,18 +31,11 @@ public class DocumentApplicationBuilder
         builderAction(builder);
     }
 
-    public void UseDocumentMapper<TDev, TProd>(bool isDevelopment) 
-        where TDev : class, IDocumentMapper
-        where TProd : class, IDocumentMapper
+    public void UseDocumentMapper<T>(Action<DocumentMapperInstallBuilder> builderAction) where T : class, IDocumentMapper
     {
-        if (isDevelopment)
-        {
-            _serviceCollection.AddSingleton<IDocumentMapper, TDev>();
-        }
-        else
-        {
-            _serviceCollection.AddSingleton<IDocumentMapper, TProd>();
-        }
+        var builder = new DocumentMapperInstallBuilder(_serviceCollection);
+        _serviceCollection.AddSingleton<IDocumentMapper, T>();
+        builderAction(builder);
     }
         
     public void UseDocumentsService<T>(Action<DocumentServiceInstallBuilder> action) where T : class, IUniDocumentsService
@@ -53,19 +46,19 @@ public class DocumentApplicationBuilder
     }
         
     public void UseFileStorage<TDev, TProd>(bool isDevelopment, Action<FileStorageInstallBuilder> action) 
-        where TDev : class, IFileStorage, IFileStorageIndexable
-        where TProd : class, IFileStorage
+        where TDev : class, IDocumentsStorage, IDocumentStorageIndexable
+        where TProd : class, IDocumentsStorage
     {
         if (isDevelopment)
         {
             _serviceCollection.AddSingleton<TDev>();
-            _serviceCollection.AddSingleton<IFileStorage>(x => x.GetRequiredService<TDev>());
-            _serviceCollection.AddSingleton<IFileStorageIndexable>(x => x.GetRequiredService<TDev>());
+            _serviceCollection.AddSingleton<IDocumentsStorage>(x => x.GetRequiredService<TDev>());
+            _serviceCollection.AddSingleton<IDocumentStorageIndexable>(x => x.GetRequiredService<TDev>());
         }
         else
         {
             var builder = new FileStorageInstallBuilder(_serviceCollection);
-            _serviceCollection.AddSingleton<IFileStorage, TProd>();
+            _serviceCollection.AddSingleton<IDocumentsStorage, TProd>();
             action(builder);
         }
     }
@@ -86,8 +79,7 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IStreamContentReader, T>();
     }
         
-    public void UseTextPreprocessor<T>(Action<TextPreprocessorInstallBuilder> builderAction) 
-        where T : class, ITextPreprocessor
+    public void UseTextPreprocessor<T>(Action<TextPreprocessorInstallBuilder> builderAction) where T : class, ITextPreprocessor
     {
         var builder = new TextPreprocessorInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<ITextPreprocessor, T>();

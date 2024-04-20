@@ -5,8 +5,8 @@ using UniDocuments.App.Domain.Models;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Documents;
-using UniDocuments.Text.Domain.Services.FileStorage;
-using UniDocuments.Text.Domain.Services.FileStorage.Requests;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
@@ -26,7 +26,7 @@ public class CommandUploadDocument : IdentityOperationResultCommand
 
 public class CommandUploadDocumentHandler : IOperationResultCommandHandler<CommandUploadDocument>
 {
-    private readonly IFileStorage _fileStorage;
+    private readonly IDocumentsStorage _documentsStorage;
     private readonly IStreamContentReader _streamContentReader;
     private readonly IFingerprintComputer _fingerprintComputer;
     private readonly IUniDocumentsService _uniDocumentsService;
@@ -34,14 +34,14 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     private readonly ApplicationDbContext _dbContext;
 
     public CommandUploadDocumentHandler(
-        IFileStorage fileStorage, 
+        IDocumentsStorage documentsStorage, 
         IStreamContentReader streamContentReader,
         IFingerprintComputer fingerprintComputer,
         IUniDocumentsService uniDocumentsService,
         IDocumentMapper documentMapper,
         ApplicationDbContext dbContext)
     {
-        _fileStorage = fileStorage;
+        _documentsStorage = documentsStorage;
         _streamContentReader = streamContentReader;
         _fingerprintComputer = fingerprintComputer;
         _uniDocumentsService = uniDocumentsService;
@@ -75,9 +75,9 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     private async Task<Guid> SaveDocumentAsync(CommandUploadDocument request, CancellationToken cancellationToken)
     {
         var stream = request.DocumentStream;
-        var saveRequest = new FileSaveRequest("test", stream);
-        var saveResponse = await _fileStorage.SaveAsync(saveRequest, cancellationToken);
-        _documentMapper.AddMap(saveResponse.FileId, saveRequest.FileName);
-        return saveResponse.FileId;
+        var saveRequest = new DocumentSaveRequest("test", stream);
+        var saveResponse = await _documentsStorage.SaveAsync(saveRequest, cancellationToken);
+        _documentMapper.AddMap(saveResponse.Id, saveRequest.Name);
+        return saveResponse.Id;
     }
 }

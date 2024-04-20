@@ -5,8 +5,9 @@ using PhlegmaticOne.JwtTokensGeneration.Extensions;
 using PhlegmaticOne.JwtTokensGeneration.Options;
 using PhlegmaticOne.PasswordHasher;
 using PhlegmaticOne.PasswordHasher.Implementation;
+using PhlegmaticOne.PythonTasks;
+using UniDocuments.App.Api;
 using UniDocuments.App.Api.Services;
-using UniDocuments.App.Api.Services.Initializer;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Services;
@@ -17,10 +18,12 @@ using UniDocuments.Text.Providers.Similarity;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
 using UniDocuments.Text.Services.DocumentMapping;
+using UniDocuments.Text.Services.DocumentMapping.Initializers;
 using UniDocuments.Text.Services.Documents;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
 using UniDocuments.Text.Services.Fingerprinting;
+using UniDocuments.Text.Services.Fingerprinting.Initializers;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Models;
@@ -80,14 +83,17 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseBaseMetric<TextSimilarityBaseMetricFingerprint>();
     });
     
-    appBuilder.UseDocumentMapper<DocumentMapperInMemory, DocumentMapperSql>(isDevelopment);
+    appBuilder.UseDocumentMapper<DocumentMapper>(b =>
+    {
+        b.UseInitializer<DocumentMapperInitializerNone, DocumentMapperInitializer>(isDevelopment);
+    });
     
     appBuilder.UseDocumentsService<UniDocumentsService>(b =>
     {
         b.UseDocumentsCache<UniDocumentsCache>();
     });
     
-    appBuilder.UseFileStorage<FileStorageInMemory, FileStorageSql>(isDevelopment, b =>
+    appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageSql>(isDevelopment, b =>
     {
         b.UseSqlConnectionProvider<SqlConnectionProvider>();
     });
@@ -96,8 +102,9 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     {
         b.UseOptionsProvider<FingerprintOptionsProvider>(builder.Configuration);
         b.UseFingerprintAlgorithm<FingerprintWinnowingAlgorithm>();
+        b.UseFingerprintContainerInitializer<FingerprintContainerInitializerNone, FingerprintContainerInitializer>(isDevelopment);
         b.UseFingerprintComputer<FingerprintComputer>();
-        b.UseFingerprintContainer<FingerprintsContainer>();
+        b.UseFingerprintContainer<FingerprintContainer>();
         b.UseFingerprintHash<FingerprintHashCrc32C>();
         b.UseFingerprintSearcher<FingerprintSearcher>();
     });
@@ -134,7 +141,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
 builder.Services.AddJwtTokenGeneration(jwtOptions);
-builder.Services.AddSingleton<IAppInitializer, AppInitializer>();
+builder.Services.AddPythonTaskPool("test");
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {
@@ -151,8 +158,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(x =>
 
 var app = builder.Build();
 
-var appInitializer = app.Services.GetRequiredService<IAppInitializer>();
-await appInitializer.InitializeAsync(app.Lifetime.ApplicationStopped);
+await AppInitializer.InitializeAsync(app, app.Lifetime.ApplicationStopped);
 
 if (isDevelopment)
 {

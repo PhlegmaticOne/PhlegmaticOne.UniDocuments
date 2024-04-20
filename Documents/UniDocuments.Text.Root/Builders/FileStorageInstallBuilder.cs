@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using UniDocuments.Text.Domain.Services.FileStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
 
 namespace UniDocuments.Text.Root.Builders;
 

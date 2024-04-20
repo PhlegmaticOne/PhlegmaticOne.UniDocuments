@@ -1,23 +1,23 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
-using UniDocuments.Text.Domain.Services.FileStorage;
-using UniDocuments.Text.Domain.Services.FileStorage.Requests;
-using UniDocuments.Text.Domain.Services.FileStorage.Responses;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
 namespace UniDocuments.Text.Services.FileStorage.Sql;
 
-public class FileStorageSql : IFileStorage
+public class DocumentsStorageSql : IDocumentsStorage
 {
     private readonly ISqlConnectionProvider _sqlConnectionProvider;
 
-    public FileStorageSql(ISqlConnectionProvider sqlConnectionProvider)
+    public DocumentsStorageSql(ISqlConnectionProvider sqlConnectionProvider)
     {
         _sqlConnectionProvider = sqlConnectionProvider;
     }
 
-    public async Task<FileLoadResponse> LoadAsync(FileLoadRequest loadRequest, CancellationToken cancellationToken)
+    public async Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
     {
-        var fileId = loadRequest.FileId;
+        var fileId = loadRequest.Id;
         var transactionContext = Array.Empty<byte>();
         var savedFileName = string.Empty;
         var path = string.Empty;
@@ -46,12 +46,12 @@ public class FileStorageSql : IFileStorage
 
         await command.Transaction.CommitAsync(cancellationToken);
 
-        return new FileLoadResponse(fileId, savedFileName, destinationStream);
+        return new DocumentLoadResponse(fileId, savedFileName, destinationStream);
     }
 
-    public async Task<FileSaveResponse> SaveAsync(FileSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<DocumentSaveResponse> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
     {
-        var fileName = saveRequest.FileName;
+        var fileName = saveRequest.Name;
         var transactionContext = Array.Empty<byte>();
         var path = string.Empty;
         var sqlConnection = _sqlConnectionProvider.Connection;
@@ -71,12 +71,12 @@ public class FileStorageSql : IFileStorage
 
         await using (var destination = new SqlFileStream(path, transactionContext, FileAccess.Write))
         {
-            await using var source = saveRequest.FileStream;
+            await using var source = saveRequest.Stream;
             await source.CopyToAsync(destination, cancellationToken);
         }
 
         await command.Transaction.CommitAsync(cancellationToken);
-        return new FileSaveResponse(Guid.Empty);
+        return new DocumentSaveResponse(Guid.Empty);
     }
 
     private static byte[] ReadTransactionContext(SqlDataReader reader) => (byte[])reader["transactionContext"];

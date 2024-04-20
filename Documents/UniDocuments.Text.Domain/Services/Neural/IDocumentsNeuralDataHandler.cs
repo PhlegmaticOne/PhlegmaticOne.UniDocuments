@@ -5,7 +5,7 @@ namespace UniDocuments.Text.Domain.Services.Neural;
 
 public interface IDocumentsNeuralDataHandler
 {
-    Task LoadAsync();
+    Task LoadAsync(CancellationToken cancellationToken);
     ParagraphNeuralSaveData GetSaveData(int id);
     void OnTrainDataSetup(RawDocument document, RawParagraph paragraph);
     void OnTrainComplete();

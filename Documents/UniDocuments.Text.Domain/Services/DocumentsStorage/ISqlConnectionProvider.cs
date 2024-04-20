@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace UniDocuments.Text.Domain.Services.FileStorage;
+namespace UniDocuments.Text.Domain.Services.DocumentsStorage;
 
 public interface ISqlConnectionProvider
 {

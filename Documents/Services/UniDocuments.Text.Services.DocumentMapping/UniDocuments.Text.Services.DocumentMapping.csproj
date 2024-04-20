@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 

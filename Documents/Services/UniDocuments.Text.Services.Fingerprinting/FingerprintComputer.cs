@@ -9,12 +9,12 @@ public class FingerprintComputer : IFingerprintComputer
 {
     private readonly IFingerprintAlgorithm _algorithm;
     private readonly IFingerprintOptionsProvider _optionsProvider;
-    private readonly IFingerprintsContainer _container;
+    private readonly IFingerprintContainer _container;
 
     public FingerprintComputer(
         IFingerprintAlgorithm algorithm, 
         IFingerprintOptionsProvider optionsProvider, 
-        IFingerprintsContainer container)
+        IFingerprintContainer container)
     {
         _algorithm = algorithm;
         _optionsProvider = optionsProvider;

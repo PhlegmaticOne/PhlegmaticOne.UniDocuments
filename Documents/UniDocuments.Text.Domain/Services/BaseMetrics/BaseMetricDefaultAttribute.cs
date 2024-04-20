@@ -1,6 +1,4 @@
 ﻿namespace UniDocuments.Text.Domain.Services.BaseMetrics;
 
-public class BaseMetricDefaultAttribute : Attribute
-{
-    
-}
+[AttributeUsage(AttributeTargets.Class)]
+public class BaseMetricDefaultAttribute : Attribute { }

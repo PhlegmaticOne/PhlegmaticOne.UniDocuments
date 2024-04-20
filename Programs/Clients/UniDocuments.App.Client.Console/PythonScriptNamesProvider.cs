@@ -6,6 +6,6 @@ public class PythonScriptNamesProvider : IPythonScriptNamesProvider
 {
     public IEnumerable<string> GetScriptNames()
     {
-        yield return "divider";
+        yield return @"test\divider";
     }
 }

@@ -1,10 +1,10 @@
-﻿using UniDocuments.Text.Domain.Services.FileStorage;
-using UniDocuments.Text.Domain.Services.FileStorage.Requests;
-using UniDocuments.Text.Domain.Services.FileStorage.Responses;
+﻿using UniDocuments.Text.Domain.Services.DocumentsStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
 namespace UniDocuments.Text.Services.FileStorage.InMemory;
 
-public class FileStorageInMemory : IFileStorage, IFileStorageIndexable
+public class DocumentsStorageInMemory : IDocumentsStorage, IDocumentStorageIndexable
 {
     private class FileLoadResponsePrepared
     {
@@ -19,10 +19,10 @@ public class FileStorageInMemory : IFileStorage, IFileStorageIndexable
             _fileContent = fileContent;
         }
 
-        public FileLoadResponse ToFileLoadResponse()
+        public DocumentLoadResponse ToFileLoadResponse()
         {
             var stream = new MemoryStream(_fileContent);
-            return new FileLoadResponse(_fileId, _fileName, stream);
+            return new DocumentLoadResponse(_fileId, _fileName, stream);
         }
     }
     
@@ -30,39 +30,39 @@ public class FileStorageInMemory : IFileStorage, IFileStorageIndexable
 
     public int StorageSize => _fileContents.Count;
 
-    public FileLoadResponse Load(int documentIndex)
+    public DocumentLoadResponse Load(int documentIndex)
     {
         var fileId = _fileContents.ElementAt(documentIndex).Key;
         
         return _fileContents.TryGetValue(fileId, out var fileLoadResponsePrepared) ? 
             fileLoadResponsePrepared.ToFileLoadResponse() : 
-            FileLoadResponse.NoContent();
+            DocumentLoadResponse.NoContent();
     }
 
-    public Task<FileLoadResponse> LoadAsync(FileLoadRequest loadRequest, CancellationToken cancellationToken)
+    public Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
     {
-        var fileId = loadRequest.FileId;
+        var fileId = loadRequest.Id;
         
         var result = _fileContents.TryGetValue(fileId, out var fileLoadResponsePrepared) ? 
             fileLoadResponsePrepared.ToFileLoadResponse() : 
-            FileLoadResponse.NoContent();
+            DocumentLoadResponse.NoContent();
 
         return Task.FromResult(result);
     }
 
-    public async Task<FileSaveResponse> SaveAsync(FileSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<DocumentSaveResponse> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
     {
         var fileBytes = await GetFileContentAsync(saveRequest, cancellationToken);
         var fileId = Guid.NewGuid();
-        _fileContents[fileId] = new FileLoadResponsePrepared(fileId, saveRequest.FileName, fileBytes);
-        return new FileSaveResponse(fileId);
+        _fileContents[fileId] = new FileLoadResponsePrepared(fileId, saveRequest.Name, fileBytes);
+        return new DocumentSaveResponse(fileId);
     }
 
     private static async Task<byte[]> GetFileContentAsync(
-        FileSaveRequest fileSaveRequest, CancellationToken cancellationToken)
+        DocumentSaveRequest documentSaveRequest, CancellationToken cancellationToken)
     {
         using var memoryStream = new MemoryStream();
-        await fileSaveRequest.FileStream.CopyToAsync(memoryStream, cancellationToken);
+        await documentSaveRequest.Stream.CopyToAsync(memoryStream, cancellationToken);
         return memoryStream.ToArray();
     }
 }

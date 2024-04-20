@@ -9,8 +9,9 @@ public class TextSimilarityBaseMetricsProvider : ITextSimilarityBaseMetricsProvi
     
     public TextSimilarityBaseMetricsProvider(IEnumerable<ITextSimilarityBaseMetric> baseMetrics)
     {
-        _baseMetrics = baseMetrics.ToDictionary(x => x.Name, x => x);
-        _defaultMetric = GetDefaultMetric(baseMetrics);
+        var metrics = baseMetrics.ToArray();
+        _baseMetrics = metrics.ToDictionary(x => x.Name, x => x);
+        _defaultMetric = GetDefaultMetric(metrics);
     }
     
     public ITextSimilarityBaseMetric GetBaseMetric(string name)

@@ -14,6 +14,10 @@ public class StudyDocumentConfiguration : IEntityTypeConfiguration<StudyDocument
 
         builder.Property(x => x.DateLoaded);
 
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);
+
         builder.HasOne(x => x.Activity)
             .WithMany(x => x.Documents)
             .HasForeignKey(x => x.ActivityId);
@@ -21,5 +25,7 @@ public class StudyDocumentConfiguration : IEntityTypeConfiguration<StudyDocument
         builder.HasOne(x => x.Student)
             .WithMany(x => x.Documents)
             .HasForeignKey(x => x.StudentId);
+
+        builder.HasIndex(x => x.Name);
     }
 }

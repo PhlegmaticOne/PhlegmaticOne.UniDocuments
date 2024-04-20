@@ -23,9 +23,9 @@ public class DocumentsNeuralDataHandler : IDocumentsNeuralDataHandler
         _paragraphsToDocumentsMap = new Dictionary<int, ParagraphNeuralSaveData>();
     }
 
-    public async Task LoadAsync()
+    public async Task LoadAsync(CancellationToken cancellationToken)
     {
-        var json = await File.ReadAllTextAsync(_savePathProvider.SavePath);
+        var json = await File.ReadAllTextAsync(_savePathProvider.SavePath, cancellationToken);
         _paragraphsToDocumentsMap = JsonConvert.DeserializeObject<Dictionary<int, ParagraphNeuralSaveData>>(json)!;
     }
 

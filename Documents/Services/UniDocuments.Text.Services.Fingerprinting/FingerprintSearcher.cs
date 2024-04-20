@@ -19,12 +19,12 @@ public class FingerprintSearcher : IFingerprintSearcher
         public int SharedCount { get; }
     }
     
-    private readonly IFingerprintsContainer _fingerprintsContainer;
+    private readonly IFingerprintContainer _fingerprintContainer;
     private readonly IDocumentMapper _documentMapper;
 
-    public FingerprintSearcher(IFingerprintsContainer fingerprintsContainer, IDocumentMapper documentMapper)
+    public FingerprintSearcher(IFingerprintContainer fingerprintContainer, IDocumentMapper documentMapper)
     {
-        _fingerprintsContainer = fingerprintsContainer;
+        _fingerprintContainer = fingerprintContainer;
         _documentMapper = documentMapper;
     }
     
@@ -37,10 +37,10 @@ public class FingerprintSearcher : IFingerprintSearcher
     {
         var currentMaxIndex = 0;
         var topNFingerprints = new FingerprintComputeData[topN];
-        var fingerprint = _fingerprintsContainer.Get(documentId)!;
+        var fingerprint = _fingerprintContainer.Get(documentId)!;
         Array.Fill(topNFingerprints, FingerprintComputeData.Empty);
 
-        foreach (var documentFingerprintData in _fingerprintsContainer.GetAll())
+        foreach (var documentFingerprintData in _fingerprintContainer.GetAll())
         {
             var other = documentFingerprintData.Value!;
             

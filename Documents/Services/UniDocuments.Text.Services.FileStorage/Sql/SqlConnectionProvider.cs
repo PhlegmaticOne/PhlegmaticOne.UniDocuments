@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using UniDocuments.Text.Domain.Services.FileStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
 
 namespace UniDocuments.Text.Services.FileStorage.Sql;
 

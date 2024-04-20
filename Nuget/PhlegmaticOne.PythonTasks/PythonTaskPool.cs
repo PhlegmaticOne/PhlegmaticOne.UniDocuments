@@ -10,10 +10,11 @@ public class PythonTaskPool : IPythonTaskPool
     private readonly IPythonScriptNamesProvider _scriptNamesProvider;
     private readonly BlockingCollection<PythonTask> _tasks;
     
-    private PythonTaskPool(IPythonScriptNamesProvider scriptNamesProvider)
+    public PythonTaskPool(IPythonScriptNamesProvider scriptNamesProvider)
     {
         _scriptNamesProvider = scriptNamesProvider;
         _tasks = new BlockingCollection<PythonTask>();
+        Instance = this;
     }
 
     public static PythonTaskPool CreateAndStart(
@@ -33,6 +34,7 @@ public class PythonTaskPool : IPythonTaskPool
 
     public void Start(CancellationToken cancellationToken)
     {
+        PythonTask.TaskPool = this;
         Task.Factory.StartNew(() => PythonExecutionThread(cancellationToken), TaskCreationOptions.LongRunning);
     }
 

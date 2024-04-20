@@ -32,11 +32,18 @@
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.StreamReading\UniDocuments.Text.Services.StreamReading.csproj" />
       <ProjectReference Include="..\..\..\Documents\UniDocuments.Text.Root\UniDocuments.Text.Root.csproj" />
       <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
+      <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj" />
       <ProjectReference Include="..\..\..\Shared\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Content\Models\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="test.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

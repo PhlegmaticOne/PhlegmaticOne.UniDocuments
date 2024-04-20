@@ -1,4 +1,4 @@
-﻿using UniDocuments.Text.Domain.Services.FileStorage;
+﻿using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Domain.Shared;
@@ -7,14 +7,14 @@ namespace UniDocuments.Text.Services.Neural.Services;
 
 public class DocumentNeuralSourceInMemory : IDocumentsNeuralSource
 {
-    private readonly IFileStorageIndexable _fileStorageIndexable;
+    private readonly IDocumentStorageIndexable _documentStorageIndexable;
     private readonly IStreamContentReader _streamContentReader;
 
     private int _currentIndex;
 
-    public DocumentNeuralSourceInMemory(IFileStorageIndexable fileStorageIndexable, IStreamContentReader streamContentReader)
+    public DocumentNeuralSourceInMemory(IDocumentStorageIndexable documentStorageIndexable, IStreamContentReader streamContentReader)
     {
-        _fileStorageIndexable = fileStorageIndexable;
+        _documentStorageIndexable = documentStorageIndexable;
         _streamContentReader = streamContentReader;
     }
     
@@ -26,15 +26,15 @@ public class DocumentNeuralSourceInMemory : IDocumentsNeuralSource
 
     public async Task<RawDocument> GetNextDocumentAsync()
     {
-        if (_currentIndex >= _fileStorageIndexable.StorageSize - 1)
+        if (_currentIndex >= _documentStorageIndexable.StorageSize - 1)
         {
             return RawDocument.NoData();
         }
 
         _currentIndex += 1;
-        var result = _fileStorageIndexable.Load(_currentIndex);
-        var readResult = await _streamContentReader.ReadAsync(result.FileStream!, CancellationToken.None);
-        return new RawDocument(result.FileId, readResult.Paragraphs);
+        var result = _documentStorageIndexable.Load(_currentIndex);
+        var readResult = await _streamContentReader.ReadAsync(result.Stream!, CancellationToken.None);
+        return new RawDocument(result.Id, readResult.Paragraphs);
     }
 
     public void Dispose()

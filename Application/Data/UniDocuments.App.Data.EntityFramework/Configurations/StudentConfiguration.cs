@@ -24,7 +24,7 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
 
         builder.Property(x => x.UserName).IsRequired();
 
-        builder.HasIndex(x => x.LastName);
+        builder.HasIndex(x => x.UserName);
 
         builder.HasOne(x => x.Group)
             .WithMany(x => x.Students)
