@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PhlegmaticOne.JwtTokensGeneration.Extensions;
 using PhlegmaticOne.JwtTokensGeneration.Options;
 using PhlegmaticOne.PasswordHasher;
 using PhlegmaticOne.PasswordHasher.Implementation;
 using UniDocuments.App.Api.Services;
+using UniDocuments.App.Api.Services.Initializer;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Services.Jwt;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
-using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Providers.PlagiarismSearching;
 using UniDocuments.Text.Providers.Similarity;
 using UniDocuments.Text.Root;
@@ -31,41 +33,46 @@ using UniDocuments.Text.Services.StreamReading;
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
+var isDevelopment = builder.Environment.IsDevelopment();
 var jwtSecrets = configuration.GetSection("JwtSecrets");
 var jwtOptions = new SymmetricKeyJwtOptions(jwtSecrets["Issuer"]!,
     jwtSecrets["Audience"]!,
     int.Parse(jwtSecrets["ExpirationDurationInMinutes"]!),
     jwtSecrets["SecretKey"]!);
-//
-// builder.Services.AddAuthentication(x =>
-// {
-//     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-// }).AddJwtBearer(o =>
-// {
-//     o.SaveToken = true;
-//     o.TokenValidationParameters = new TokenValidationParameters
-//     {
-//         ValidateIssuer = true,
-//         ValidateAudience = true,
-//         ValidateLifetime = true,
-//         ValidateIssuerSigningKey = true,
-//         ValidIssuer = jwtOptions.Issuer,
-//         ValidAudience = jwtOptions.Audience,
-//         IssuerSigningKey = jwtOptions.GetSecretKey(),
-//         ClockSkew = TimeSpan.Zero
-//     };
-// });
+
+if (!isDevelopment)
+{
+    builder.Services.AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(o =>
+    {
+        o.SaveToken = true;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidAudience = jwtOptions.Audience,
+            IssuerSigningKey = jwtOptions.GetSecretKey(),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+}
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly));
+builder.Services.AddMediatR(x =>
+{
+    x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly);
+});
 
 builder.Services.AddDocumentsApplication(appBuilder =>
 {
-    var isDevelopment = builder.Environment.IsDevelopment();
-
     appBuilder.UseBaseMetrics<TextSimilarityBaseMetricsProvider>(b =>
     {
         b.UseBaseMetric<TextSimilarityBaseMetricCosine>();
@@ -116,15 +123,18 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     });
 
     appBuilder.UseSavePathProvider<SavePathProvider>();
+    
     appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>();
     
     appBuilder.UsePlagiarismSearcher<PlagiarismSearcher>();
+    
     appBuilder.UseSimilarityService<CompareTextsService>();
 });
 
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
 builder.Services.AddJwtTokenGeneration(jwtOptions);
+builder.Services.AddSingleton<IAppInitializer, AppInitializer>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {
@@ -141,16 +151,21 @@ builder.Services.AddDbContext<ApplicationDbContext>(x =>
 
 var app = builder.Build();
 
-var stopWordsLoader = app.Services.GetRequiredService<IStopWordsLoader>();
-await stopWordsLoader.LoadStopWordsAsync(CancellationToken.None);
+var appInitializer = app.Services.GetRequiredService<IAppInitializer>();
+await appInitializer.InitializeAsync(app.Lifetime.ApplicationStopped);
 
-if (app.Environment.IsDevelopment())
+if (isDevelopment)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+
+if (!isDevelopment)
+{
+    app.UseAuthentication();
+}
 
 app.UseAuthorization();
 
