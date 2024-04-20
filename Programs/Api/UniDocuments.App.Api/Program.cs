@@ -13,8 +13,9 @@ using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Services.Jwt;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
+using UniDocuments.Text.Providers.Comparing;
+using UniDocuments.Text.Providers.Matching;
 using UniDocuments.Text.Providers.PlagiarismSearching;
-using UniDocuments.Text.Providers.Similarity;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
 using UniDocuments.Text.Services.DocumentMapping;
@@ -109,7 +110,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseFingerprintSearcher<FingerprintSearcher>();
     });
     
-    appBuilder.UseMatchingService<TextMatchingService>(b =>
+    appBuilder.UseMatchingService<TextMatchProvider>(b =>
     {
         b.UseOptionsProvider<MatchingOptionsProvider>(builder.Configuration);
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
@@ -135,7 +136,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     
     appBuilder.UsePlagiarismSearcher<PlagiarismSearcher>();
     
-    appBuilder.UseSimilarityService<CompareTextsService>();
+    appBuilder.UseSimilarityService<TextCompareProvider>();
 });
 
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();

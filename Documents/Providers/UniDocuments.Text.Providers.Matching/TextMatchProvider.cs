@@ -4,14 +4,14 @@ using UniDocuments.Text.Domain.Providers.Matching.Responses;
 using UniDocuments.Text.Domain.Services.Matching;
 using UniDocuments.Text.Domain.Services.Matching.Options;
 
-namespace UniDocuments.Text.Providers.Similarity;
+namespace UniDocuments.Text.Providers.Matching;
 
-public class TextMatchingService : ITextMatchingService
+public class TextMatchProvider : ITextMatchProvider
 {
     private readonly ITextMatchingAlgorithm _matchingAlgorithm;
     private readonly IMatchingOptionsProvider _optionsProvider;
 
-    public TextMatchingService(ITextMatchingAlgorithm matchingAlgorithm, IMatchingOptionsProvider optionsProvider)
+    public TextMatchProvider(ITextMatchingAlgorithm matchingAlgorithm, IMatchingOptionsProvider optionsProvider)
     {
         _matchingAlgorithm = matchingAlgorithm;
         _optionsProvider = optionsProvider;

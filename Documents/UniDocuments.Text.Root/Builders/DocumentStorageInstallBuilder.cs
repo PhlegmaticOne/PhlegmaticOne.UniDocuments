@@ -3,11 +3,11 @@ using UniDocuments.Text.Domain.Services.DocumentsStorage;
 
 namespace UniDocuments.Text.Root.Builders;
 
-public class FileStorageInstallBuilder
+public class DocumentStorageInstallBuilder
 {
     private readonly IServiceCollection _serviceCollection;
 
-    public FileStorageInstallBuilder(IServiceCollection serviceCollection)
+    public DocumentStorageInstallBuilder(IServiceCollection serviceCollection)
     {
         _serviceCollection = serviceCollection;
     }

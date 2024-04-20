@@ -6,15 +6,15 @@ using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.Matching;
 using UniDocuments.Text.Domain.Services.Matching.Options;
 
-namespace UniDocuments.Text.Providers.Similarity;
+namespace UniDocuments.Text.Providers.Comparing;
 
-public class CompareTextsService : ICompareTextsService
+public class TextCompareProvider : ITextCompareProvider
 {
     private readonly ITextSimilarityBaseMetricsProvider _baseMetricsProvider;
     private readonly IMatchingOptionsProvider _matchingOptionsProvider;
     private readonly ITextMatchingAlgorithm _matchingAlgorithm;
 
-    public CompareTextsService(
+    public TextCompareProvider(
         ITextSimilarityBaseMetricsProvider baseMetricsProvider, 
         IMatchingOptionsProvider matchingOptionsProvider,
         ITextMatchingAlgorithm matchingAlgorithm)

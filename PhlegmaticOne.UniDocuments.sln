@@ -57,7 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Providers.PlagiarismSearching", "Documents\Providers\UniDocuments.Text.Providers.PlagiarismSearching\UniDocuments.Text.Providers.PlagiarismSearching.csproj", "{8D9713F1-BF45-4379-9183-EE5099B01547}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Providers.Similarity", "Documents\Providers\UniDocuments.Text.Providers.Similarity\UniDocuments.Text.Providers.Similarity.csproj", "{53C39B9B-2D59-4ED9-8F1D-9839B467EE7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Providers.Comparing", "Documents\Providers\UniDocuments.Text.Providers.Comparing\UniDocuments.Text.Providers.Comparing.csproj", "{53C39B9B-2D59-4ED9-8F1D-9839B467EE7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Root", "Documents\UniDocuments.Text.Root\UniDocuments.Text.Root.csproj", "{3C3310BA-1AC3-47A2-8A97-0DB0122AFFFE}"
 EndProject
@@ -82,6 +82,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.Fingerprinting", "Documents\Services\UniDocuments.Text.Services.Fingerprinting\UniDocuments.Text.Services.Fingerprinting.csproj", "{391B88DE-4736-4DB0-9D0B-134698894D9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.Matching", "Documents\Services\UniDocuments.Text.Services.Matching\UniDocuments.Text.Services.Matching.csproj", "{C1CEE84C-7350-4DB7-AB12-5E9626297F1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Providers.Matching", "Documents\Providers\UniDocuments.Text.Providers.Matching\UniDocuments.Text.Providers.Matching.csproj", "{3332C60D-3434-4698-AA85-B9660510127F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -201,6 +203,10 @@ Global
 		{C1CEE84C-7350-4DB7-AB12-5E9626297F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1CEE84C-7350-4DB7-AB12-5E9626297F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1CEE84C-7350-4DB7-AB12-5E9626297F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3332C60D-3434-4698-AA85-B9660510127F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3332C60D-3434-4698-AA85-B9660510127F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3332C60D-3434-4698-AA85-B9660510127F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3332C60D-3434-4698-AA85-B9660510127F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -241,6 +247,7 @@ Global
 		{99E42AB7-C321-475C-80EB-593E16A919BE} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{391B88DE-4736-4DB0-9D0B-134698894D9C} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{C1CEE84C-7350-4DB7-AB12-5E9626297F1A} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
+		{3332C60D-3434-4698-AA85-B9660510127F} = {EC951D49-BF44-47BE-AB0D-2149B118DA65}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}

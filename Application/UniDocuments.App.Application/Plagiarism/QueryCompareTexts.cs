@@ -17,15 +17,15 @@ public class QueryCompareTexts : IRequest<CompareTextsResponse>
 
 public class QueryCompareTextsRequestHandler : IRequestHandler<QueryCompareTexts, CompareTextsResponse>
 {
-    private readonly ICompareTextsService _similarityService;
+    private readonly ITextCompareProvider _similarityProvider;
 
-    public QueryCompareTextsRequestHandler(ICompareTextsService similarityService)
+    public QueryCompareTextsRequestHandler(ITextCompareProvider similarityProvider)
     {
-        _similarityService = similarityService;
+        _similarityProvider = similarityProvider;
     }
     
     public Task<CompareTextsResponse> Handle(QueryCompareTexts request, CancellationToken cancellationToken)
     {
-        return _similarityService.CompareAsync(request.Request, cancellationToken);
+        return _similarityProvider.CompareAsync(request.Request, cancellationToken);
     }
 }

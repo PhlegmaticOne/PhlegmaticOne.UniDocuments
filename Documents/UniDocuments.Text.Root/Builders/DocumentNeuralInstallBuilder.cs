@@ -5,11 +5,11 @@ using UniDocuments.Text.Domain.Services.Neural.Options;
 
 namespace UniDocuments.Text.Root.Builders;
 
-public class DocumentsNeuralInstallBuilder
+public class DocumentNeuralInstallBuilder
 {
     private readonly IServiceCollection _serviceCollection;
 
-    public DocumentsNeuralInstallBuilder(IServiceCollection serviceCollection)
+    public DocumentNeuralInstallBuilder(IServiceCollection serviceCollection)
     {
         _serviceCollection = serviceCollection;
     }

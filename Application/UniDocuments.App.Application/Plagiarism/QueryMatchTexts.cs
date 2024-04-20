@@ -17,15 +17,15 @@ public class QueryMatchTexts : IRequest<MatchTextsResponse>
 
 public class QueryMatchTextsRequestHandler : IRequestHandler<QueryMatchTexts, MatchTextsResponse>
 {
-    private readonly ITextMatchingService _textMatchingService;
+    private readonly ITextMatchProvider _textMatchProvider;
 
-    public QueryMatchTextsRequestHandler(ITextMatchingService textMatchingService)
+    public QueryMatchTextsRequestHandler(ITextMatchProvider textMatchProvider)
     {
-        _textMatchingService = textMatchingService;
+        _textMatchProvider = textMatchProvider;
     }
     
     public Task<MatchTextsResponse> Handle(QueryMatchTexts request, CancellationToken cancellationToken)
     {
-        return _textMatchingService.MatchAsync(request.Request, cancellationToken);
+        return _textMatchProvider.MatchAsync(request.Request, cancellationToken);
     }
 }

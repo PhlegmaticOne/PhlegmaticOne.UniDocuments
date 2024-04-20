@@ -45,7 +45,7 @@ public class DocumentApplicationBuilder
         action(builder);
     }
         
-    public void UseFileStorage<TDev, TProd>(bool isDevelopment, Action<FileStorageInstallBuilder> action) 
+    public void UseFileStorage<TDev, TProd>(bool isDevelopment, Action<DocumentStorageInstallBuilder> action) 
         where TDev : class, IDocumentsStorage, IDocumentStorageIndexable
         where TProd : class, IDocumentsStorage
     {
@@ -57,7 +57,7 @@ public class DocumentApplicationBuilder
         }
         else
         {
-            var builder = new FileStorageInstallBuilder(_serviceCollection);
+            var builder = new DocumentStorageInstallBuilder(_serviceCollection);
             _serviceCollection.AddSingleton<IDocumentsStorage, TProd>();
             action(builder);
         }
@@ -86,23 +86,23 @@ public class DocumentApplicationBuilder
         builderAction(builder);
     }
 
-    public void UseNeuralModel<T>(Action<DocumentsNeuralInstallBuilder> action) where T : class, IDocumentsNeuralModel
+    public void UseNeuralModel<T>(Action<DocumentNeuralInstallBuilder> action) where T : class, IDocumentsNeuralModel
     {
-        var builder = new DocumentsNeuralInstallBuilder(_serviceCollection);
+        var builder = new DocumentNeuralInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<IDocumentsNeuralModel, T>();
         action(builder);
     }
 
-    public void UseMatchingService<T>(Action<MatchingInstallBuilder> builderAction) where T : class, ITextMatchingService
+    public void UseMatchingService<T>(Action<MatchingInstallBuilder> builderAction) where T : class, ITextMatchProvider
     {
         var builder = new MatchingInstallBuilder(_serviceCollection);
-        _serviceCollection.AddScoped<ITextMatchingService, T>();
+        _serviceCollection.AddScoped<ITextMatchProvider, T>();
         builderAction(builder);
     }
     
-    public void UseSimilarityService<T>() where T : class, ICompareTextsService
+    public void UseSimilarityService<T>() where T : class, ITextCompareProvider
     {
-        _serviceCollection.AddScoped<ICompareTextsService, T>();
+        _serviceCollection.AddScoped<ITextCompareProvider, T>();
     }
     
     public void UsePlagiarismSearcher<T>() where T : class, IPlagiarismSearcher
