@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UniDocuments.App.Application.Training.Commands;
+using UniDocuments.App.Application.Training;
 using UniDocuments.Text.Domain.Services.SavePath;
 
 namespace UniDocuments.App.Api.Controllers;

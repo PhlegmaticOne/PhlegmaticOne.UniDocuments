@@ -14,6 +14,10 @@ public class StudyDocumentConfiguration : IEntityTypeConfiguration<StudyDocument
 
         builder.Property(x => x.DateLoaded);
 
+        builder.Property(x => x.Fingerprint);
+
+        builder.Property(x => x.ValuableParagraphsCount);
+
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);

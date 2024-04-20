@@ -3,14 +3,16 @@
 public class UniDocument : IEquatable<UniDocument>
 {
     public Guid Id { get; }
-    public UniDocumentContent Content { get; }
+    public UniDocumentContent? Content { get; }
 
     public static UniDocument Empty => new(Guid.Empty);
+    
+    public bool HasData => Content is not null;
     
     public UniDocument(Guid id, UniDocumentContent? content = null)
     {
         Id = id;
-        Content = content ?? UniDocumentContent.FromString(string.Empty);
+        Content = content;
     }
 
     public bool Equals(UniDocument? other)
@@ -24,12 +26,16 @@ public class UniDocument : IEquatable<UniDocument>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((UniDocument)obj);
+        return obj.GetType() == GetType() && Equals((UniDocument)obj);
     }
 
     public override int GetHashCode()
     {
         return Id.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return Id.ToString();
     }
 }

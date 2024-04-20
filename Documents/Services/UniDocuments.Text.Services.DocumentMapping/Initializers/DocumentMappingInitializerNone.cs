@@ -2,7 +2,7 @@
 
 namespace UniDocuments.Text.Services.DocumentMapping.Initializers;
 
-public class DocumentMapperInitializerNone : IDocumentMapperInitializer
+public class DocumentMappingInitializerNone : IDocumentMappingInitializer
 {
     public Task InitializeAsync(CancellationToken cancellationToken)
     {

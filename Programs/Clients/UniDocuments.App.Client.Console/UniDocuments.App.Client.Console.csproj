@@ -11,18 +11,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Documents\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj" />
     <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="test\divider.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

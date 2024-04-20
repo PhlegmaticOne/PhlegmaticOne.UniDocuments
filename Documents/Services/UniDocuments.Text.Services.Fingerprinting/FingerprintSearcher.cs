@@ -71,7 +71,7 @@ public class FingerprintSearcher : IFingerprintSearcher
         return topNFingerprints.Where(x => x.SharedCount != 0).Select(x => new DocumentSearchData
         {
             Id = x.DocumentId,
-            Name = _documentMapper.GetDocumentName(x.DocumentId)
+            Name = _documentMapper.GetDocumentData(x.DocumentId).Name
         }).ToList();
     }
 

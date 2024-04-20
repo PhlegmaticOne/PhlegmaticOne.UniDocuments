@@ -20,9 +20,8 @@ def preprocess_and_tokenize(text, patterns="[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\
 
 
 class DocumentStream(object):
-    def __init__(self, getter, options, data_handler):
+    def __init__(self, getter, options):
         self.getter = getter
-        self.data_handler = data_handler
         self.options = options
 
     def __iter__(self):
@@ -36,7 +35,7 @@ class DocumentStream(object):
                 self.getter.Dispose()
                 break
             
-            for paragraph in document.Paragraphs:
+            for paragraph in document.Content.Paragraphs:
                 words = preprocess_and_tokenize(paragraph.Content, patterns=self.options.TokenizeRegex)
                 
                 if len(words) <= self.options.ParagraphMinWordsCount:
@@ -44,13 +43,12 @@ class DocumentStream(object):
                     
                 paragraph_id += 1
                 paragraph.Id = paragraph_id
-                self.data_handler.OnTrainDataSetup(document, paragraph)
                 yield TaggedDocument(words=words, tags=[paragraph_id])
 
 
-def train(source, options, data_handler):
+def train(source, options):
     
-    tagged_documents = DocumentStream(source, options, data_handler)
+    tagged_documents = DocumentStream(source, options)
 
     model = Doc2Vec(vector_size=options.VectorSize,
                     alpha=options.Alpha,
@@ -62,7 +60,6 @@ def train(source, options, data_handler):
 
     model.build_vocab(tagged_documents)
     model.train(tagged_documents, total_examples=model.corpus_count, epochs=model.epochs)
-    data_handler.OnTrainComplete()
     return model
 
 

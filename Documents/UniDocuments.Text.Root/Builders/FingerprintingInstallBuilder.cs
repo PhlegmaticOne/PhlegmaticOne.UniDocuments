@@ -19,20 +19,6 @@ public class FingerprintingInstallBuilder
         _serviceCollection.AddSingleton<IFingerprintContainer, T>();
     }
     
-    public void UseFingerprintContainerInitializer<TDev, TProd>(bool isDevelopment)
-        where TDev : class, IFingerprintContainerInitializer
-        where TProd : class, IFingerprintContainerInitializer
-    {
-        if (isDevelopment)
-        {
-            _serviceCollection.AddSingleton<IFingerprintContainerInitializer, TDev>();
-        }
-        else
-        {
-            _serviceCollection.AddSingleton<IFingerprintContainerInitializer, TProd>();
-        }
-    }
-    
     public void UseFingerprintComputer<T>() where T : class, IFingerprintComputer
     {
         _serviceCollection.AddSingleton<IFingerprintComputer, T>();

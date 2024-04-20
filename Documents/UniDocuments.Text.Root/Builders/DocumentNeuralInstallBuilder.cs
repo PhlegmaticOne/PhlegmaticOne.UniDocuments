@@ -27,11 +27,6 @@ public class DocumentNeuralInstallBuilder
             _serviceCollection.AddSingleton<IDocumentsNeuralSource, TProd>();
         }
     }
-        
-    public void UseDataHandler<T>() where T : class, IDocumentsNeuralDataHandler
-    {
-        _serviceCollection.AddSingleton<IDocumentsNeuralDataHandler, T>();
-    }
     
     public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, IDocumentNeuralOptionsProvider
     {

@@ -11,15 +11,13 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
     private const string PythonScriptName = "document_model";
     private const string ModelName = "model.bin";
 
-    private readonly IDocumentsNeuralDataHandler _dataHandler;
     private readonly IDocumentNeuralOptionsProvider _optionsProvider;
 
     private dynamic _script = null!;
     private dynamic _model = null!;
     
-    public DocumentNeuralModel(IDocumentsNeuralDataHandler dataHandler, IDocumentNeuralOptionsProvider optionsProvider)
+    public DocumentNeuralModel(IDocumentNeuralOptionsProvider optionsProvider)
     {
-        _dataHandler = dataHandler;
         _optionsProvider = optionsProvider;
         PythonEngine.Initialize();
         PythonEngine.BeginAllowThreads();
@@ -45,7 +43,7 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
         using (Py.GIL())
         {
             _script = Py.Import(PythonScriptName);
-            _model = _script.train(source, options, _dataHandler);
+            _model = _script.train(source, options);
         }
         
         return Task.CompletedTask;
@@ -89,30 +87,30 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
         return Task.CompletedTask;
     }
 
-    private List<ParagraphSearchData> SelectSuspiciousParagraphs(dynamic infer, Guid documentId)
-    {
-        var suspiciousParagraphs = new List<ParagraphSearchData>();
-
-        foreach (var inferData in infer)
-        {
-            var pythonModelId = int.Parse(((object)inferData[0]).ToString()!);
-            var modelSimilarity = float.Parse(((object)inferData[1]).ToString()!);
-            var saveData = _dataHandler.GetSaveData(pythonModelId);
-
-            if (saveData.DocumentId == documentId)
-            {
-                continue;
-            }
-                    
-            suspiciousParagraphs.Add(new ParagraphSearchData
-            {
-                Similarity = modelSimilarity,
-                DocumentId = saveData.DocumentId,
-                DocumentName = saveData.DocumentName,
-                OriginalId = saveData.OriginalId
-            });
-        }
-
-        return suspiciousParagraphs;
-    }
+    // private List<ParagraphSearchData> SelectSuspiciousParagraphs(dynamic infer, Guid documentId)
+    // {
+    //     var suspiciousParagraphs = new List<ParagraphSearchData>();
+    //
+    //     foreach (var inferData in infer)
+    //     {
+    //         var pythonModelId = int.Parse(((object)inferData[0]).ToString()!);
+    //         var modelSimilarity = float.Parse(((object)inferData[1]).ToString()!);
+    //         var saveData = _dataHandler.GetSaveData(pythonModelId);
+    //
+    //         if (saveData.DocumentId == documentId)
+    //         {
+    //             continue;
+    //         }
+    //                 
+    //         suspiciousParagraphs.Add(new ParagraphSearchData
+    //         {
+    //             Similarity = modelSimilarity,
+    //             DocumentId = saveData.DocumentId,
+    //             DocumentName = saveData.DocumentName,
+    //             OriginalId = saveData.OriginalId
+    //         });
+    //     }
+    //
+    //     return suspiciousParagraphs;
+    // }
 }

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using UniDocuments.Text.Domain.Services.Neural;
 
-namespace UniDocuments.App.Application.Training.Commands;
+namespace UniDocuments.App.Application.Training;
 
 public class CommandTrainDocumentsNeuralModel : IRequest
 {

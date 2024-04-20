@@ -1,7 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 
 namespace UniDocuments.App.Api;
@@ -15,8 +14,7 @@ public class AppInitializer
         var environment = application.Environment;
         
         var stopWordsService = services.GetRequiredService<IStopWordsService>();
-        var documentMapperInitializer = services.GetRequiredService<IDocumentMapperInitializer>();
-        var fingerprintContainerInitializer = services.GetRequiredService<IFingerprintContainerInitializer>();
+        var documentMapperInitializer = services.GetRequiredService<IDocumentMappingInitializer>();
         var pythonTaskPool = services.GetRequiredService<IPythonTaskPool>();
         
         if (!environment.IsDevelopment())
@@ -27,7 +25,6 @@ public class AppInitializer
         
         await stopWordsService.InitializeAsync(cancellationToken);
         await documentMapperInitializer.InitializeAsync(cancellationToken);
-        await fingerprintContainerInitializer.InitializeAsync(cancellationToken);
         pythonTaskPool.Start(cancellationToken);
     }
 }

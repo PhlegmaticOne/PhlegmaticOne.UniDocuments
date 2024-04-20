@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UniDocuments.App.Application.Uploading.Commands;
+using UniDocuments.App.Application.Uploading;
 
 namespace UniDocuments.App.Api.Controllers;
 

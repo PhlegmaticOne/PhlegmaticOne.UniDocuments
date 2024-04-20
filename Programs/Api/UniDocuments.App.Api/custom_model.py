@@ -25,11 +25,6 @@ nltk.download('stopwords')
 sw = stopwords.words('russian')
 
 
-def train(model_type, generator, options):
-    
-    return 0
-
-
 class Document(object):
 
     def __init__(self, id: int, tokens: list[str]):
@@ -92,7 +87,7 @@ class DocumentsStreamGenerator(DocumentsStream):
                 self.generator.Dispose()
                 break
 
-            for paragraph in document.Paragraphs:
+            for paragraph in document.Content.Paragraphs:
                 words = preprocess_and_tokenize(paragraph.Content, patterns=self.options.TokenizeRegex)
 
                 if len(words) <= self.options.ParagraphMinWordsCount:
@@ -315,39 +310,6 @@ class Doc2VecModelLSTM(Doc2VecModel):
         merged = self._concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
 
         lstm = LSTM(200, name=LstmLayerName)(merged)
-
-        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(lstm)
-
-        model = Model(inputs=[document_id_input, words_input], outputs=output)
-
-        self._update_main_model(model, is_infer)
-
-
-class Doc2VecModelGRU(Doc2VecModel):
-
-    def build(self, is_infer: bool = False):
-        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
-        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
-
-        document_inference = Embedding(input_dim=1,
-                                       output_dim=self.embedding_size,
-                                       input_shape=1,
-                                       name=InferredDocumentsLayerName,
-                                       embeddings_initializer="uniform")(document_id_input)
-
-        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
-                                    output_dim=self.embedding_size,
-                                    input_shape=self.window_size - 1,
-                                    name=WordEmbeddingsLayerName)(words_input)
-
-        document_embedding = Embedding(input_dim=self.vocab.documents_count,
-                                       output_dim=self.embedding_size,
-                                       input_shape=1,
-                                       name=DocumentEmbeddingsLayerName)(document_id_input)
-
-        merged = self._concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
-
-        lstm = GRU(200, name=LstmLayerName)(merged)
 
         output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(lstm)
 

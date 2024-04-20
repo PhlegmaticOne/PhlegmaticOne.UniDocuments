@@ -1,13 +1,12 @@
-﻿using System.Text;
-using UniDocuments.Text.Domain.Shared;
-
-namespace UniDocuments.Text.Domain;
+﻿namespace UniDocuments.Text.Domain;
 
 public class UniDocumentContent
 {
     private const char Space = ' ';
     
-    public List<RawParagraph> Paragraphs { get; }
+    public List<UniContentParagraph> Paragraphs { get; }
+
+    public int ParagraphsCount => Paragraphs.Count;
 
     public static UniDocumentContent FromString(string value)
     {
@@ -18,34 +17,22 @@ public class UniDocumentContent
 
     public UniDocumentContent()
     {
-        Paragraphs = new List<RawParagraph>();
+        Paragraphs = new List<UniContentParagraph>();
     }
 
     public void AddParagraph(string content)
     {
         var id = Paragraphs.Count;
-        Paragraphs.Add(new RawParagraph(id, content));
-    }
-
-    public string ToRawTextWithMinLength(int minLength, char separator = Space)
-    {
-        var sb = new StringBuilder();
-
-        var selectParagraphsQuery = from paragraph in Paragraphs
-            let wordsCount = paragraph.GetWordsCountApproximate()
-            where wordsCount >= minLength
-            select paragraph;
-
-        foreach (var paragraph in selectParagraphsQuery)
-        {
-            sb.Append(paragraph.Content).Append(separator);
-        }
-
-        return sb.ToString();
+        Paragraphs.Add(new UniContentParagraph(id, content));
     }
 
     public string ToRawText(char separator = Space)
     {
         return string.Join(separator, Paragraphs);
+    }
+
+    public override string ToString()
+    {
+        return $"Count: {ParagraphsCount}";
     }
 }

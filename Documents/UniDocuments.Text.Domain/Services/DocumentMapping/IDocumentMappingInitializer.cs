@@ -1,6 +1,6 @@
 ﻿namespace UniDocuments.Text.Domain.Services.DocumentMapping;
 
-public interface IDocumentMapperInitializer
+public interface IDocumentMappingInitializer
 {
     Task InitializeAsync(CancellationToken cancellationToken);
 }

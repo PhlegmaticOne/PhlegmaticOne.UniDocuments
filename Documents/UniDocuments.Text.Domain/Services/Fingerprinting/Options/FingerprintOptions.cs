@@ -2,7 +2,6 @@
 
 public class FingerprintOptions
 {
-    public int MinWords { get; set; }
     public FingerprintLevelOptions SentenceLevel { get; set; } = null!;
     public FingerprintLevelOptions ParagraphLevel { get; set; } = null!;
     public FingerprintLevelOptions DocumentLevel { get; set; } = null!;

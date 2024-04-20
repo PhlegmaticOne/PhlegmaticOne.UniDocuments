@@ -1,9 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
+using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.StreamReading;
-using UniDocuments.Text.Domain.Shared;
 
 namespace UniDocuments.Text.Services.Neural.Services;
 
@@ -33,13 +33,13 @@ public class DocumentNeuralSourceSql : IDocumentsNeuralSource
         _dataReader = await command.ExecuteReaderAsync();
     }
 
-    public async Task<RawDocument> GetNextDocumentAsync()
+    public async Task<UniDocument> GetNextDocumentAsync()
     {
         var hasData = await _dataReader!.ReadAsync();
 
         if (!hasData)
         {
-            return RawDocument.NoData();
+            return UniDocument.Empty;
         }
 
         var transactionContext = ReadTransactionContext(_dataReader);
@@ -48,7 +48,7 @@ public class DocumentNeuralSourceSql : IDocumentsNeuralSource
         
         await using var source = new SqlFileStream(path, transactionContext, FileAccess.Read);
         var content = await _streamContentReader.ReadAsync(source, CancellationToken.None);
-        var document = new RawDocument(id, content.Paragraphs);
+        var document = new UniDocument(id, content);
         return document;
     }
 

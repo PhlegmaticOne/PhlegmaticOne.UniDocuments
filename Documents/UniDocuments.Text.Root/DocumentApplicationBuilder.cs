@@ -74,9 +74,11 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<ISavePathProvider, T>();
     }
         
-    public void UseStreamContentReader<T>() where T : class, IStreamContentReader
+    public void UseStreamContentReader<T>(Action<StreamContentReaderInstallBuilder> builderAction) where T : class, IStreamContentReader
     {
+        var builder = new StreamContentReaderInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<IStreamContentReader, T>();
+        builderAction(builder);
     }
         
     public void UseTextPreprocessor<T>(Action<TextPreprocessorInstallBuilder> builderAction) where T : class, ITextPreprocessor

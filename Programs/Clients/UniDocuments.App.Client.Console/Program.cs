@@ -1,8 +1,7 @@
-﻿using PhlegmaticOne.PythonTasks;
-using UniDocuments.App.Client.Console;
+﻿using Newtonsoft.Json;
 
-var source = new CancellationTokenSource();
-PythonTaskPool.CreateAndStart(new PythonScriptNamesProvider(), source.Token);
-var result = await new PythonTaskDivideNumber(20);
-Console.WriteLine(result);
-source.Cancel();
+var set = new HashSet<uint> { uint.MaxValue, 534534535 };
+var json = JsonConvert.SerializeObject(set);
+var test = JsonConvert.DeserializeObject<HashSet<uint>>(json);
+
+Console.WriteLine(test.First());

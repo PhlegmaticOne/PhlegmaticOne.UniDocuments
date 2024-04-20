@@ -22,7 +22,7 @@ public class TextSimilarityBaseMetricFingerprint : ITextSimilarityBaseMetric
 
     public double Calculate(string sourceText, string suspiciousText)
     {
-        var options = GetOptions();
+        var options = _optionsProvider.GetOptions();
         
         var sourceFingerprint = _fingerprintAlgorithm.Fingerprint(
             UniDocumentContent.FromString(sourceText), options);
@@ -36,12 +36,5 @@ public class TextSimilarityBaseMetricFingerprint : ITextSimilarityBaseMetric
     public bool IsSuspicious(double metricValue)
     {
         return metricValue > 0.5;
-    }
-
-    private FingerprintOptions GetOptions()
-    {
-        var options = _optionsProvider.GetOptions();
-        options.MinWords = -1;
-        return options;
     }
 }

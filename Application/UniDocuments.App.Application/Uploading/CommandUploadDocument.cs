@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Newtonsoft.Json;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
@@ -10,7 +11,7 @@ using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
-namespace UniDocuments.App.Application.Uploading.Commands;
+namespace UniDocuments.App.Application.Uploading;
 
 public class CommandUploadDocument : IdentityOperationResultCommand
 {
@@ -55,8 +56,9 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
         var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
 
-        var document = new UniDocument(documentId);
+        var document = new UniDocument(documentId, content);
         await _uniDocumentsService.SaveAsync(document, cancellationToken);
+        _documentMapper.AddDocument(document, "test");
 
         await _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument
         {
@@ -64,7 +66,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
             ActivityId = request.ActivityId,
             StudentId = request.ProfileId,
             DateLoaded = DateTime.UtcNow,
-            WinnowingData = fingerprint.ToByteArray()
+            Fingerprint = JsonConvert.SerializeObject(fingerprint)
         }, cancellationToken);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -77,7 +79,6 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var stream = request.DocumentStream;
         var saveRequest = new DocumentSaveRequest("test", stream);
         var saveResponse = await _documentsStorage.SaveAsync(saveRequest, cancellationToken);
-        _documentMapper.AddMap(saveResponse.Id, saveRequest.Name);
         return saveResponse.Id;
     }
 }

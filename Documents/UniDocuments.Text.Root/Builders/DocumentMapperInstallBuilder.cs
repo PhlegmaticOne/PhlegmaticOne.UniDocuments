@@ -13,16 +13,16 @@ public class DocumentMapperInstallBuilder
     }
 
     public void UseInitializer<TDev, TProd>(bool isDevelopment)
-        where TDev : class, IDocumentMapperInitializer
-        where TProd : class, IDocumentMapperInitializer
+        where TDev : class, IDocumentMappingInitializer
+        where TProd : class, IDocumentMappingInitializer
     {
         if (isDevelopment)
         {
-            _serviceCollection.AddScoped<IDocumentMapperInitializer, TDev>();
+            _serviceCollection.AddScoped<IDocumentMappingInitializer, TDev>();
         }
         else
         {
-            _serviceCollection.AddScoped<IDocumentMapperInitializer, TProd>();
+            _serviceCollection.AddScoped<IDocumentMappingInitializer, TProd>();
         }
     }
 }

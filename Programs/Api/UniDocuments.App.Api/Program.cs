@@ -24,7 +24,6 @@ using UniDocuments.Text.Services.Documents;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
 using UniDocuments.Text.Services.Fingerprinting;
-using UniDocuments.Text.Services.Fingerprinting.Initializers;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Models;
@@ -33,6 +32,7 @@ using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.Preprocessing.StopWords;
 using UniDocuments.Text.Services.StreamReading;
+using UniDocuments.Text.Services.StreamReading.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +86,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     
     appBuilder.UseDocumentMapper<DocumentMapper>(b =>
     {
-        b.UseInitializer<DocumentMapperInitializerNone, DocumentMapperInitializer>(isDevelopment);
+        b.UseInitializer<DocumentMappingInitializerNone, DocumentMappingInitializer>(isDevelopment);
     });
     
     appBuilder.UseDocumentsService<UniDocumentsService>(b =>
@@ -103,7 +103,6 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     {
         b.UseOptionsProvider<FingerprintOptionsProvider>(builder.Configuration);
         b.UseFingerprintAlgorithm<FingerprintWinnowingAlgorithm>();
-        b.UseFingerprintContainerInitializer<FingerprintContainerInitializerNone, FingerprintContainerInitializer>(isDevelopment);
         b.UseFingerprintComputer<FingerprintComputer>();
         b.UseFingerprintContainer<FingerprintContainer>();
         b.UseFingerprintHash<FingerprintHashCrc32C>();
@@ -118,7 +117,6 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 
     appBuilder.UseNeuralModel<DocumentNeuralModel>(b =>
     {
-        b.UseDataHandler<DocumentsNeuralDataHandler>();
         b.UseDataSource<DocumentNeuralSourceInMemory, DocumentNeuralSourceSql>(isDevelopment);
         b.UseOptionsProvider<DocumentNeuralOptionsProvider>(builder.Configuration);
     });
@@ -132,7 +130,10 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 
     appBuilder.UseSavePathProvider<SavePathProvider>();
     
-    appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>();
+    appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>(b =>
+    {
+        b.UseOptionsProvider<ParagraphOptionsProvider>(builder.Configuration);
+    });
     
     appBuilder.UsePlagiarismSearcher<PlagiarismSearcher>();
     
@@ -142,7 +143,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
 builder.Services.AddJwtTokenGeneration(jwtOptions);
-builder.Services.AddPythonTaskPool("test");
+builder.Services.AddPythonTaskPool("doc2vec_model", "custom_model");
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {

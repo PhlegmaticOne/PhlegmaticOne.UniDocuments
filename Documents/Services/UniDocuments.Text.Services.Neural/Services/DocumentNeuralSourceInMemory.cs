@@ -1,7 +1,7 @@
-﻿using UniDocuments.Text.Domain.Services.DocumentsStorage;
+﻿using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.StreamReading;
-using UniDocuments.Text.Domain.Shared;
 
 namespace UniDocuments.Text.Services.Neural.Services;
 
@@ -24,17 +24,17 @@ public class DocumentNeuralSourceInMemory : IDocumentsNeuralSource
         return Task.CompletedTask;
     }
 
-    public async Task<RawDocument> GetNextDocumentAsync()
+    public async Task<UniDocument> GetNextDocumentAsync()
     {
         if (_currentIndex >= _documentStorageIndexable.StorageSize - 1)
         {
-            return RawDocument.NoData();
+            return UniDocument.Empty;
         }
 
         _currentIndex += 1;
         var result = _documentStorageIndexable.Load(_currentIndex);
         var readResult = await _streamContentReader.ReadAsync(result.Stream!, CancellationToken.None);
-        return new RawDocument(result.Id, readResult.Paragraphs);
+        return new UniDocument(result.Id, readResult);
     }
 
     public void Dispose()

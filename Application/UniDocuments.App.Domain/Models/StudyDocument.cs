@@ -10,5 +10,6 @@ public class StudyDocument : EntityBase
     public Student Student { get; set; } = null!;
     public Guid ActivityId { get; set; }
     public StudyActivity Activity { get; set; } = null!;
-    public byte[] WinnowingData { get; set; } = null!;
+    public string Fingerprint { get; set; } = null!;
+    public int ValuableParagraphsCount { get; set; }
 }

@@ -1,14 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UniDocuments.App.Data.EntityFramework.Context;
-using UniDocuments.App.Domain.Models;
-using UniDocuments.Text.Domain.Services.Fingerprinting;
+﻿using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
 
 public class FingerprintContainer : IFingerprintContainer
 {
-    private Dictionary<Guid, TextFingerprint> _fingerprints;
+    private readonly Dictionary<Guid, TextFingerprint> _fingerprints;
 
     public FingerprintContainer()
     {

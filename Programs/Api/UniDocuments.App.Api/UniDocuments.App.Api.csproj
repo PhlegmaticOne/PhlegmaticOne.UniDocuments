@@ -42,7 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="test.py">
+      <None Update="doc2vec_model.py">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
