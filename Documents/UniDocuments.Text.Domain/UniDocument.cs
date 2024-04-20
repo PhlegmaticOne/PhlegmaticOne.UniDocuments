@@ -1,53 +1,16 @@
-﻿using UniDocuments.Text.Domain.Features;
+﻿namespace UniDocuments.Text.Domain;
 
-namespace UniDocuments.Text.Domain;
-
-public class UniDocument : IEquatable<UniDocument>, IUniDocumentFeaturesCollection
+public class UniDocument : IEquatable<UniDocument>
 {
-    private readonly UniDocumentFeaturesCollection _features;
-
     public Guid Id { get; }
+    public UniDocumentContent Content { get; }
 
     public static UniDocument Empty => new(Guid.Empty);
     
-    public UniDocument(Guid id)
+    public UniDocument(Guid id, UniDocumentContent? content = null)
     {
         Id = id;
-        _features = new UniDocumentFeaturesCollection();
-    }
-    
-    public UniDocument(Guid id, params IUniDocumentFeature[] startFeatures) : this(id)
-    {
-        foreach (var startFeature in startFeatures)
-        {
-            AddFeature(startFeature);
-        }
-    }
-
-    public UniDocument WithFeature(IUniDocumentFeature feature)
-    {
-        AddFeature(feature);
-        return this;
-    }
-
-    public T GetFeature<T>()
-    {
-        return _features.GetFeature<T>();
-    }
-
-    public bool TryGetFeature<T>(out T? feature) where T : IUniDocumentFeature
-    {
-        return _features.TryGetFeature(out feature);
-    }
-
-    public void AddFeature(IUniDocumentFeature feature)
-    {
-        _features.AddFeature(feature);
-    }
-
-    public bool ContainsFeature(UniDocumentFeatureFlag featureFlag)
-    {
-        return _features.ContainsFeature(featureFlag);
+        Content = content ?? UniDocumentContent.FromString(string.Empty);
     }
 
     public bool Equals(UniDocument? other)

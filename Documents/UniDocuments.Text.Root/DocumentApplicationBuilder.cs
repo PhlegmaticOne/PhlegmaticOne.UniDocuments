@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using UniDocuments.Text.Domain.Algorithms;
-using UniDocuments.Text.Domain.Features.Factories;
-using UniDocuments.Text.Domain.Features.Providers;
+using UniDocuments.Text.Domain.Providers.Comparing;
+using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
-using UniDocuments.Text.Domain.Providers.Similarity;
+using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Documents;
 using UniDocuments.Text.Domain.Services.FileStorage;
@@ -11,13 +10,7 @@ using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Domain.Services.SavePath;
 using UniDocuments.Text.Domain.Services.StreamReading;
-using UniDocuments.Text.Features.Fingerprint;
-using UniDocuments.Text.Features.Text;
-using UniDocuments.Text.Features.TextVector;
-using UniDocuments.Text.Plagiarism.Matching.Algorithm;
 using UniDocuments.Text.Root.Builders;
-using UniDocuments.Text.Root.Builders.Algorithms;
-using UniDocuments.Text.Root.Builders.Features;
 
 namespace UniDocuments.Text.Root;
 
@@ -28,34 +21,17 @@ public class DocumentApplicationBuilder
     public DocumentApplicationBuilder(IServiceCollection serviceCollection)
     {
         _serviceCollection = serviceCollection;
-        _serviceCollection.AddSingleton<IUniDocumentFeatureProvider, UniDocumentFeatureProvider>();
     }
 
-    public void UseAlgorithm<T>() where T : class, IPlagiarismAlgorithm
+    public void UseBaseMetrics<T>(Action<TextBaseMetricsInstallBuilder> builderAction)
+        where T : class, ITextSimilarityBaseMetricsProvider
     {
-        _serviceCollection.AddScoped<IPlagiarismAlgorithm, T>();
+        var builder = new TextBaseMetricsInstallBuilder(_serviceCollection);
+        _serviceCollection.AddSingleton<ITextSimilarityBaseMetricsProvider, T>();
+        builderAction(builder);
     }
 
-    public void UseFingerprintFeature(Action<FingerprintFeatureInstallBuilder> action)
-    {
-        var builder = new FingerprintFeatureInstallBuilder(_serviceCollection);
-        _serviceCollection.AddSingleton<IUniDocumentFeatureFactory, UniDocumentFeatureFingerprintFactory>();
-        action(builder);
-    }
-
-    public void UseTextVectorFeature()
-    {
-        _serviceCollection.AddSingleton<IUniDocumentSharedFeatureFactory, UniDocumentFeatureTextVectorFactory>();
-    }
-    
-    public void UseTextFeature(Action<TextFeatureInstallBuilder> action)
-    {
-        var builder = new TextFeatureInstallBuilder(_serviceCollection);
-        _serviceCollection.AddSingleton<IUniDocumentFeatureFactory, UniDocumentFeatureTextFactory>();
-        action(builder);
-    }
-
-    public void UseDocumentNameMapper<TDev, TProd>(bool isDevelopment) 
+    public void UseDocumentMapper<TDev, TProd>(bool isDevelopment) 
         where TDev : class, IDocumentMapper
         where TProd : class, IDocumentMapper
     {
@@ -94,6 +70,12 @@ public class DocumentApplicationBuilder
         }
     }
 
+    public void UseFingerprint(Action<FingerprintingInstallBuilder> builderAction)
+    {
+        var builder = new FingerprintingInstallBuilder(_serviceCollection);
+        builderAction(builder);
+    }
+
     public void UseSavePathProvider<T>() where T : class, ISavePathProvider
     {
         _serviceCollection.AddSingleton<ISavePathProvider, T>();
@@ -118,21 +100,21 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IDocumentsNeuralModel, T>();
         action(builder);
     }
-    
-    public void UseSimilarityFinder<T>() where T : class, IDocumentsSimilarityFinder
-    {
-        _serviceCollection.AddScoped<IDocumentsSimilarityFinder, T>();
-    }
-    
-    public void UsePlagiarismFinder<T>() where T : class, IPlagiarismFinder
-    {
-        _serviceCollection.AddSingleton<IPlagiarismFinder, T>();
-    }
 
-    public void UseMatchingAlgorithm(Action<MatchingInstallBuilder> action)
+    public void UseMatchingService<T>(Action<MatchingInstallBuilder> builderAction) where T : class, ITextMatchingService
     {
         var builder = new MatchingInstallBuilder(_serviceCollection);
-        UseAlgorithm<PlagiarismAlgorithmMatching>();
-        action(builder);
+        _serviceCollection.AddScoped<ITextMatchingService, T>();
+        builderAction(builder);
+    }
+    
+    public void UseSimilarityService<T>() where T : class, ICompareTextsService
+    {
+        _serviceCollection.AddScoped<ICompareTextsService, T>();
+    }
+    
+    public void UsePlagiarismSearcher<T>() where T : class, IPlagiarismSearcher
+    {
+        _serviceCollection.AddSingleton<IPlagiarismSearcher, T>();
     }
 }

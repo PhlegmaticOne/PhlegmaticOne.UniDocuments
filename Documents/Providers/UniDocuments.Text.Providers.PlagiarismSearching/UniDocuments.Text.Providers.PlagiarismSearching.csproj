@@ -8,8 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Features\Fingerprint\UniDocuments.Text.Features.Fingerprint\UniDocuments.Text.Features.Fingerprint.csproj" />
-      <ProjectReference Include="..\..\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
       <ProjectReference Include="..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 

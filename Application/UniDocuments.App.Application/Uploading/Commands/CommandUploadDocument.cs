@@ -7,9 +7,8 @@ using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Documents;
 using UniDocuments.Text.Domain.Services.FileStorage;
 using UniDocuments.Text.Domain.Services.FileStorage.Requests;
+using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.StreamReading;
-using UniDocuments.Text.Features.Fingerprint;
-using UniDocuments.Text.Features.Fingerprint.Services;
 
 namespace UniDocuments.App.Application.Uploading.Commands;
 
@@ -56,7 +55,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
         var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
 
-        var document = new UniDocument(documentId, new UniDocumentFeatureFingerprint(fingerprint));
+        var document = new UniDocument(documentId);
         await _uniDocumentsService.SaveAsync(document, cancellationToken);
 
         await _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument

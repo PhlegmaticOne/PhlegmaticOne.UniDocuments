@@ -1,23 +1,26 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using PhlegmaticOne.JwtTokensGeneration.Extensions;
 using PhlegmaticOne.JwtTokensGeneration.Options;
-using UniDocuments.App.Api.Controllers;
+using PhlegmaticOne.PasswordHasher;
+using PhlegmaticOne.PasswordHasher.Implementation;
+using UniDocuments.App.Api.Services;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
+using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Services.Jwt;
+using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.Preprocessing;
-using UniDocuments.Text.Features.Fingerprint.Services;
-using UniDocuments.Text.Features.Text.Services;
-using UniDocuments.Text.Plagiarism.Cosine.Algorithm;
-using UniDocuments.Text.Plagiarism.Matching.Services;
-using UniDocuments.Text.Plagiarism.TsSs.Algorithm;
 using UniDocuments.Text.Providers.PlagiarismSearching;
 using UniDocuments.Text.Providers.Similarity;
 using UniDocuments.Text.Root;
+using UniDocuments.Text.Services.BaseMetrics;
 using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.Documents;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
+using UniDocuments.Text.Services.Fingerprinting;
+using UniDocuments.Text.Services.Matching;
+using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Models;
 using UniDocuments.Text.Services.Neural.Services;
 using UniDocuments.Text.Services.Preprocessing;
@@ -33,26 +36,26 @@ var jwtOptions = new SymmetricKeyJwtOptions(jwtSecrets["Issuer"]!,
     jwtSecrets["Audience"]!,
     int.Parse(jwtSecrets["ExpirationDurationInMinutes"]!),
     jwtSecrets["SecretKey"]!);
-
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(o =>
-{
-    o.SaveToken = true;
-    o.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtOptions.Issuer,
-        ValidAudience = jwtOptions.Audience,
-        IssuerSigningKey = jwtOptions.GetSecretKey(),
-        ClockSkew = TimeSpan.Zero
-    };
-});
+//
+// builder.Services.AddAuthentication(x =>
+// {
+//     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+// }).AddJwtBearer(o =>
+// {
+//     o.SaveToken = true;
+//     o.TokenValidationParameters = new TokenValidationParameters
+//     {
+//         ValidateIssuer = true,
+//         ValidateAudience = true,
+//         ValidateLifetime = true,
+//         ValidateIssuerSigningKey = true,
+//         ValidIssuer = jwtOptions.Issuer,
+//         ValidAudience = jwtOptions.Audience,
+//         IssuerSigningKey = jwtOptions.GetSecretKey(),
+//         ClockSkew = TimeSpan.Zero
+//     };
+// });
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
@@ -62,33 +65,16 @@ builder.Services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UniDocume
 builder.Services.AddDocumentsApplication(appBuilder =>
 {
     var isDevelopment = builder.Environment.IsDevelopment();
-    
-    appBuilder.UseAlgorithm<PlagiarismAlgorithmCosineSimilarity>();
-    
-    appBuilder.UseAlgorithm<PlagiarismAlgorithmTsSs>();
-    
-    appBuilder.UseMatchingAlgorithm(b =>
-    {
-        b.UseOptionsProvider<MatchingOptionsProvider>(builder.Configuration);
-    });
-    
-    appBuilder.UseTextVectorFeature();
-    
-    appBuilder.UseTextFeature(b =>
-    {
-        b.UseTextLoader<DocumentTextLoader>();
-    });
 
-    appBuilder.UseFingerprintFeature(b =>
+    appBuilder.UseBaseMetrics<TextSimilarityBaseMetricsProvider>(b =>
     {
-        b.UseFingerprintAlgorithm<FingerprintWinnowingAlgorithm>();
-        b.UseFingerprintContainer<FingerprintsContainer>();
-        b.UseFingerprintComputer<FingerprintComputer>();
-        b.UseFingerprintHash<FingerprintHashCrc32C>();
-        b.UseFingerprintSearcher<FingerprintSearcher>();
-        b.UseOptionsProvider<FingerprintOptionsProvider>(builder.Configuration);
+        b.UseBaseMetric<TextSimilarityBaseMetricCosine>();
+        b.UseBaseMetric<TextSimilarityBaseMetricTsSs>();
+        b.UseBaseMetric<TextSimilarityBaseMetricFingerprint>();
     });
-
+    
+    appBuilder.UseDocumentMapper<DocumentMapperInMemory, DocumentMapperSql>(isDevelopment);
+    
     appBuilder.UseDocumentsService<UniDocumentsService>(b =>
     {
         b.UseDocumentsCache<UniDocumentsCache>();
@@ -99,13 +85,22 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseSqlConnectionProvider<SqlConnectionProvider>();
     });
     
-    appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>
+    appBuilder.UseFingerprint(b =>
     {
-        b.UseStemmer<Stemmer>();
-        b.UseStopWordsLoader<StopWordsLoaderFile>();
-        b.UseStopWordsService<StopWordsService>();
+        b.UseOptionsProvider<FingerprintOptionsProvider>(builder.Configuration);
+        b.UseFingerprintAlgorithm<FingerprintWinnowingAlgorithm>();
+        b.UseFingerprintComputer<FingerprintComputer>();
+        b.UseFingerprintContainer<FingerprintsContainer>();
+        b.UseFingerprintHash<FingerprintHashCrc32C>();
+        b.UseFingerprintSearcher<FingerprintSearcher>();
     });
     
+    appBuilder.UseMatchingService<TextMatchingService>(b =>
+    {
+        b.UseOptionsProvider<MatchingOptionsProvider>(builder.Configuration);
+        b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
+    });
+
     appBuilder.UseNeuralModel<DocumentNeuralModel>(b =>
     {
         b.UseDataHandler<DocumentsNeuralDataHandler>();
@@ -113,13 +108,23 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseOptionsProvider<DocumentNeuralOptionsProvider>(builder.Configuration);
     });
     
-    appBuilder.UseDocumentNameMapper<DocumentMapperInMemory, DocumentMapperSql>(isDevelopment);
+    appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>
+    {
+        b.UseStemmer<Stemmer>();
+        b.UseStopWordsLoader<StopWordsLoaderFile>();
+        b.UseStopWordsService<StopWordsService>();
+    });
+
     appBuilder.UseSavePathProvider<SavePathProvider>();
     appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>();
     
-    appBuilder.UsePlagiarismFinder<PlagiarismFinder>();
-    appBuilder.UseSimilarityFinder<DocumentsSimilarityFinder>();
+    appBuilder.UsePlagiarismSearcher<PlagiarismSearcher>();
+    appBuilder.UseSimilarityService<CompareTextsService>();
 });
+
+builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
+builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
+builder.Services.AddJwtTokenGeneration(jwtOptions);
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {

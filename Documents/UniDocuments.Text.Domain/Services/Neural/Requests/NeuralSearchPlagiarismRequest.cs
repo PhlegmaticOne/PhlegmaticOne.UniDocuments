@@ -1,5 +1,3 @@
-﻿using UniDocuments.Text.Domain.Services.StreamReading;
+﻿namespace UniDocuments.Text.Domain.Services.Neural.Requests;
 
-namespace UniDocuments.Text.Domain.Services.Neural.Requests;
-
-public record NeuralSearchPlagiarismRequest(Guid DocumentId, StreamContentReadResult Content, int TopN);
+public record NeuralSearchPlagiarismRequest(Guid DocumentId, int TopN);

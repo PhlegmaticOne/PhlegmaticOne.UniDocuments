@@ -2,5 +2,5 @@
 
 public interface IStreamContentReader
 {
-    Task<StreamContentReadResult> ReadAsync(Stream stream, CancellationToken cancellationToken);
+    Task<UniDocumentContent> ReadAsync(Stream stream, CancellationToken cancellationToken);
 }

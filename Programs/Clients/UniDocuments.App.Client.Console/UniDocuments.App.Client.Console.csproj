@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Documents\Features\Text\UniDocuments.Text.Features.Text\UniDocuments.Text.Features.Text.csproj" />
     <ProjectReference Include="..\..\..\Documents\Infrastructure\UniDocuments.Text.Algorithms\UniDocuments.Text.Algorithms.csproj" />
     <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj" />
   </ItemGroup>

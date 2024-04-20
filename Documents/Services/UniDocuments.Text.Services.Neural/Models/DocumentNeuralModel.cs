@@ -57,22 +57,22 @@ public class DocumentNeuralModel : IDocumentsNeuralModel
         var result = new List<ParagraphPlagiarismData>();
         var options = _optionsProvider.GetOptions();
 
-        using (Py.GIL())
-        {
-            foreach (var rawParagraph in request.Content.Paragraphs)
-            {
-                var text = rawParagraph.Content;
-                var infer = _script.infer(_model, options, text, request.TopN);
-
-                if (((object)infer).ToPython().IsNone())
-                {
-                    continue;
-                }
-
-                var suspiciousParagraphs = SelectSuspiciousParagraphs(infer, request.DocumentId);
-                result.Add(new ParagraphPlagiarismData(rawParagraph.Id, suspiciousParagraphs));
-            }
-        }
+        // using (Py.GIL())
+        // {
+        //     foreach (var rawParagraph in request.Content.Paragraphs)
+        //     {
+        //         var text = rawParagraph.Content;
+        //         var infer = _script.infer(_model, options, text, request.TopN);
+        //
+        //         if (((object)infer).ToPython().IsNone())
+        //         {
+        //             continue;
+        //         }
+        //
+        //         var suspiciousParagraphs = SelectSuspiciousParagraphs(infer, request.DocumentId);
+        //         result.Add(new ParagraphPlagiarismData(rawParagraph.Id, suspiciousParagraphs));
+        //     }
+        // }
         
         return Task.FromResult(result);
     }

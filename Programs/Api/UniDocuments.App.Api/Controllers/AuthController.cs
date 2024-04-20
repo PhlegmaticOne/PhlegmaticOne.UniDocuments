@@ -20,29 +20,33 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register([FromBody] RegisterProfileDto registerProfileDto)
+    public async Task<IActionResult> Register(
+        [FromBody] RegisterProfileDto registerProfileDto,
+        CancellationToken cancellationToken)
     {
-        var registerOperationResult =
-            await _mediator.Send(new RegisterProfileCommand(registerProfileDto), HttpContext.RequestAborted);
+        var registerCommand = new RegisterProfileCommand(registerProfileDto);
+        var registerResult = await _mediator.Send(registerCommand, cancellationToken);
 
-        if (registerOperationResult.IsSuccess == false)
+        if (registerResult.IsSuccess == false)
         {
-            return BadRequest(registerOperationResult.ErrorMessage);
+            return BadRequest(registerResult.ErrorMessage);
         }
 
-        return await AuthorizeAsync(registerProfileDto.UserName, registerProfileDto.Password);
+        return await AuthorizeAsync(registerProfileDto.UserName, registerProfileDto.Password, cancellationToken);
     }
 
     [HttpPost]
-    public Task<IActionResult> Login([FromBody] LoginDto loginDto)
+    public Task<IActionResult> Login(
+        [FromBody] LoginDto loginDto, 
+        CancellationToken cancellationToken)
     {
-        return AuthorizeAsync(loginDto.UserName, loginDto.Password);
+        return AuthorizeAsync(loginDto.UserName, loginDto.Password, cancellationToken);
     }
 
-    private async Task<IActionResult> AuthorizeAsync(string email, string password)
+    private async Task<IActionResult> AuthorizeAsync(string email, string password, CancellationToken cancellationToken)
     {
         var query = new GetAuthorizedProfileAnonymousQuery(email, password);
-        var profile = await _mediator.Send(query, HttpContext.RequestAborted);
+        var profile = await _mediator.Send(query, cancellationToken);
 
         if (profile.IsSuccess == false)
         {
