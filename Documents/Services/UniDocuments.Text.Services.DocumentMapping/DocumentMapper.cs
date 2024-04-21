@@ -18,6 +18,11 @@ public class DocumentMapper : IDocumentMapper
 
     public int GetDocumentIdFromGlobalParagraphId(int paragraphId)
     {
+        if (paragraphId < 0 || paragraphId >= _paragraphsToDocumentsMap.Count)
+        {
+            return int.MinValue;
+        }
+        
         return _paragraphsToDocumentsMap[paragraphId];
     }
 

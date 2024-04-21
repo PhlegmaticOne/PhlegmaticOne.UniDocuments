@@ -14,20 +14,24 @@ using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Services.Jwt;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Providers.Comparing;
+using UniDocuments.Text.Providers.Loading;
 using UniDocuments.Text.Providers.Matching;
 using UniDocuments.Text.Providers.PlagiarismSearching;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
+using UniDocuments.Text.Services.Cache;
 using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.DocumentMapping.Initializers;
-using UniDocuments.Text.Services.Documents;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
 using UniDocuments.Text.Services.Fingerprinting;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
-using UniDocuments.Text.Services.Neural.Models;
-using UniDocuments.Text.Services.Neural.Services;
+using UniDocuments.Text.Services.Neural.Custom.Core.Options;
+using UniDocuments.Text.Services.Neural.Custom.Doc2Vec;
+using UniDocuments.Text.Services.Neural.Custom.Lstm;
+using UniDocuments.Text.Services.Neural.Doc2Vec;
+using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
@@ -90,10 +94,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseInitializer<DocumentMappingInitializerNone, DocumentMappingInitializer>(isDevelopment);
     });
     
-    appBuilder.UseDocumentsService<UniDocumentsService>(b =>
-    {
-        b.UseDocumentsCache<UniDocumentsCache>();
-    });
+    appBuilder.UseDocumentsCache<UniDocumentsCache>();
     
     appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageSql>(isDevelopment, b =>
     {
@@ -116,10 +117,12 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
     });
 
-    appBuilder.UseNeuralModel<DocumentNeuralModelDoc2Vec>(b =>
+    appBuilder.UseNeuralModel<DocumentNeuralModelCustomLstm>(b =>
     {
-        b.UseDataSource<DocumentNeuralSourceInMemory, DocumentNeuralSourceSql>(isDevelopment);
-        b.UseOptionsProvider<DocumentNeuralOptionsProvider>(builder.Configuration);
+        b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
+        b.UseOptionsProvider<Doc2VecOptionsProvider, Doc2VecOptions>(builder.Configuration);
+        b.UseOptionsProvider<CustomModelOptionsProvider<CustomOptionsLstm>, CustomOptionsLstm>(builder.Configuration);
+        b.UseOptionsProvider<CustomModelOptionsProvider<CustomOptionsDoc2Vec>, CustomOptionsDoc2Vec>(builder.Configuration);
     });
     
     appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>
@@ -133,22 +136,24 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     
     appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>(b =>
     {
-        b.UseOptionsProvider<ParagraphOptionsProvider>(builder.Configuration);
+        b.UseOptionsProvider<TextProcessOptionsProvider>(builder.Configuration);
     });
     
     appBuilder.UsePlagiarismSearcher<PlagiarismSearchProvider>();
     
     appBuilder.UseSimilarityService<TextCompareProvider>();
+    
+    appBuilder.UseDocumentLoadingProvider<DocumentLoadingProvider>();
 });
 
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
 builder.Services.AddJwtTokenGeneration(jwtOptions);
-builder.Services.AddPythonTaskPool("doc2vec_model");
+builder.Services.AddPythonTaskPool("document_models");
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {
-    if (builder.Environment.IsDevelopment())
+    if (isDevelopment)
     {
         x.UseInMemoryDatabase("MEMORY");
     }

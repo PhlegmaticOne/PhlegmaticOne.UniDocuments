@@ -14,23 +14,17 @@ public class DocumentNeuralInstallBuilder
         _serviceCollection = serviceCollection;
     }
 
-    public void UseDataSource<TDev, TProd>(bool isDevelopment) 
-        where TDev : class, IDocumentsNeuralSource
-        where TProd : class, IDocumentsNeuralSource
+    public void UseTrainDatasetSource<T>() where T : class, IDocumentsTrainDatasetSource
     {
-        if (isDevelopment)
-        {
-            _serviceCollection.AddSingleton<IDocumentsNeuralSource, TDev>();
-        }
-        else
-        {
-            _serviceCollection.AddSingleton<IDocumentsNeuralSource, TProd>();
-        }
+        _serviceCollection.AddSingleton<IDocumentsTrainDatasetSource, T>();
     }
     
-    public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, IDocumentNeuralOptionsProvider
+    public void UseOptionsProvider<TProvider, TModel>(IConfiguration configuration) 
+        where TProvider : class, INeuralOptionsProvider<TModel>
+        where TModel : class, INeuralOptions
     {
-        _serviceCollection.AddSingleton<IDocumentNeuralOptionsProvider, T>();
-        _serviceCollection.Configure<DocumentNeuralOptions>(configuration.GetSection(nameof(DocumentNeuralOptions)));
+        var section = configuration.GetSection(typeof(TModel).Name);
+        _serviceCollection.AddSingleton<INeuralOptionsProvider<TModel>, TProvider>();
+        _serviceCollection.Configure<TModel>(section);
     }
 }

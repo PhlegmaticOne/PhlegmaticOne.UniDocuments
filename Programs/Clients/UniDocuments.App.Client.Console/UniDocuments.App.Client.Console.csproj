@@ -20,4 +20,10 @@
     <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="custom_model.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

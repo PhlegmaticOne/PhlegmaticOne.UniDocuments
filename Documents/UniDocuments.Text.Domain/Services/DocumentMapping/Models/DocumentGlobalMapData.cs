@@ -12,4 +12,9 @@ public class DocumentGlobalMapData
     public Guid Id { get; }
     public string Name { get; }
     public int GlobalFirstParagraphId { get; }
+
+    public int GetLocalParagraphId(int globalParagraphId)
+    {
+        return globalParagraphId - GlobalFirstParagraphId;
+    }
 }

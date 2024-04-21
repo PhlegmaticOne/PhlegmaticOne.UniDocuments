@@ -1,11 +1,6 @@
-﻿var result = new int[5]
-{
-    5, 66, 123, 543, 67
-};
+﻿using PhlegmaticOne.PythonTasks;
 
-Array.Sort(result, (a, b) => a.CompareTo(b));
+var token = CancellationToken.None;
+PythonTaskPool.CreateAndStart(new [] { "custom_model" }.ToScriptNamesProvider(), token);
 
-foreach (var i in result)
-{
-    Console.WriteLine(i);
-}
+Console.WriteLine("Completed");

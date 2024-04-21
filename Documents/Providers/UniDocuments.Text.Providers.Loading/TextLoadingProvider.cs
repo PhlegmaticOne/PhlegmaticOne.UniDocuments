@@ -1,0 +1,46 @@
+﻿using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Providers.Loading;
+using UniDocuments.Text.Domain.Services.Cache;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
+using UniDocuments.Text.Domain.Services.StreamReading;
+
+namespace UniDocuments.Text.Providers.Loading;
+
+public class DocumentLoadingProvider : IDocumentLoadingProvider
+{
+    private readonly IDocumentsStorage _documentsStorage;
+    private readonly IStreamContentReader _streamContentReader;
+    private readonly IUniDocumentsCache _documentsCache;
+
+    public DocumentLoadingProvider(
+        IDocumentsStorage documentsStorage, 
+        IStreamContentReader streamContentReader,
+        IUniDocumentsCache documentsCache)
+    {
+        _documentsStorage = documentsStorage;
+        _streamContentReader = streamContentReader;
+        _documentsCache = documentsCache;
+    }
+    
+    public async Task<UniDocument> LoadAsync(Guid documentId, bool cache, CancellationToken cancellationToken)
+    {
+        var cached = _documentsCache.Get(documentId);
+
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        var loadResponse = await _documentsStorage.LoadAsync(new DocumentLoadRequest(documentId), cancellationToken);
+        var content = await _streamContentReader.ReadAsync(loadResponse.Stream!, cancellationToken);
+        var result = new UniDocument(documentId, content);
+
+        if (cache)
+        {
+            _documentsCache.Cache(result);
+        }
+
+        return result;
+    }
+}

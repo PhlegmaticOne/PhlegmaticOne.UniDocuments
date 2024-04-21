@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Domain.Providers.Comparing;
+using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
+using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
-using UniDocuments.Text.Domain.Services.Documents;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Preprocessing;
@@ -38,11 +39,9 @@ public class DocumentApplicationBuilder
         builderAction(builder);
     }
         
-    public void UseDocumentsService<T>(Action<DocumentServiceInstallBuilder> action) where T : class, IUniDocumentsService
+    public void UseDocumentsCache<T>() where T : class, IUniDocumentsCache
     {
-        var builder = new DocumentServiceInstallBuilder(_serviceCollection);
-        _serviceCollection.AddSingleton<IUniDocumentsService, T>();
-        action(builder);
+        _serviceCollection.AddSingleton<IUniDocumentsCache, T>();
     }
         
     public void UseFileStorage<TDev, TProd>(bool isDevelopment, Action<DocumentStorageInstallBuilder> action) 
@@ -110,5 +109,10 @@ public class DocumentApplicationBuilder
     public void UsePlagiarismSearcher<T>() where T : class, IPlagiarismSearchProvider
     {
         _serviceCollection.AddSingleton<IPlagiarismSearchProvider, T>();
+    }
+    
+    public void UseDocumentLoadingProvider<T>() where T : class, IDocumentLoadingProvider
+    {
+        _serviceCollection.AddSingleton<IDocumentLoadingProvider, T>();
     }
 }

@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Applicatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.App.Domain", "Application\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj", "{6917DFC6-34C3-43A7-883B-5592D62AA944}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Services.Documents", "Documents\Services\UniDocuments.Text.Services.Documents\UniDocuments.Text.Services.Documents.csproj", "{50CEEF1C-F721-4F84-B8B3-C9404BF58289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniDocuments.Text.Services.Cache", "Documents\Services\UniDocuments.Text.Services.Cache\UniDocuments.Text.Services.Cache.csproj", "{50CEEF1C-F721-4F84-B8B3-C9404BF58289}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.Neural", "Documents\Services\UniDocuments.Text.Services.Neural\UniDocuments.Text.Services.Neural.csproj", "{586011BD-EE9B-4650-BC67-F1B165A8A103}"
 EndProject
@@ -84,6 +84,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.Matching", "Documents\Services\UniDocuments.Text.Services.Matching\UniDocuments.Text.Services.Matching.csproj", "{C1CEE84C-7350-4DB7-AB12-5E9626297F1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Providers.Matching", "Documents\Providers\UniDocuments.Text.Providers.Matching\UniDocuments.Text.Providers.Matching.csproj", "{3332C60D-3434-4698-AA85-B9660510127F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Providers.Loading", "Documents\Providers\UniDocuments.Text.Providers.Loading\UniDocuments.Text.Providers.Loading.csproj", "{737BC580-0D59-4A82-ADEB-B20CEC5C75B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,6 +209,10 @@ Global
 		{3332C60D-3434-4698-AA85-B9660510127F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3332C60D-3434-4698-AA85-B9660510127F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3332C60D-3434-4698-AA85-B9660510127F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{737BC580-0D59-4A82-ADEB-B20CEC5C75B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{737BC580-0D59-4A82-ADEB-B20CEC5C75B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{737BC580-0D59-4A82-ADEB-B20CEC5C75B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{737BC580-0D59-4A82-ADEB-B20CEC5C75B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -248,6 +254,7 @@ Global
 		{391B88DE-4736-4DB0-9D0B-134698894D9C} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{C1CEE84C-7350-4DB7-AB12-5E9626297F1A} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{3332C60D-3434-4698-AA85-B9660510127F} = {EC951D49-BF44-47BE-AB0D-2149B118DA65}
+		{737BC580-0D59-4A82-ADEB-B20CEC5C75B9} = {EC951D49-BF44-47BE-AB0D-2149B118DA65}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}

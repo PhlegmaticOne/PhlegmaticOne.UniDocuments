@@ -19,12 +19,13 @@
       <ProjectReference Include="..\..\..\Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\..\..\Application\Services\UniDocuments.App.Services\UniDocuments.App.Services.csproj" />
       <ProjectReference Include="..\..\..\Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers.Loading\UniDocuments.Text.Providers.Loading.csproj" />
       <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers.Matching\UniDocuments.Text.Providers.Matching.csproj" />
       <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers.PlagiarismSearching\UniDocuments.Text.Providers.PlagiarismSearching.csproj" />
       <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers.Comparing\UniDocuments.Text.Providers.Comparing.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.BaseMetrics\UniDocuments.Text.Services.BaseMetrics.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.DocumentMapping\UniDocuments.Text.Services.DocumentMapping.csproj" />
-      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Documents\UniDocuments.Text.Services.Documents.csproj" />
+      <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Cache\UniDocuments.Text.Services.Cache.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.FileStorage\UniDocuments.Text.Services.FileStorage.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Fingerprinting\UniDocuments.Text.Services.Fingerprinting.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Matching\UniDocuments.Text.Services.Matching.csproj" />
@@ -42,10 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="doc2vec_model.py">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="custom_model.py">
+      <None Update="document_models.py">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

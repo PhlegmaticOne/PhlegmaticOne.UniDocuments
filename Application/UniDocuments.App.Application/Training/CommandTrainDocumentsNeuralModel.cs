@@ -16,19 +16,19 @@ public class CommandTrainDocumentsNeuralModel : IRequest
 public class CommandTrainDocumentsNeuralModelHandler : IRequestHandler<CommandTrainDocumentsNeuralModel>
 {
     private readonly IDocumentsNeuralModel _documentsNeuralModel;
-    private readonly IDocumentsNeuralSource _documentsNeuralSource;
+    private readonly IDocumentsTrainDatasetSource _documentsTrainDatasetSource;
 
     public CommandTrainDocumentsNeuralModelHandler(
         IDocumentsNeuralModel documentsNeuralModel,
-        IDocumentsNeuralSource documentsNeuralSource)
+        IDocumentsTrainDatasetSource documentsTrainDatasetSource)
     {
         _documentsNeuralModel = documentsNeuralModel;
-        _documentsNeuralSource = documentsNeuralSource;
+        _documentsTrainDatasetSource = documentsTrainDatasetSource;
     }
     
     public async Task Handle(CommandTrainDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
-        await _documentsNeuralModel.TrainAsync(_documentsNeuralSource, cancellationToken);
+        await _documentsNeuralModel.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
         await _documentsNeuralModel.SaveAsync(request.SavePath, cancellationToken);
     }
 }

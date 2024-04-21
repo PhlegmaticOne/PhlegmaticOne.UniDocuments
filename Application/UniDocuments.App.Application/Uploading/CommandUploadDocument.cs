@@ -4,8 +4,8 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
-using UniDocuments.Text.Domain.Services.Documents;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
@@ -30,7 +30,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     private readonly IDocumentsStorage _documentsStorage;
     private readonly IStreamContentReader _streamContentReader;
     private readonly IFingerprintComputer _fingerprintComputer;
-    private readonly IUniDocumentsService _uniDocumentsService;
+    private readonly IUniDocumentsCache _documentsCache;
     private readonly IDocumentMapper _documentMapper;
     private readonly ApplicationDbContext _dbContext;
 
@@ -38,14 +38,14 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         IDocumentsStorage documentsStorage, 
         IStreamContentReader streamContentReader,
         IFingerprintComputer fingerprintComputer,
-        IUniDocumentsService uniDocumentsService,
+        IUniDocumentsCache documentsCache,
         IDocumentMapper documentMapper,
         ApplicationDbContext dbContext)
     {
         _documentsStorage = documentsStorage;
         _streamContentReader = streamContentReader;
         _fingerprintComputer = fingerprintComputer;
-        _uniDocumentsService = uniDocumentsService;
+        _documentsCache = documentsCache;
         _documentMapper = documentMapper;
         _dbContext = dbContext;
     }
@@ -57,7 +57,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
 
         var document = new UniDocument(documentId, content);
-        await _uniDocumentsService.SaveAsync(document, cancellationToken);
+        _documentsCache.Cache(document);
         _documentMapper.AddDocument(document, "test");
 
         await _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument

@@ -8,17 +8,17 @@ namespace UniDocuments.Text.Services.StreamReading;
 
 public class StreamContentReaderWordDocument : IStreamContentReader
 {
-    private readonly IParagraphOptionsProvider _paragraphOptionsProvider;
+    private readonly ITextProcessOptionsProvider _textProcessOptionsProvider;
 
-    public StreamContentReaderWordDocument(IParagraphOptionsProvider paragraphOptionsProvider)
+    public StreamContentReaderWordDocument(ITextProcessOptionsProvider textProcessOptionsProvider)
     {
-        _paragraphOptionsProvider = paragraphOptionsProvider;
+        _textProcessOptionsProvider = textProcessOptionsProvider;
     }
     
     public Task<UniDocumentContent> ReadAsync(Stream stream, CancellationToken cancellationToken)
     {
         var result = new UniDocumentContent();
-        var options = _paragraphOptionsProvider.GetOptions();
+        var options = _textProcessOptionsProvider.GetOptions();
         
         using (var wordDocument = WordprocessingDocument.Open(stream, false))
         {

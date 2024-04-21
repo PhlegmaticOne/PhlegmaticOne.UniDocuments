@@ -13,9 +13,9 @@ public class StreamContentReaderInstallBuilder
         _serviceCollection = serviceCollection;
     }
     
-    public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, IParagraphOptionsProvider
+    public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, ITextProcessOptionsProvider
     {
-        _serviceCollection.AddSingleton<IParagraphOptionsProvider, T>();
-        _serviceCollection.Configure<ParagraphOptions>(configuration.GetSection(nameof(ParagraphOptions)));
+        _serviceCollection.AddSingleton<ITextProcessOptionsProvider, T>();
+        _serviceCollection.Configure<TextProcessOptions>(configuration.GetSection(nameof(TextProcessOptions)));
     }
 }
