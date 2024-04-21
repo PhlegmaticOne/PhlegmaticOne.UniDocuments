@@ -107,8 +107,8 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddScoped<ITextCompareProvider, T>();
     }
     
-    public void UsePlagiarismSearcher<T>() where T : class, IPlagiarismSearcher
+    public void UsePlagiarismSearcher<T>() where T : class, IPlagiarismSearchProvider
     {
-        _serviceCollection.AddSingleton<IPlagiarismSearcher, T>();
+        _serviceCollection.AddSingleton<IPlagiarismSearchProvider, T>();
     }
 }

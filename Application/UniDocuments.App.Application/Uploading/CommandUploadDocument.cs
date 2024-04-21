@@ -66,7 +66,9 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
             ActivityId = request.ActivityId,
             StudentId = request.ProfileId,
             DateLoaded = DateTime.UtcNow,
-            Fingerprint = JsonConvert.SerializeObject(fingerprint)
+            Fingerprint = JsonConvert.SerializeObject(fingerprint),
+            Name = "test",
+            ValuableParagraphsCount = content.ParagraphsCount
         }, cancellationToken);
 
         await _dbContext.SaveChangesAsync(cancellationToken);

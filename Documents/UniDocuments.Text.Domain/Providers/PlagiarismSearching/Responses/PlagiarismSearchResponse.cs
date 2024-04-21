@@ -6,7 +6,7 @@ namespace UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 public class PlagiarismSearchResponse
 {
     [JsonConstructor]
-    public PlagiarismSearchResponse(List<ParagraphPlagiarismData> suspiciousParagraphs, List<DocumentSearchData> suspiciousDocuments)
+    public PlagiarismSearchResponse(List<ParagraphPlagiarismData> suspiciousParagraphs, DocumentSearchData[] suspiciousDocuments)
     {
         SuspiciousParagraphs = suspiciousParagraphs;
         SuspiciousDocuments = suspiciousDocuments;
@@ -15,5 +15,5 @@ public class PlagiarismSearchResponse
     [JsonProperty]
     public List<ParagraphPlagiarismData> SuspiciousParagraphs { get; set; }
     [JsonProperty]
-    public List<DocumentSearchData> SuspiciousDocuments { get; set; }
+    public DocumentSearchData[] SuspiciousDocuments { get; set; }
 }

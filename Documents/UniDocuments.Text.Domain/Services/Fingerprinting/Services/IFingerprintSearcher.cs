@@ -4,5 +4,5 @@ namespace UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 public interface IFingerprintSearcher
 {
-    Task<List<DocumentSearchData>> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken);
+    Task<DocumentSearchData[]> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken);
 }

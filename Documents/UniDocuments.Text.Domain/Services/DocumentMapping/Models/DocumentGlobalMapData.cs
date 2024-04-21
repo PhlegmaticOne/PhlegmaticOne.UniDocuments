@@ -11,5 +11,5 @@ public class DocumentGlobalMapData
 
     public Guid Id { get; }
     public string Name { get; }
-    private int GlobalFirstParagraphId { get; }
+    public int GlobalFirstParagraphId { get; }
 }

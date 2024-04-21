@@ -22,7 +22,12 @@ public abstract class PythonTask<TIn, TOut> : PythonTask
         _completionSource = new TaskCompletionSource<TOut?>();
     }
 
-    public Task<TOut?> Execute(IPythonTaskPool taskPool)
+    public Task<TOut?> Execute()
+    {
+        return ExecuteOnPool(TaskPool!);
+    } 
+    
+    public Task<TOut?> ExecuteOnPool(IPythonTaskPool taskPool)
     {
         if (_isCompleted)
         {
@@ -51,5 +56,17 @@ public abstract class PythonTask<TIn, TOut> : PythonTask
         }
         
         return _completionSource.Task;
+    }
+}
+
+public abstract class PythonUnitTask<T> : PythonTask<T, PythonUnit>
+{
+    protected PythonUnitTask(T input) : base(input)
+    {
+    }
+
+    protected sealed override PythonUnit MapResult(dynamic result)
+    {
+        return new PythonUnit();
     }
 }

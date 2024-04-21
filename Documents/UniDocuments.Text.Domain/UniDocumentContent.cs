@@ -4,7 +4,7 @@ public class UniDocumentContent
 {
     private const char Space = ' ';
     
-    public List<UniContentParagraph> Paragraphs { get; }
+    public List<string> Paragraphs { get; }
 
     public int ParagraphsCount => Paragraphs.Count;
 
@@ -17,13 +17,12 @@ public class UniDocumentContent
 
     public UniDocumentContent()
     {
-        Paragraphs = new List<UniContentParagraph>();
+        Paragraphs = new List<string>();
     }
 
     public void AddParagraph(string content)
     {
-        var id = Paragraphs.Count;
-        Paragraphs.Add(new UniContentParagraph(id, content));
+        Paragraphs.Add(content);
     }
 
     public string ToRawText(char separator = Space)

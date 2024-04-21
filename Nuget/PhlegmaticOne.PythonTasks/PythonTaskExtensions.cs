@@ -13,6 +13,6 @@ public static class PythonTaskExtensions
             throw new ArgumentException("TaskPool is null");
         }
         
-        return pythonTask.Execute(taskPool).GetAwaiter();
+        return pythonTask.ExecuteOnPool(taskPool).GetAwaiter();
     }
 }

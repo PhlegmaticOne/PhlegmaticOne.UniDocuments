@@ -1,7 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿var result = new int[5]
+{
+    5, 66, 123, 543, 67
+};
 
-var set = new HashSet<uint> { uint.MaxValue, 534534535 };
-var json = JsonConvert.SerializeObject(set);
-var test = JsonConvert.DeserializeObject<HashSet<uint>>(json);
+Array.Sort(result, (a, b) => a.CompareTo(b));
 
-Console.WriteLine(test.First());
+foreach (var i in result)
+{
+    Console.WriteLine(i);
+}

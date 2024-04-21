@@ -20,34 +20,29 @@ def preprocess_and_tokenize(text, patterns="[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\
 
 
 class DocumentStream(object):
-    def __init__(self, getter, options):
-        self.getter = getter
+    def __init__(self, source, options):
+        self.source = source
         self.options = options
 
     def __iter__(self):
-        paragraph_id = -1
-        self.getter.InitializeAsync().GetAwaiter().GetResult()
+        self.source.InitializeAsync().GetAwaiter().GetResult()
         
         while True:
-            document = self.getter.GetNextDocumentAsync().GetAwaiter().GetResult()
+            document = self.source.GetNextDocumentAsync().GetAwaiter().GetResult()
             
             if document.HasData is False:
-                self.getter.Dispose()
+                self.source.Dispose()
                 break
             
-            for paragraph in document.Content.Paragraphs:
+            for paragraph in document.Paragraphs:
                 words = preprocess_and_tokenize(paragraph.Content, patterns=self.options.TokenizeRegex)
-                
-                if len(words) <= self.options.ParagraphMinWordsCount:
-                    continue
-                    
-                paragraph_id += 1
-                paragraph.Id = paragraph_id
-                yield TaggedDocument(words=words, tags=[paragraph_id])
+                yield TaggedDocument(words=words, tags=[paragraph.GlobalId])
 
 
-def train(source, options):
-    
+def train(input_data):
+    options = input_data.Options
+    source = input_data.Source
+
     tagged_documents = DocumentStream(source, options)
 
     model = Doc2Vec(vector_size=options.VectorSize,
@@ -63,15 +58,22 @@ def train(source, options):
     return model
 
 
-def load(path):
-    return Doc2Vec.load(path)
+def load(input_data):
+    return Doc2Vec.load(input_data)
 
 
-def infer(model, options, text, top_n):
+def save(input_data):
+    model = input_data.Model
+    path = input_data.Path
+    model.save(path)
+    
+
+def infer(input_data):
+    model = input_data.Model
+    text = input_data.Content
+    options = input_data.Options
+    top_n = input_data.TopN
+    
     preprocess = preprocess_and_tokenize(text, patterns=options.TokenizeRegex)
-    
-    if len(preprocess) < options.ParagraphMinWordsCount:
-        return None
-    
     vec = model.infer_vector(preprocess)
     return model.docvecs.most_similar(vec, topn=top_n)

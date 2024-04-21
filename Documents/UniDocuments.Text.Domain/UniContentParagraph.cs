@@ -2,13 +2,10 @@
 
 public class UniContentParagraph
 {
-    public int Id { set; get; }
-    public int OriginalId { get; }
     public string Content { get; }
 
-    public UniContentParagraph(int originalId, string content)
+    public UniContentParagraph(string content)
     {
-        OriginalId = originalId;
         Content = content;
     }
     

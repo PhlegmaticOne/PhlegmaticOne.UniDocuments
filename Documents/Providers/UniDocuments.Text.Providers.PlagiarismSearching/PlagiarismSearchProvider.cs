@@ -7,12 +7,12 @@ using UniDocuments.Text.Domain.Services.Neural.Requests;
 
 namespace UniDocuments.Text.Providers.PlagiarismSearching;
 
-public class PlagiarismSearcher : IPlagiarismSearcher
+public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {
     private readonly IDocumentsNeuralModel _documentsNeuralModel;
     private readonly IFingerprintSearcher _fingerprintSearcher;
 
-    public PlagiarismSearcher(
+    public PlagiarismSearchProvider(
         IDocumentsNeuralModel documentsNeuralModel, 
         IFingerprintSearcher fingerprintSearcher)
     {
@@ -25,10 +25,11 @@ public class PlagiarismSearcher : IPlagiarismSearcher
     {
         var documentId = request.DocumentId;
         
-        var topFingerprintsTask = _fingerprintSearcher.SearchTopAsync(documentId, request.NDocuments, cancellationToken);
-        var searchRequest = new NeuralSearchPlagiarismRequest(documentId, request.NDocuments);
-        var topParagraphs = await _documentsNeuralModel.FindSimilarAsync(searchRequest, cancellationToken);
-        var topFingerprints = await topFingerprintsTask;
+        var topFingerprints = await _fingerprintSearcher
+            .SearchTopAsync(documentId, request.NDocuments, cancellationToken);
+        
+        var topParagraphs = await _documentsNeuralModel
+            .FindSimilarAsync(new NeuralSearchPlagiarismRequest(documentId, request.NDocuments), cancellationToken);
         
         return new PlagiarismSearchResponse(topParagraphs, topFingerprints);
     }

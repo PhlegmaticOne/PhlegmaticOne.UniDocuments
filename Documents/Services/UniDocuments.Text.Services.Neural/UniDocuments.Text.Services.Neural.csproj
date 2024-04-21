@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj" />
       <ProjectReference Include="..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 

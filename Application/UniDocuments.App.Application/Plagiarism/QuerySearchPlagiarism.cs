@@ -19,16 +19,16 @@ public class QuerySearchPlagiarism : IRequest<PlagiarismSearchResponse>
 
 public class QuerySearchPlagiarismHandler : IRequestHandler<QuerySearchPlagiarism, PlagiarismSearchResponse>
 {
-    private readonly IPlagiarismSearcher _plagiarismSearcher;
+    private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
 
-    public QuerySearchPlagiarismHandler(IPlagiarismSearcher plagiarismSearcher)
+    public QuerySearchPlagiarismHandler(IPlagiarismSearchProvider plagiarismSearchProvider)
     {
-        _plagiarismSearcher = plagiarismSearcher;
+        _plagiarismSearchProvider = plagiarismSearchProvider;
     }
     
     public Task<PlagiarismSearchResponse> Handle(QuerySearchPlagiarism request, CancellationToken cancellationToken)
     {
         var searchRequest = new PlagiarismSearchRequest(request.DocumentId, request.TopN, ""); 
-        return _plagiarismSearcher.SearchAsync(searchRequest, cancellationToken);
+        return _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
     }
 }

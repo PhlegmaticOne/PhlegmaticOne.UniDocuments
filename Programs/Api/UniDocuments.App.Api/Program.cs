@@ -28,6 +28,7 @@ using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Models;
 using UniDocuments.Text.Services.Neural.Services;
+using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.Preprocessing.StopWords;
@@ -115,7 +116,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
     });
 
-    appBuilder.UseNeuralModel<DocumentNeuralModel>(b =>
+    appBuilder.UseNeuralModel<DocumentNeuralModelDoc2Vec>(b =>
     {
         b.UseDataSource<DocumentNeuralSourceInMemory, DocumentNeuralSourceSql>(isDevelopment);
         b.UseOptionsProvider<DocumentNeuralOptionsProvider>(builder.Configuration);
@@ -135,7 +136,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseOptionsProvider<ParagraphOptionsProvider>(builder.Configuration);
     });
     
-    appBuilder.UsePlagiarismSearcher<PlagiarismSearcher>();
+    appBuilder.UsePlagiarismSearcher<PlagiarismSearchProvider>();
     
     appBuilder.UseSimilarityService<TextCompareProvider>();
 });
@@ -143,7 +144,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
 builder.Services.AddJwtTokenGeneration(jwtOptions);
-builder.Services.AddPythonTaskPool("doc2vec_model", "custom_model");
+builder.Services.AddPythonTaskPool("doc2vec_model");
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {

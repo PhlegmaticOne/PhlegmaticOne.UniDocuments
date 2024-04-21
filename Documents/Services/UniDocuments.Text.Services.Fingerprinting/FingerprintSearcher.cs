@@ -6,19 +6,6 @@ namespace UniDocuments.Text.Services.Fingerprinting;
 
 public class FingerprintSearcher : IFingerprintSearcher
 {
-    private class FingerprintComputeData
-    {
-        public static FingerprintComputeData Empty => new(Guid.Empty, 0);
-        public FingerprintComputeData(Guid documentId, int sharedCount)
-        {
-            DocumentId = documentId;
-            SharedCount = sharedCount;
-        }
-
-        public Guid DocumentId { get; }
-        public int SharedCount { get; }
-    }
-    
     private readonly IFingerprintContainer _fingerprintContainer;
     private readonly IDocumentMapper _documentMapper;
 
@@ -28,60 +15,52 @@ public class FingerprintSearcher : IFingerprintSearcher
         _documentMapper = documentMapper;
     }
     
-    public Task<List<DocumentSearchData>> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken)
+    public Task<DocumentSearchData[]> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken)
     {
         return Task.Run(() => ComputeTopFingerprints(documentId, topN), cancellationToken);
     }
 
-    private List<DocumentSearchData> ComputeTopFingerprints(Guid documentId, int topN)
+    private DocumentSearchData[] ComputeTopFingerprints(Guid documentId, int topN)
     {
-        var currentMaxIndex = 0;
-        var topNFingerprints = new FingerprintComputeData[topN];
-        var fingerprint = _fingerprintContainer.Get(documentId)!;
-        Array.Fill(topNFingerprints, FingerprintComputeData.Empty);
+        var isSorted = false;
+        var currentIndex = 0;
+        var allFingerprints = _fingerprintContainer.GetAll();
+        var n = allFingerprints.Count - 1 < topN ? allFingerprints.Count - 1 : topN;
+        var documentFingerprint = _fingerprintContainer.Get(documentId);
+        var result = new DocumentSearchData[n];
 
-        foreach (var documentFingerprintData in _fingerprintContainer.GetAll())
+        foreach (var (id, fingerprint) in allFingerprints)
         {
-            var other = documentFingerprintData.Value!;
-            
-            if (fingerprint == other)
+            if (documentId == id)
             {
                 continue;
             }
 
-            var count = fingerprint.GetSharedPrintsCount(other);
+            var similarity = documentFingerprint.CalculateJaccard(fingerprint);
+            var documentName = _documentMapper.GetDocumentData(id).Name;
 
-            if (currentMaxIndex < topN)
+            if (currentIndex < topN)
             {
-                if (count > topNFingerprints[currentMaxIndex].SharedCount)
-                {
-                    topNFingerprints[currentMaxIndex] = new FingerprintComputeData(documentFingerprintData.Key, count);
-                    currentMaxIndex++;
-                }
+                result[currentIndex] = new DocumentSearchData(id, documentName, similarity);
+                currentIndex++;
+                continue;
             }
-            else
+
+            if (!isSorted)
             {
-                if (count > topNFingerprints[^1].SharedCount)
+                Array.Sort(result, (a, b) => a.Similarity.CompareTo(b.Similarity));
+                isSorted = true;
+            }
+
+            for (var i = topN - 1; i >= 0; i--)
+            {
+                if (similarity > result[i].Similarity)
                 {
-                    ShiftArray(topNFingerprints, new FingerprintComputeData(documentFingerprintData.Key, count));
+                    result[i] = new DocumentSearchData(id, documentName, similarity);
                 }
             }
         }
 
-        return topNFingerprints.Where(x => x.SharedCount != 0).Select(x => new DocumentSearchData
-        {
-            Id = x.DocumentId,
-            Name = _documentMapper.GetDocumentData(x.DocumentId).Name
-        }).ToList();
-    }
-
-    private static void ShiftArray(FingerprintComputeData[] originalArray, FingerprintComputeData newLast)
-    {
-        for (var i = 1; i < originalArray.Length; i++)
-        {
-            originalArray[i - 1] = originalArray[i];
-        }
-
-        originalArray[^1] = newLast;
+        return result;
     }
 }

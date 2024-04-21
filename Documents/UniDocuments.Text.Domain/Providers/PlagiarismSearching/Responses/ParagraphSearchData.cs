@@ -5,8 +5,8 @@ namespace UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 [Serializable]
 public struct ParagraphSearchData
 {
-    [JsonProperty] public int OriginalId;
+    [JsonProperty] public int Id;
     [JsonProperty] public Guid DocumentId;
-    [JsonProperty] public float Similarity;
+    [JsonProperty] public double Similarity;
     [JsonProperty] public string DocumentName;
 }

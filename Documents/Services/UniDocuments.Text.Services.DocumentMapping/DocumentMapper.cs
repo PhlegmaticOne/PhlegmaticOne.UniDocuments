@@ -16,13 +16,18 @@ public class DocumentMapper : IDocumentMapper
         _documentsIdMap = new Dictionary<Guid, int>();
     }
 
-    public int GetDocumentForGlobalParagraphId(int paragraphId)
+    public int GetDocumentIdFromGlobalParagraphId(int paragraphId)
     {
         return _paragraphsToDocumentsMap[paragraphId];
     }
 
-    public DocumentGlobalMapData GetDocumentData(int documentId)
+    public DocumentGlobalMapData? GetDocumentData(int documentId)
     {
+        if (documentId < 0 || documentId >= _documentsMap.Count)
+        {
+            return null;
+        }
+        
         return _documentsMap[documentId];
     }
 

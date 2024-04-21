@@ -3,5 +3,5 @@
 public interface IDocumentsNeuralSource : IDisposable
 {
     Task InitializeAsync();
-    Task<UniDocument> GetNextDocumentAsync();
+    Task<DocumentNeuralViewModel> GetNextDocumentAsync();
 }

@@ -29,11 +29,11 @@ public class TextFingerprint
 
     public double CalculateJaccard(TextFingerprint other)
     {
-        var intersection = Entries.ToHashSet();
-        var union = Entries.ToHashSet();
-        intersection.IntersectWith(other.Entries);
-        union.UnionWith(other.Entries);
-        return (double)intersection.Count / union.Count;
+        var otherEntries = other.Entries;
+        var intersectionSize = Entries.Count(finger => otherEntries.Contains(finger));
+        var unionSize = Entries.Count + other.Entries.Count - intersectionSize;
+        var similarity = (double)intersectionSize / unionSize;
+        return similarity;
     }
 
     public bool HasFingerprint(uint fingerprint)
