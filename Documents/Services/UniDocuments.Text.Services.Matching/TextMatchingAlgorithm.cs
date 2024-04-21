@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
-using UniDocuments.Text.Algorithms.SequenceMatching;
 using UniDocuments.Text.Domain.Services.Matching;
 using UniDocuments.Text.Domain.Services.Matching.Models;
 using UniDocuments.Text.Domain.Services.Matching.Options;
 using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Services.Matching.Algorithms;
 using UniDocuments.Text.Services.Matching.Grams;
 
 namespace UniDocuments.Text.Services.Matching;

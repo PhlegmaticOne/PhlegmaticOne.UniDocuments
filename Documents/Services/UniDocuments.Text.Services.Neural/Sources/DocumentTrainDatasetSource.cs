@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Domain;
+﻿using PhlegmaticOne.PythonTasks;
+using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentMapping.Models;
@@ -7,36 +8,29 @@ using UniDocuments.Text.Domain.Services.Neural.Models;
 
 namespace UniDocuments.Text.Services.Neural.Sources;
 
+[UseInPython]
 public class DocumentTrainDatasetSource : IDocumentsTrainDatasetSource
 {
     private readonly IDocumentMapper _documentMapper;
     private readonly IDocumentLoadingProvider _documentLoadingProvider;
-
-    private CancellationToken _cancellationToken;
-    private int _currentIndex;
+    private readonly CancellationToken _cancellationToken;
 
     public DocumentTrainDatasetSource(IDocumentMapper documentMapper, IDocumentLoadingProvider documentLoadingProvider)
     {
         _documentMapper = documentMapper;
         _documentLoadingProvider = documentLoadingProvider;
-    }
-    
-    public void Initialize()
-    {
-        _currentIndex = 0;
         _cancellationToken = CancellationToken.None;
     }
 
-    public async Task<DocumentTrainModel> GetNextDocumentAsync()
+    public async Task<DocumentTrainModel> GetDocumentAsync(int id)
     {
-        var documentData = _documentMapper.GetDocumentData(_currentIndex);
+        var documentData = _documentMapper.GetDocumentData(id);
 
         if (documentData is null)
         {
             return DocumentTrainModel.Empty;
         }
 
-        _currentIndex += 1;
         var document = await _documentLoadingProvider.LoadAsync(documentData.Id, false, _cancellationToken);
         return CreateDocument(document.Content!, documentData);
     }
@@ -56,11 +50,6 @@ public class DocumentTrainDatasetSource : IDocumentsTrainDatasetSource
         }
         
         return batch;
-    }
-
-    public void Dispose()
-    {
-        _currentIndex = 0;
     }
 
     private Dictionary<int, List<int>> GetLoadData(dynamic paragraphIds)

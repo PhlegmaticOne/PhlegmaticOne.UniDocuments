@@ -1,6 +1,6 @@
 ﻿using UniDocuments.Text.Domain.Services.BaseMetrics;
 using UniDocuments.Text.Domain.Services.Preprocessing;
-using UniDocuments.Text.Math;
+using UniDocuments.Text.Services.BaseMetrics.Infrastructure;
 using UniDocuments.Text.Services.BaseMetrics.Models;
 
 namespace UniDocuments.Text.Services.BaseMetrics;

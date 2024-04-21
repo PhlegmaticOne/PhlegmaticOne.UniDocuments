@@ -1,9 +1,9 @@
-﻿using UniDocuments.Text.Algorithms;
-using UniDocuments.Text.Domain;
+﻿using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Services.Fingerprinting.Extensions;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
 

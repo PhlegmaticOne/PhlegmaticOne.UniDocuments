@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Algorithms.SequenceMatching;
+﻿namespace UniDocuments.Text.Services.Matching.Algorithms;
 
 public static class SequenceMatcherExtensions
 {

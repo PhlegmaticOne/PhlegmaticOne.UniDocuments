@@ -1,7 +1,6 @@
-﻿using UniDocuments.Text.Algorithms.Hashing;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
+﻿using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
-namespace UniDocuments.Text.Services.Fingerprinting;
+namespace UniDocuments.Text.Services.Fingerprinting.Hashing;
 
 public class FingerprintHashCrc32C : IFingerprintHash
 {

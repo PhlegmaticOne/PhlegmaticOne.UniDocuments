@@ -2,9 +2,8 @@
 
 namespace UniDocuments.Text.Domain.Services.Neural;
 
-public interface IDocumentsTrainDatasetSource : IDisposable
+public interface IDocumentsTrainDatasetSource
 {
-    void Initialize();
-    Task<DocumentTrainModel> GetNextDocumentAsync();
+    Task<DocumentTrainModel> GetDocumentAsync(int id);
     Task<List<DocumentTrainModel>> GetBatchAsync(object paragraphIdsObject);
 }

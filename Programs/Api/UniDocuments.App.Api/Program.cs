@@ -25,6 +25,8 @@ using UniDocuments.Text.Services.DocumentMapping.Initializers;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
 using UniDocuments.Text.Services.Fingerprinting;
+using UniDocuments.Text.Services.Fingerprinting.Hashing;
+using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Custom.Core.Options;

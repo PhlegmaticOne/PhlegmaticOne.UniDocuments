@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Algorithms.SequenceMatching;
+﻿namespace UniDocuments.Text.Services.Matching.Algorithms;
 
 public struct SubSequence : IEquatable<SubSequence>, IFormattable
 {

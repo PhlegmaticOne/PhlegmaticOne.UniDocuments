@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Math;
+﻿namespace UniDocuments.Text.Services.BaseMetrics.Infrastructure;
 
 public readonly partial struct UniAngle : IEquatable<UniAngle>
 {

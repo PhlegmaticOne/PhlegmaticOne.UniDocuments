@@ -11,7 +11,6 @@ import nltk
 from nltk.corpus import stopwords
 import re
 from typing import List, Dict
-import gc
 
 InputWordsLayerName = 'input_words'
 InputDocumentsLayerName = 'input_documents'
@@ -82,10 +81,12 @@ class DocumentStream(object):
         self.options = options
 
     def __iter__(self):
+        document_id: int = 0
         self.source.Initialize()
 
         while True:
-            document = self.source.GetNextDocumentAsync().GetAwaiter().GetResult()
+            document = self.source.GetDocumentAsync(document_id).GetAwaiter().GetResult()
+            document_id += 1
 
             if document.HasData is False:
                 self.source.Dispose()
@@ -184,10 +185,12 @@ class DocumentsStreamSource(DocumentsStream):
         self.options = options
 
     def __iter__(self):
+        document_id: int = 0
         self.source.Initialize()
 
         while True:
-            document = self.source.GetNextDocumentAsync().GetAwaiter().GetResult()
+            document = self.source.GetDocumentAsync(document_id).GetAwaiter().GetResult()
+            document_id += 1
 
             if document.HasData is False:
                 self.source.Dispose()
@@ -435,4 +438,3 @@ class Doc2VecModel(object):
             return Concatenate(name=MergedLayerName, axis=1)([on_infer, shared])
         else:
             return Concatenate(name=MergedLayerName, axis=1)([on_train, shared])
-        

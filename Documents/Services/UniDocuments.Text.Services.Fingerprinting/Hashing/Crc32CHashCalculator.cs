@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Algorithms.Hashing;
+﻿namespace UniDocuments.Text.Services.Fingerprinting.Hashing;
 
 internal static class Crc32CHashCalculator
 {

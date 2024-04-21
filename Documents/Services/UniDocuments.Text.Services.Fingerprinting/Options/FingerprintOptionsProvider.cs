@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
 
-namespace UniDocuments.Text.Services.Fingerprinting;
+namespace UniDocuments.Text.Services.Fingerprinting.Options;
 
 public class FingerprintOptionsProvider : IFingerprintOptionsProvider
 {

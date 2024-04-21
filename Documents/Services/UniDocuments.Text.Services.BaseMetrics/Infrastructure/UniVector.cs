@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace UniDocuments.Text.Math;
+namespace UniDocuments.Text.Services.BaseMetrics.Infrastructure;
 
 public class UniVector<T> where T : INumber<T>
 {

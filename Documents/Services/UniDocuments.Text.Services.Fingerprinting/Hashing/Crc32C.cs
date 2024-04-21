@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Algorithms.Hashing;
+﻿namespace UniDocuments.Text.Services.Fingerprinting.Hashing;
 
 public static class Crc32C
 {

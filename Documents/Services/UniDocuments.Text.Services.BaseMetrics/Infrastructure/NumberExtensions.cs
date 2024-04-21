@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace UniDocuments.Text.Math;
+namespace UniDocuments.Text.Services.BaseMetrics.Infrastructure;
 
 public static class NumberExtensions
 {
