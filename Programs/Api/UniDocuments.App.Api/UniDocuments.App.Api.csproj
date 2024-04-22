@@ -19,7 +19,6 @@
       <ProjectReference Include="..\..\..\Application\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\..\..\Application\Services\UniDocuments.App.Services\UniDocuments.App.Services.csproj" />
       <ProjectReference Include="..\..\..\Application\UniDocuments.App.Application\UniDocuments.App.Application.csproj" />
-      <ProjectReference Include="..\..\..\Documents\Providers\UniDocuments.Text.Providers\UniDocuments.Text.Providers.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.BaseMetrics\UniDocuments.Text.Services.BaseMetrics.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.DocumentMapping\UniDocuments.Text.Services.DocumentMapping.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Cache\UniDocuments.Text.Services.Cache.csproj" />
@@ -29,6 +28,7 @@
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Neural\UniDocuments.Text.Services.Neural.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj" />
       <ProjectReference Include="..\..\..\Documents\Services\UniDocuments.Text.Services.StreamReading\UniDocuments.Text.Services.StreamReading.csproj" />
+      <ProjectReference Include="..\..\..\Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj" />
       <ProjectReference Include="..\..\..\Documents\UniDocuments.Text.Root\UniDocuments.Text.Root.csproj" />
       <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
       <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.PythonTasks\PhlegmaticOne.PythonTasks.csproj" />

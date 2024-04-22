@@ -6,7 +6,7 @@ using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.Matching;
 using UniDocuments.Text.Domain.Services.Matching.Options;
 
-namespace UniDocuments.Text.Providers.Comparing;
+namespace UniDocuments.Text.Application.Comparing;
 
 public class TextCompareProvider : ITextCompareProvider
 {

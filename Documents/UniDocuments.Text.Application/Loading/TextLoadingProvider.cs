@@ -5,7 +5,7 @@ using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
-namespace UniDocuments.Text.Providers.Loading;
+namespace UniDocuments.Text.Application.Loading;
 
 public class DocumentLoadingProvider : IDocumentLoadingProvider
 {

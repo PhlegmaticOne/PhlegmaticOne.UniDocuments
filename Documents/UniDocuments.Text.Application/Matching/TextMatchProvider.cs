@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Providers.Matching.Responses;
 using UniDocuments.Text.Domain.Services.Matching;
 using UniDocuments.Text.Domain.Services.Matching.Options;
 
-namespace UniDocuments.Text.Providers.Matching;
+namespace UniDocuments.Text.Application.Matching;
 
 public class TextMatchProvider : ITextMatchProvider
 {

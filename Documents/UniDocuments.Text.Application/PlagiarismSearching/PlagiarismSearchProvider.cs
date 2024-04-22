@@ -5,7 +5,7 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.Neural;
 
-namespace UniDocuments.Text.Providers.PlagiarismSearching;
+namespace UniDocuments.Text.Application.PlagiarismSearching;
 
 public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {

@@ -37,7 +37,7 @@ public class FingerprintSearcher : IFingerprintSearcher
             }
 
             var similarity = documentFingerprint.CalculateJaccard(fingerprint);
-            var documentName = _documentMapper.GetDocumentData(id).Name;
+            var documentName = _documentMapper.GetDocumentData(id)!.Name;
 
             if (currentIndex < topN)
             {
