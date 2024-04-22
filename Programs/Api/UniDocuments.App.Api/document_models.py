@@ -82,14 +82,12 @@ class DocumentStream(object):
 
     def __iter__(self):
         document_id: int = 0
-        self.source.Initialize()
 
         while True:
             document = self.source.GetDocumentAsync(document_id).GetAwaiter().GetResult()
             document_id += 1
 
             if document.HasData is False:
-                self.source.Dispose()
                 break
 
             for paragraph in document.Paragraphs:
@@ -114,6 +112,8 @@ def save_custom(input_data):
 
 
 def load_custom(input_data):
+    print('test')
+    print('start load: {0}'.format(input_data))
     return load_model(input_data)
 
 
@@ -186,14 +186,12 @@ class DocumentsStreamSource(DocumentsStream):
 
     def __iter__(self):
         document_id: int = 0
-        self.source.Initialize()
 
         while True:
             document = self.source.GetDocumentAsync(document_id).GetAwaiter().GetResult()
             document_id += 1
 
             if document.HasData is False:
-                self.source.Dispose()
                 break
 
             for paragraph in document.Paragraphs:

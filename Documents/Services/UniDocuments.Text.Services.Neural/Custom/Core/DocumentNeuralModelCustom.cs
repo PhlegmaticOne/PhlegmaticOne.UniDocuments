@@ -12,6 +12,8 @@ namespace UniDocuments.Text.Services.Neural.Custom.Core;
 
 public abstract class DocumentNeuralModelCustom<T> : IDocumentsNeuralModel where T : CustomModelOptions, new()
 {
+    private const string ModelNameFormat = "{0}.keras";
+    
     private readonly INeuralOptionsProvider<T> _optionsProvider;
     private readonly IDocumentMapper _documentMapper;
 
@@ -27,12 +29,14 @@ public abstract class DocumentNeuralModelCustom<T> : IDocumentsNeuralModel where
 
     public Task SaveAsync(string path, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        var savePath = GetModelPath(path);
+        return _customManagedModel!.SaveAsync(savePath);
     }
 
-    public Task LoadAsync(string path, CancellationToken cancellationToken)
+    public async Task LoadAsync(string path, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        var loadPath = GetModelPath(path);
+        _customManagedModel = await new PythonTaskLoadCustomModel(loadPath);
     }
 
     public async Task TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
@@ -46,5 +50,11 @@ public abstract class DocumentNeuralModelCustom<T> : IDocumentsNeuralModel where
         UniDocument document, int topN, CancellationToken cancellationToken)
     {
         return Task.FromResult(new List<ParagraphPlagiarismData>());
+    }
+    
+    private string GetModelPath(string basePath)
+    {
+        var name = string.Format(ModelNameFormat, Name);
+        return Path.Combine(basePath, name);
     }
 }

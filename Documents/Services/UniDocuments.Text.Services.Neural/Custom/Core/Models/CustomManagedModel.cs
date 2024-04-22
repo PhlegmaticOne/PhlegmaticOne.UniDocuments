@@ -1,4 +1,7 @@
-﻿namespace UniDocuments.Text.Services.Neural.Custom.Core.Models;
+﻿using PhlegmaticOne.PythonTasks;
+using UniDocuments.Text.Services.Neural.Custom.Core.Tasks;
+
+namespace UniDocuments.Text.Services.Neural.Custom.Core.Models;
 
 public class CustomManagedModel
 {
@@ -7,5 +10,11 @@ public class CustomManagedModel
     public CustomManagedModel(dynamic model)
     {
         _model = model;
+    }
+
+    public async Task SaveAsync(string path)
+    {
+        var input = new SaveCustomModelInput(path, _model);
+        await new PythonTaskSaveCustomModel(input);
     }
 }
