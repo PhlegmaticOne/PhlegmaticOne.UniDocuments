@@ -1,5 +1,8 @@
-﻿namespace UniDocuments.Text.Domain;
+﻿using Newtonsoft.Json;
 
+namespace UniDocuments.Text.Domain;
+
+[Serializable]
 public class UniDocument : IEquatable<UniDocument>
 {
     public Guid Id { get; }
@@ -9,6 +12,7 @@ public class UniDocument : IEquatable<UniDocument>
     
     public bool HasData => Content is not null;
     
+    [JsonConstructor]
     public UniDocument(Guid id, UniDocumentContent? content = null)
     {
         Id = id;

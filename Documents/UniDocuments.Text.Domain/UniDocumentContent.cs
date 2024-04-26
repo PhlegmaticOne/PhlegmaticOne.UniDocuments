@@ -1,11 +1,15 @@
-﻿namespace UniDocuments.Text.Domain;
+﻿using Newtonsoft.Json;
 
+namespace UniDocuments.Text.Domain;
+
+[Serializable]
 public class UniDocumentContent
 {
     private const char Space = ' ';
     
     public List<string> Paragraphs { get; }
 
+    [JsonIgnore]
     public int ParagraphsCount => Paragraphs.Count;
 
     public static UniDocumentContent FromString(string value)

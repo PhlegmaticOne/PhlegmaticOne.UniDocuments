@@ -6,7 +6,6 @@ from keras.utils import to_categorical
 import numpy as np
 import tensorflow as tf
 import keras
-from keras.backend import mean
 import nltk
 from nltk.corpus import stopwords
 import re
