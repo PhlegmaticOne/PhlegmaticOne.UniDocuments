@@ -22,9 +22,6 @@ public class StudyActivityConfiguration : IEntityTypeConfiguration<StudyActivity
 
         builder.HasIndex(x => x.Name);
 
-        builder.HasMany(x => x.Groups)
-            .WithMany(x => x.Activities);
-
         builder.HasMany(x => x.Documents)
             .WithOne(x => x.Activity)
             .HasForeignKey(x => x.ActivityId);
