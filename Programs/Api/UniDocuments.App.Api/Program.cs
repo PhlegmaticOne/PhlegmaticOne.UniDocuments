@@ -29,11 +29,10 @@ using UniDocuments.Text.Services.Fingerprinting.Hashing;
 using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
-using UniDocuments.Text.Services.Neural.Custom.Core.Options;
-using UniDocuments.Text.Services.Neural.Custom.Doc2Vec;
-using UniDocuments.Text.Services.Neural.Custom.Lstm;
-using UniDocuments.Text.Services.Neural.Doc2Vec;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
+using UniDocuments.Text.Services.Neural.Keras.Core.Options;
+using UniDocuments.Text.Services.Neural.Keras.Doc2Vec;
+using UniDocuments.Text.Services.Neural.Keras.Lstm;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
@@ -119,12 +118,12 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
     });
 
-    appBuilder.UseNeuralModel<DocumentNeuralModelCustomLstm>(b =>
+    appBuilder.UseNeuralModel<DocumentNeuralModelKerasDoc2Vec>(b =>
     {
         b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
         b.UseOptionsProvider<Doc2VecOptionsProvider, Doc2VecOptions>(builder.Configuration);
-        b.UseOptionsProvider<CustomModelOptionsProvider<CustomOptionsLstm>, CustomOptionsLstm>(builder.Configuration);
-        b.UseOptionsProvider<CustomModelOptionsProvider<CustomOptionsDoc2Vec>, CustomOptionsDoc2Vec>(builder.Configuration);
+        b.UseOptionsProvider<KerasModelOptionsProvider<KerasOptionsLstm>, KerasOptionsLstm>(builder.Configuration);
+        b.UseOptionsProvider<KerasModelOptionsProvider<KerasOptionsDoc2Vec>, KerasOptionsDoc2Vec>(builder.Configuration);
     });
     
     appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>
@@ -151,7 +150,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
 builder.Services.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
 builder.Services.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
 builder.Services.AddJwtTokenGeneration(jwtOptions);
-builder.Services.AddPythonTaskPool("document_models");
+builder.Services.AddPythonTaskPool("keras2vec", "doc2vec");
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {

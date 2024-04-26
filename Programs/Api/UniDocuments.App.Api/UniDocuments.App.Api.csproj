@@ -40,7 +40,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="document_models.py">
+      <None Update="keras2vec.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="doc2vec.py">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

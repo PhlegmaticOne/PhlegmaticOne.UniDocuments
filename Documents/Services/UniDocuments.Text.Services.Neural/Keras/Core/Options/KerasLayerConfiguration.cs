@@ -1,9 +1,9 @@
 ﻿using PhlegmaticOne.PythonTasks;
 
-namespace UniDocuments.Text.Services.Neural.Custom.Core.Options;
+namespace UniDocuments.Text.Services.Neural.Keras.Core.Options;
 
 [UseInPython]
-public class LayerConfiguration
+public class KerasLayerConfiguration
 {
     public string Name { get; set; } = null!;
     public string Type { get; set; } = null!;

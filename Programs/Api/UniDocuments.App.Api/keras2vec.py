@@ -1,16 +1,17 @@
-﻿from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-from keras.models import Model, load_model
-from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average
+﻿from keras.models import Model, load_model
+from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average, Flatten
 from keras.callbacks import EarlyStopping
 from keras.optimizers import Adam
 from keras.utils import to_categorical
 import numpy as np
 import tensorflow as tf
 import keras
+from keras.backend import mean
 import nltk
 from nltk.corpus import stopwords
 import re
 from typing import List, Dict
+from sklearn.metrics.pairwise import cosine_similarity
 
 InputWordsLayerName = 'input_words'
 InputDocumentsLayerName = 'input_documents'
@@ -24,46 +25,6 @@ nltk.download('stopwords')
 sw = stopwords.words('russian')
 
 
-def train_doc2vec(input_data) -> Doc2Vec:
-    options = input_data.Options
-    source = input_data.Source
-
-    tagged_documents = DocumentStream(source, options)
-
-    model = Doc2Vec(vector_size=options.EmbeddingSize,
-                    alpha=options.Alpha,
-                    min_alpha=options.MinAlpha,
-                    min_count=options.MinWordsCount,
-                    dm=options.Dm,
-                    epochs=options.Epochs,
-                    workers=options.WorkersCount)
-
-    model.build_vocab(tagged_documents)
-    model.train(tagged_documents, total_examples=model.corpus_count, epochs=model.epochs)
-    return model
-
-
-def load_doc2vec(input_data) -> Doc2Vec:
-    return Doc2Vec.load(input_data)
-
-
-def save_doc2vec(input_data):
-    model = input_data.Model
-    path = input_data.Path
-    model.save(path)
-
-
-def infer_doc2vec(input_data):
-    model = input_data.Model
-    text = input_data.Content
-    options = input_data.Options
-    top_n = input_data.TopN
-
-    preprocess = preprocess_and_tokenize(text, patterns=options.TokenizeRegex)
-    vec = model.infer_vector(preprocess)
-    return model.docvecs.most_similar(vec, topn=top_n)
-
-
 def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\"\\-−]+") -> List[str]:
     doc = re.sub(patterns, ' ', text).lower()
     tokens: List[str] = []
@@ -75,46 +36,40 @@ def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@
     return tokens
 
 
-class DocumentStream(object):
-    def __init__(self, source, options):
-        self.source = source
-        self.options = options
-
-    def __iter__(self):
-        document_id: int = 0
-
-        while True:
-            document = self.source.GetDocumentAsync(document_id).GetAwaiter().GetResult()
-            document_id += 1
-
-            if document.HasData is False:
-                break
-
-            for paragraph in document.Paragraphs:
-                words = preprocess_and_tokenize(paragraph.Content, patterns=self.options.TokenizeRegex)
-                yield TaggedDocument(words=words, tags=[paragraph.GlobalId])
-
-
-def train_custom(input_data):
+def train(input_data):
     options = input_data.Options
     source = input_data.Source
     stream = DocumentsStreamSource(source, options)
-    model = Doc2VecModel(stream, options)
+    model = KerasDoc2Vec(stream, options)
     model.build(is_infer=False)
     model.train(options.Epochs, options.LearningRate, options.Verbose)
     return model
 
 
-def save_custom(input_data):
+def save(input_data):
     model = input_data.Model
     path = input_data.Path
     model.save(path)
 
 
-def load_custom(input_data):
-    print('test')
-    print('start load: {0}'.format(input_data))
-    return load_model(input_data)
+def load(input_data):
+    options = input_data.Options
+    source = input_data.Source
+    model = load_model(input_data)
+    stream = DocumentsStreamSource(source, options)
+    result = KerasDoc2VecModelCustom(stream, options, model)
+    return result
+
+
+def infer(input_data):
+    model = input_data.Model
+    text = input_data.Content
+    options = input_data.Options
+    top_n = input_data.TopN
+
+    preprocess = preprocess_and_tokenize(text, patterns=options.TokenizeRegex)
+    document = DocumentModel(0, preprocess)
+    return model.infer_vector(document, top_n, verbose=1)
 
 
 def split_w(window_size):
@@ -137,6 +92,12 @@ def stack(window_size):
 
     return _lambda
 
+
+class InferenceData(object):
+    def __init__(self, cos, index):
+        self.cos = cos
+        self.index = index
+        
 
 class DocumentModel(object):
 
@@ -208,6 +169,7 @@ class DocumentsStreamSource(DocumentsStream):
 
 
 class DocumentVocab(object):
+    _UNKNOWN: str = '<unk>'
 
     def __init__(self, stream: DocumentsStream):
         current = 0
@@ -232,13 +194,15 @@ class DocumentVocab(object):
             index2word[current] = token
             current += 1
 
+        word2index[self._UNKNOWN] = len(word2index)
+
         self.word2index = word2index
         self.index2word = index2word
         self.documents_count = documents_count
         self.vocab_size = len(index2word)
 
     def to_index(self, token: str) -> int:
-        return self.word2index[token]
+        return self.word2index.get(token, self.word2index[self._UNKNOWN])
 
     def to_token(self, index: int) -> str:
         return self.index2word[index]
@@ -310,55 +274,31 @@ class DocumentsGenerator(keras.utils.Sequence):
         return inputs, outputs
 
 
-class Doc2VecModel(object):
-    def __init__(self, stream: DocumentsStream, options):
+class KerasDoc2VecModelBase(object):
+    def __init__(self, stream: DocumentsStream, options, model=None):
         self.options = options
         self.embedding_size = options.EmbeddingSize
         self.window_size = options.WindowSize
         self.vocab = DocumentVocab(stream)
         self.stream = stream
-        self.model = self.infer_model = None
+        self.model = model
+        self.infer_model = None
         self.generator = DocumentsGenerator(stream, self.vocab, self.vocab.documents_count,
                                             self.window_size, options.BatchSize)
 
     def build(self, is_infer: bool = False):
-        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
-        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
-
-        document_inference = Embedding(input_dim=1,
-                                       output_dim=self.embedding_size,
-                                       input_shape=(1,),
-                                       name=InferredDocumentsLayerName,
-                                       embeddings_initializer="uniform")(document_id_input)
-
-        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
-                                    output_dim=self.embedding_size,
-                                    input_shape=(self.window_size - 1,),
-                                    name=WordEmbeddingsLayerName)(words_input)
-
-        document_embedding = Embedding(input_dim=self.vocab.documents_count,
-                                       output_dim=self.embedding_size,
-                                       input_shape=(1,),
-                                       name=DocumentEmbeddingsLayerName)(document_id_input)
-
-        merged = self.__concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
-
-        last_hidden_layer = self.__create_hidden_layers(merged, self.options.Layers)
-
-        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(last_hidden_layer)
-
-        model = Model(inputs=[document_id_input, words_input], outputs=output)
-
-        self.__update_main_model(model, is_infer)
+        raise NotImplementedError()
 
     def train(self, epochs: int, learning_rate=0.1, verbose: int = 0):
-        early_stop_callback = EarlyStopping(monitor='loss', mode='min', patience=10, verbose=1)
+        early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
         optimizer = Adam(learning_rate=learning_rate)
         self.model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
         self.model.fit(self.generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
         self.__retrieve_embeddings(self.model)
 
-    def infer_vector(self, infer_document: DocumentModel, epochs: int = 5, learning_rate: int = 0.1, verbose: int = 0):
+    def infer_vector(self, infer_document: DocumentModel, n: int = 5,
+                     epochs: int = 5, learning_rate: int = 0.1, verbose: int = 0):
+
         if self.infer_model is None:
             self.build(is_infer=True)
         else:
@@ -381,7 +321,8 @@ class Doc2VecModel(object):
         early_stop_callback = EarlyStopping(monitor='loss', mode='min', patience=10, verbose=1)
         self.infer_model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
         self.infer_model.fit(generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
-        return self.__get_infer_documents_layer().get_weights()[0]
+        inferred_vector = self.__get_infer_documents_layer().get_weights()[0]
+        return self.top_n(inferred_vector, n)
 
     def save(self, path):
         self.model.save(path)
@@ -392,6 +333,35 @@ class Doc2VecModel(object):
     def get_word_embeddings(self):
         return self.word_embeddings
 
+    def top_n(self, inferred_vector, n: int) -> List[InferenceData]:
+        embeddings = self.get_document_embeddings()
+        result: List[InferenceData] = []
+
+        for i in range(n):
+            result.append(InferenceData(0, 0))
+
+        current = 0
+        inferred_vector = inferred_vector.reshape(1, -1)
+        is_sorted = False
+
+        for i, embed in enumerate(embeddings):
+            cos = cosine_similarity(inferred_vector, embed.reshape(1, -1))[0][0]
+
+            if current < n:
+                result[current] = InferenceData(cos, i)
+                current += 1
+            else:
+                if is_sorted is False:
+                    result = sorted(result, key=lambda x: x.cos)
+                    is_sorted = True
+
+                for j in range(n - 1, -1, -1):
+                    if cos > result[j].cos:
+                        result[j] = InferenceData(cos, i)
+                        break
+
+        return result
+
     def __get_infer_documents_layer(self):
         return self.infer_model.get_layer(InferredDocumentsLayerName)
 
@@ -399,11 +369,51 @@ class Doc2VecModel(object):
         self.document_embeddings = model.get_layer(DocumentEmbeddingsLayerName).get_weights()[0]
         self.word_embeddings = model.get_layer(WordEmbeddingsLayerName).get_weights()[0]
 
-    def __update_main_model(self, model: Model, is_infer: bool):
+    def _update_main_model(self, model: Model, is_infer: bool):
         if is_infer:
             self.infer_model = model
         else:
             self.model = model
+
+    @staticmethod
+    def _concatenate_layers(on_infer: Layer, on_train: Layer, shared: Layer, is_infer: bool):
+        if is_infer:
+            return Concatenate(name=MergedLayerName, axis=1)([on_infer, shared])
+        else:
+            return Concatenate(name=MergedLayerName, axis=1)([on_train, shared])
+
+
+class KerasDoc2VecModelCustom(KerasDoc2VecModelBase):
+
+    def build(self, is_infer: bool = False):
+        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
+        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
+
+        document_inference = Embedding(input_dim=1,
+                                       output_dim=self.embedding_size,
+                                       input_shape=(1,),
+                                       name=InferredDocumentsLayerName,
+                                       embeddings_initializer="uniform")(document_id_input)
+
+        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
+                                    output_dim=self.embedding_size,
+                                    input_shape=(self.window_size - 1,),
+                                    name=WordEmbeddingsLayerName)(words_input)
+
+        document_embedding = Embedding(input_dim=self.vocab.documents_count,
+                                       output_dim=self.embedding_size,
+                                       input_shape=(1,),
+                                       name=DocumentEmbeddingsLayerName)(document_id_input)
+
+        merged = self._concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
+
+        last_hidden_layer = self.__create_hidden_layers(merged, self.options.Layers)
+
+        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(last_hidden_layer)
+
+        model = Model(inputs=[document_id_input, words_input], outputs=output)
+
+        self._update_main_model(model, is_infer)
 
     def __create_hidden_layers(self, merged, options):
         last_layer = merged
@@ -422,17 +432,60 @@ class Doc2VecModel(object):
                 lambda_name = layer.GetString("LambdaName")
 
                 if lambda_name == "squeeze":
-                    current_layer = Lambda(split_w(self.window_size - 1), name=layer.name)
+                    current_layer = Lambda(split_w(self.window_size - 1), name=layer.Name)
                 elif lambda_name == "split":
-                    current_layer = Lambda(squeeze(axis=1), name=layer.name)
+                    current_layer = Lambda(squeeze(axis=1), name=layer.Name)
 
             last_layer = current_layer(last_layer)
 
         return last_layer
 
+
+class KerasDoc2Vec(KerasDoc2VecModelBase):
+
+    def build(self, is_infer: bool = False):
+        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
+        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
+
+        document_inference = Embedding(input_dim=1,
+                                       output_dim=self.embedding_size,
+                                       input_shape=(1,),
+                                       name=InferredDocumentsLayerName,
+                                       embeddings_initializer="uniform")(document_id_input)
+
+        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
+                                    output_dim=self.embedding_size,
+                                    input_shape=(self.window_size - 1,),
+                                    name=WordEmbeddingsLayerName)(words_input)
+
+        document_embedding = Embedding(input_dim=self.vocab.documents_count,
+                                       output_dim=self.embedding_size,
+                                       input_shape=(1,),
+                                       name=DocumentEmbeddingsLayerName)(document_id_input)
+
+        split_seq = Lambda(self.__split_layer(self.window_size - 1), name='split_seq')(words_embedding)
+        context = Average(name='avg_seq')(split_seq)
+
+        merged = self._concatenate_layers(document_inference, document_embedding, context, is_infer)
+
+        flattened = Flatten(name='flattened')(merged)
+
+        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(flattened)
+
+        model = Model(inputs=[document_id_input, words_input], outputs=output)
+
+        self._update_main_model(model, is_infer)
+
     @staticmethod
-    def __concatenate_layers(on_infer: Layer, on_train: Layer, shared: Layer, is_infer: bool):
-        if is_infer:
-            return Concatenate(name=MergedLayerName, axis=1)([on_infer, shared])
-        else:
-            return Concatenate(name=MergedLayerName, axis=1)([on_train, shared])
+    def __mean_layer():
+        def _lambda(layer):
+            return mean(layer, axis=1)
+
+        return _lambda
+
+    @staticmethod
+    def __split_layer(splits):
+        def _lambda(layer):
+            return tf.split(layer, splits, axis=1)
+
+        return _lambda

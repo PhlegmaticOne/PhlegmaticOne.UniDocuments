@@ -2,14 +2,14 @@
 using UniDocuments.Text.Domain.Services.Neural.Options;
 using UniDocuments.Text.Domain.Services.StreamReading.Options;
 
-namespace UniDocuments.Text.Services.Neural.Custom.Core.Options;
+namespace UniDocuments.Text.Services.Neural.Keras.Core.Options;
 
-public class CustomModelOptionsProvider<T> : INeuralOptionsProvider<T> where T : CustomModelOptions, new()
+public class KerasModelOptionsProvider<T> : INeuralOptionsProvider<T> where T : KerasModelOptions, new()
 {
     private readonly IOptions<T> _options;
     private readonly ITextProcessOptionsProvider _optionsProvider;
 
-    public CustomModelOptionsProvider(IOptions<T> options, ITextProcessOptionsProvider optionsProvider)
+    public KerasModelOptionsProvider(IOptions<T> options, ITextProcessOptionsProvider optionsProvider)
     {
         _options = options;
         _optionsProvider = optionsProvider;

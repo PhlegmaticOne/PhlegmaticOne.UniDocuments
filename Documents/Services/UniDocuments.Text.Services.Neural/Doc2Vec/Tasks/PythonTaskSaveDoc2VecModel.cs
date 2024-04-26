@@ -18,6 +18,6 @@ public class SaveDoc2VecModelInput
 public class PythonTaskSaveDoc2VecModel : PythonUnitTask<SaveDoc2VecModelInput>
 {
     public PythonTaskSaveDoc2VecModel(SaveDoc2VecModelInput input) : base(input) { }
-    public override string ScriptName => "document_models";
-    public override string MethodName => "save_doc2vec";
+    public override string ScriptName => "doc2vec";
+    public override string MethodName => "save";
 }

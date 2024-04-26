@@ -1,5 +1,4 @@
 ﻿using PhlegmaticOne.PythonTasks;
-using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 
 namespace UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
 
@@ -7,11 +6,11 @@ namespace UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
 public class InferVectorInput
 {
     public string Content { get; }
-    public Doc2VecOptions Options { get; }
+    public IInferOptions Options { get; }
     public int TopN { get; }
     public dynamic Model { get; }
 
-    public InferVectorInput(string content, Doc2VecOptions options, int topN, dynamic model)
+    public InferVectorInput(string content, IInferOptions options, int topN, dynamic model)
     {
         Content = content;
         Options = options;
@@ -53,8 +52,8 @@ public class PythonTaskInferDoc2Vec : PythonTask<InferVectorInput, InferVectorOu
         _paragraphId = paragraphId;
     }
 
-    public override string ScriptName => "document_models";
-    public override string MethodName => "infer_doc2vec";
+    public override string ScriptName => "doc2vec";
+    public override string MethodName => "infer";
     protected override InferVectorOutput MapResult(dynamic result)
     {
         var entries = new List<InferVectorEntry>();

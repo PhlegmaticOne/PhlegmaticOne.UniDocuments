@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Services.Neural.Options;
 namespace UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 
 [UseInPython]
-public class Doc2VecOptions : INeuralOptions
+public class Doc2VecOptions : INeuralOptions, IInferOptions
 {
     public string Name { get; set; } = null!;
     public string TokenizeRegex { get; set; } = null!;

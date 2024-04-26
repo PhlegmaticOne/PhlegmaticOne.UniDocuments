@@ -21,7 +21,7 @@ public class TrainDoc2VecModelInput
 public class PythonTaskTrainDoc2VecModel : PythonTask<TrainDoc2VecModelInput, Doc2VecManagedModel>
 {
     public PythonTaskTrainDoc2VecModel(TrainDoc2VecModelInput input) : base(input) { }
-    public override string ScriptName => "document_models";
-    public override string MethodName => "train_doc2vec";
+    public override string ScriptName => "doc2vec";
+    public override string MethodName => "train";
     protected override Doc2VecManagedModel MapResult(dynamic result) => new Doc2VecManagedModel(result);
 }
