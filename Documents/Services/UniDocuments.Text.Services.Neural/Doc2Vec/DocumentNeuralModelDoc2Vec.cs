@@ -4,6 +4,7 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Options;
+using UniDocuments.Text.Services.Neural.Core;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Models;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;

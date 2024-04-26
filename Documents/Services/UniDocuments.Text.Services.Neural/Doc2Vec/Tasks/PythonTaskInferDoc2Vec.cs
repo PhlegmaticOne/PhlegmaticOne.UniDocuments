@@ -1,47 +1,7 @@
 ﻿using PhlegmaticOne.PythonTasks;
+using UniDocuments.Text.Services.Neural.Core;
 
 namespace UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
-
-[UseInPython]
-public class InferVectorInput
-{
-    public string Content { get; }
-    public IInferOptions Options { get; }
-    public int TopN { get; }
-    public dynamic Model { get; }
-
-    public InferVectorInput(string content, IInferOptions options, int topN, dynamic model)
-    {
-        Content = content;
-        Options = options;
-        TopN = topN;
-        Model = model;
-    }
-}
-
-public class InferVectorEntry
-{
-    public int ParagraphId { get; }
-    public double Similarity { get; }
-
-    public InferVectorEntry(int paragraphId, double similarity)
-    {
-        ParagraphId = paragraphId;
-        Similarity = similarity;
-    }
-}
-
-public class InferVectorOutput
-{
-    public InferVectorOutput(int paragraphId, List<InferVectorEntry> inferEntries)
-    {
-        ParagraphId = paragraphId;
-        InferEntries = inferEntries;
-    }
-
-    public int ParagraphId { get; }
-    public List<InferVectorEntry> InferEntries { get; }
-}
 
 public class PythonTaskInferDoc2Vec : PythonTask<InferVectorInput, InferVectorOutput>
 {

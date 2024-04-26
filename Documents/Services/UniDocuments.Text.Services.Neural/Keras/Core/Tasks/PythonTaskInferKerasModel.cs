@@ -1,5 +1,5 @@
 ﻿using PhlegmaticOne.PythonTasks;
-using UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
+using UniDocuments.Text.Services.Neural.Core;
 
 namespace UniDocuments.Text.Services.Neural.Keras.Core.Tasks;
 

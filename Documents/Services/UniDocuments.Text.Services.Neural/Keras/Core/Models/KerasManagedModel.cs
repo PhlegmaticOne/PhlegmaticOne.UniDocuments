@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
+using UniDocuments.Text.Services.Neural.Core;
 using UniDocuments.Text.Services.Neural.Keras.Core.Options;
 using UniDocuments.Text.Services.Neural.Keras.Core.Tasks;
 

@@ -1,5 +1,5 @@
 ﻿from keras.models import Model, load_model
-from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average, Flatten
+from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average, Flatten, GRU, Dropout
 from keras.callbacks import EarlyStopping
 from keras.optimizers import Adam
 from keras.utils import to_categorical
@@ -40,7 +40,8 @@ def train(input_data):
     options = input_data.Options
     source = input_data.Source
     stream = DocumentsStreamSource(source, options)
-    model = KerasDoc2Vec(stream, options)
+    print('Invoke KerasDoc2VecModelCustom')
+    model = KerasDoc2VecModelCustom(stream, options)
     model.build(is_infer=False)
     model.train(options.Epochs, options.LearningRate, options.Verbose)
     return model
@@ -72,32 +73,11 @@ def infer(input_data):
     return model.infer_vector(document, top_n, verbose=1)
 
 
-def split_w(window_size):
-    def _lambda(tensor):
-        return tf.split(tensor, window_size + 1, axis=1)
-
-    return _lambda
-
-
-def squeeze(axis=-1):
-    def _lambda(tensor):
-        return tf.squeeze(tensor, axis=axis)
-
-    return _lambda
-
-
-def stack(window_size):
-    def _lambda(tensor):
-        return tf.stack([tensor] * window_size, axis=1)
-
-    return _lambda
-
-
 class InferenceData(object):
     def __init__(self, cos, index):
         self.cos = cos
         self.index = index
-        
+
 
 class DocumentModel(object):
 
@@ -318,7 +298,7 @@ class KerasDoc2VecModelBase(object):
         self.__get_infer_documents_layer().trainable = True
 
         optimizer = Adam(learning_rate=learning_rate)
-        early_stop_callback = EarlyStopping(monitor='loss', mode='min', patience=10, verbose=1)
+        early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
         self.infer_model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
         self.infer_model.fit(generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
         inferred_vector = self.__get_infer_documents_layer().get_weights()[0]
@@ -407,9 +387,9 @@ class KerasDoc2VecModelCustom(KerasDoc2VecModelBase):
 
         merged = self._concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
 
-        last_hidden_layer = self.__create_hidden_layers(merged, self.options.Layers)
+        squeezed = self.__create_hidden_layers(merged, self.options.Layers)
 
-        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(last_hidden_layer)
+        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(squeezed)
 
         model = Model(inputs=[document_id_input, words_input], outputs=output)
 
@@ -419,73 +399,51 @@ class KerasDoc2VecModelCustom(KerasDoc2VecModelBase):
         last_layer = merged
 
         for layer in options:
-            # noinspection PyTypeChecker
-            current_layer: Layer = None
+            current_layer = None
 
-            if layer.Type == "LSTM":
+            if layer.Type == "Dropout":
+                current_layer = Dropout(rate=layer.GetInt("Rate"), name=layer.Name)
+            elif layer.Type == "Average":
+                current_layer = Average(name=layer.Name)
+            elif layer.Type == "Flatten":
+                current_layer = Flatten(name=layer.Name)
+            elif layer.Type == "LSTM":
                 current_layer = LSTM(units=layer.GetInt("UnitsCount"),
                                      return_sequences=layer.GetBool("ReturnSequences"),
                                      name=layer.Name)
-            elif layer.Type == "Average":
-                current_layer = Average(name=layer.Name)
+            elif layer.Type == "GRU":
+                current_layer = GRU(units=layer.GetInt("UnitsCount"),
+                                    return_sequences=layer.GetBool("ReturnSequences"),
+                                    name=layer.Name)
             elif layer.Type == "Lambda":
                 lambda_name = layer.GetString("LambdaName")
 
-                if lambda_name == "squeeze":
-                    current_layer = Lambda(split_w(self.window_size - 1), name=layer.Name)
-                elif lambda_name == "split":
-                    current_layer = Lambda(squeeze(axis=1), name=layer.Name)
+                if lambda_name == "split":
+                    current_layer = Lambda(split_tensor(self.window_size - 1), name=layer.Name)
+                elif lambda_name == "squeeze":
+                    current_layer = Lambda(squeeze_tensor(axis=1), name=layer.Name)
 
             last_layer = current_layer(last_layer)
 
         return last_layer
+    
+
+def split_tensor(window_size):
+    def _lambda(tensor):
+        return tf.split(tensor, window_size + 1, axis=1)
+
+    return _lambda
 
 
-class KerasDoc2Vec(KerasDoc2VecModelBase):
+def squeeze_tensor(axis=-1):
+    def _lambda(tensor):
+        return tf.squeeze(tensor, axis=axis)
 
-    def build(self, is_infer: bool = False):
-        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
-        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
+    return _lambda
 
-        document_inference = Embedding(input_dim=1,
-                                       output_dim=self.embedding_size,
-                                       input_shape=(1,),
-                                       name=InferredDocumentsLayerName,
-                                       embeddings_initializer="uniform")(document_id_input)
 
-        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
-                                    output_dim=self.embedding_size,
-                                    input_shape=(self.window_size - 1,),
-                                    name=WordEmbeddingsLayerName)(words_input)
+def stack_tensor(window_size):
+    def _lambda(tensor):
+        return tf.stack([tensor] * window_size, axis=1)
 
-        document_embedding = Embedding(input_dim=self.vocab.documents_count,
-                                       output_dim=self.embedding_size,
-                                       input_shape=(1,),
-                                       name=DocumentEmbeddingsLayerName)(document_id_input)
-
-        split_seq = Lambda(self.__split_layer(self.window_size - 1), name='split_seq')(words_embedding)
-        context = Average(name='avg_seq')(split_seq)
-
-        merged = self._concatenate_layers(document_inference, document_embedding, context, is_infer)
-
-        flattened = Flatten(name='flattened')(merged)
-
-        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(flattened)
-
-        model = Model(inputs=[document_id_input, words_input], outputs=output)
-
-        self._update_main_model(model, is_infer)
-
-    @staticmethod
-    def __mean_layer():
-        def _lambda(layer):
-            return mean(layer, axis=1)
-
-        return _lambda
-
-    @staticmethod
-    def __split_layer(splits):
-        def _lambda(layer):
-            return tf.split(layer, splits, axis=1)
-
-        return _lambda
+    return _lambda
