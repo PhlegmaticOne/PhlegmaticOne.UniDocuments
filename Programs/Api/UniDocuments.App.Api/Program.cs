@@ -30,7 +30,6 @@ using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
-using UniDocuments.Text.Services.Neural.Keras;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
@@ -42,13 +41,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 var isDevelopment = builder.Environment.IsDevelopment();
+var useAuthorization = configuration.GetValue<bool>("UseAuthorization");
 var jwtSecrets = configuration.GetSection("JwtSecrets");
 var jwtOptions = new SymmetricKeyJwtOptions(jwtSecrets["Issuer"]!,
     jwtSecrets["Audience"]!,
     int.Parse(jwtSecrets["ExpirationDurationInMinutes"]!),
     jwtSecrets["SecretKey"]!);
 
-if (!isDevelopment)
+if (useAuthorization)
 {
     builder.Services.AddAuthentication(x =>
     {
@@ -175,7 +175,7 @@ if (isDevelopment)
 
 app.UseHttpsRedirection();
 
-if (!isDevelopment)
+if (useAuthorization)
 {
     app.UseAuthentication();
 }

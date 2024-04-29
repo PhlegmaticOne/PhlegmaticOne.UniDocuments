@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UniDocuments.App.Client.Web.ViewModels.Account.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login page";
+}
+
+<section>
+    <div class="container my-1">
+        <div class="row d-flex justify-content-center align-items-center ">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white mt-5 me-4 ms-4" style="border-radius: 1rem;">
+                    <div class="card-body pt-3 pb-3 pe-5 ps-5 text-center box">
+
+                        <div class="mb-md-2 mt-md-2">
+
+                            <h2 class="fw-bold text-uppercase">Login</h2>
+                            <p class="text-white-50 mb-5">Please enter your login and password!</p>
+
+                            <form asp-action="Login" asp-controller="Auth" method="post">
+                                <div>
+                                    <input hidden asp-for="ReturnUrl"/>
+                                </div>
+
+                                <div class="form-outline form-white mb-2">
+                                    <label asp-for="Email" class="mb-2">Enter Email</label><br/>
+                                    <input type="text" asp-for="Email" class="form-control form-control-lg"/>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-outline form-white mb-2">
+                                    <label asp-for="Password" class="mb-2">Enter Password</label><br/>
+                                    <input type="password" asp-for="Password" class="form-control form-control-lg"/>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <h5 class="h5 text-danger">@Model?.ErrorMessage</h5>
+                                <button class="btn btn-outline-light btn-lg my-4" type="submit">Login</button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <p>
+                                Don't have an account?
+                                <button class="btn btn-outline-light btn-lg px-5 m-1"
+                                        onclick="location.href = '@Url.Action("Register", "Auth")'">
+                                    Register
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/account_pages.css" asp-append-version="true"/>
+}

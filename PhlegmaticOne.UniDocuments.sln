@@ -73,6 +73,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Application", "Documents\UniDocuments.Text.Application\UniDocuments.Text.Application.csproj", "{A81837E3-282D-4162-BF47-97CF49A5C503}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.ApiRequesting", "Nuget\PhlegmaticOne.ApiRequesting\PhlegmaticOne.ApiRequesting.csproj", "{08D5701A-E3C8-41F2-B991-3036CECD0425}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.LocalStorage", "Nuget\PhlegmaticOne.LocalStorage\PhlegmaticOne.LocalStorage.csproj", "{3E344C6A-B5E0-45B9-915A-162EE6C730F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +183,14 @@ Global
 		{A81837E3-282D-4162-BF47-97CF49A5C503}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A81837E3-282D-4162-BF47-97CF49A5C503}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A81837E3-282D-4162-BF47-97CF49A5C503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D5701A-E3C8-41F2-B991-3036CECD0425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D5701A-E3C8-41F2-B991-3036CECD0425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D5701A-E3C8-41F2-B991-3036CECD0425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D5701A-E3C8-41F2-B991-3036CECD0425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +226,8 @@ Global
 		{391B88DE-4736-4DB0-9D0B-134698894D9C} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{C1CEE84C-7350-4DB7-AB12-5E9626297F1A} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 		{A81837E3-282D-4162-BF47-97CF49A5C503} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
+		{08D5701A-E3C8-41F2-B991-3036CECD0425} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
+		{3E344C6A-B5E0-45B9-915A-162EE6C730F2} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}
