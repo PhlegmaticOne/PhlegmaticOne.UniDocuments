@@ -20,9 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(
-        [FromBody] RegisterProfileDto registerProfileDto,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Register(RegisterProfileDto registerProfileDto, CancellationToken cancellationToken)
     {
         var registerCommand = new RegisterProfileCommand(registerProfileDto);
         var registerResult = await _mediator.Send(registerCommand, cancellationToken);
@@ -36,9 +34,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public Task<IActionResult> Login(
-        [FromBody] LoginDto loginDto, 
-        CancellationToken cancellationToken)
+    public Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
     {
         return AuthorizeAsync(loginDto.UserName, loginDto.Password, cancellationToken);
     }
@@ -53,6 +49,6 @@ public class AuthController : ControllerBase
             return BadRequest(profile.ErrorMessage);
         }
 
-        return Ok(profile.Result);
+        return Ok(profile);
     }
 }

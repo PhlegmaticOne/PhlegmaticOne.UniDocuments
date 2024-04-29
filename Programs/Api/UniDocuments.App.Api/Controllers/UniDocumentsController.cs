@@ -30,7 +30,7 @@ public class UniDocumentsController : ControllerBase
             return BadRequest(result.ErrorMessage);
         }
         
-        return new JsonResult(result.GetResult());
+        return new JsonResult(result);
     }
 
     [HttpGet("GetParagraphById")]
@@ -44,9 +44,8 @@ public class UniDocumentsController : ControllerBase
             return BadRequest(result);
         }
 
-        return Ok(result.Result);
+        return Ok(result);
     }
-    
     
     [HttpGet("GetDocumentContentByGlobalId")]
     public async Task<IActionResult> GetDocumentContentByGlobalId(int documentId, CancellationToken cancellationToken)
@@ -59,7 +58,7 @@ public class UniDocumentsController : ControllerBase
             return BadRequest(result);
         }
 
-        return Ok(result.Result);
+        return Ok(result);
     }
     
     [HttpGet("GetDocumentContentById")]
@@ -73,11 +72,11 @@ public class UniDocumentsController : ControllerBase
             return BadRequest(result);
         }
 
-        return Ok(result.Result);
+        return Ok(result);
     }
     
-    [HttpGet("GetDocumentById")]
-    public async Task<IActionResult> GetDocumentPayloadById(Guid documentId, CancellationToken cancellationToken)
+    [HttpGet("GetDocumentFileById")]
+    public async Task<IActionResult> GetDocumentFileById(Guid documentId, CancellationToken cancellationToken)
     {
         var query = new QueryGetDocumentById(documentId);
         var result = await _mediator.Send(query, cancellationToken);
