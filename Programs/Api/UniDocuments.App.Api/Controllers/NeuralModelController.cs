@@ -23,7 +23,13 @@ public class NeuralModelController : ControllerBase
     {
         var path = _savePathProvider.SavePath;
         var request = new CommandTrainDocumentsNeuralModel(path);
-        await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+        
         return Ok();
     }
 
@@ -32,7 +38,13 @@ public class NeuralModelController : ControllerBase
     {
         var path = _savePathProvider.SavePath;
         var request = new CommandLoadDocumentsNeuralModel(path);
-        await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+        
         return Ok();
     }
 }

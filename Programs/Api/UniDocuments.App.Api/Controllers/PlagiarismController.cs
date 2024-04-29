@@ -30,6 +30,12 @@ public class PlagiarismController : ControllerBase
     {
         var query = new QueryCompareTexts(request);
         var result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+        
         return new JsonResult(result);
     }
 
@@ -38,6 +44,12 @@ public class PlagiarismController : ControllerBase
     {
         var request = new QuerySearchPlagiarismDocument(documentId, topN);
         var result = await _mediator.Send(request, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+        
         return new JsonResult(result);
     }
     
@@ -46,6 +58,12 @@ public class PlagiarismController : ControllerBase
     {
         var request = new QuerySearchPlagiarismText(text, topN);
         var result = await _mediator.Send(request, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+        
         return new JsonResult(result);
     }
 }

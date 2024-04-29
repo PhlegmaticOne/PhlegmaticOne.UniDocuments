@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using PhlegmaticOne.OperationResults;
+using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
 namespace UniDocuments.App.Application.Plagiarism;
 
-public class QuerySearchPlagiarismDocument : IRequest<PlagiarismSearchResponse>
+public class QuerySearchPlagiarismDocument : IOperationResultQuery<PlagiarismSearchResponse>
 {
     public Guid DocumentId { get; }
     public int TopN { get; }
@@ -17,7 +18,7 @@ public class QuerySearchPlagiarismDocument : IRequest<PlagiarismSearchResponse>
     }
 }
 
-public class QuerySearchPlagiarismDocumentHandler : IRequestHandler<QuerySearchPlagiarismDocument, PlagiarismSearchResponse>
+public class QuerySearchPlagiarismDocumentHandler : IOperationResultQueryHandler<QuerySearchPlagiarismDocument, PlagiarismSearchResponse>
 {
     private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
 
@@ -26,9 +27,11 @@ public class QuerySearchPlagiarismDocumentHandler : IRequestHandler<QuerySearchP
         _plagiarismSearchProvider = plagiarismSearchProvider;
     }
     
-    public Task<PlagiarismSearchResponse> Handle(QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
+    public async Task<OperationResult<PlagiarismSearchResponse>> Handle(
+        QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
     {
         var searchRequest = new PlagiarismSearchRequest(request.DocumentId, request.TopN, ""); 
-        return _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
+        var result = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
+        return OperationResult.Successful(result);
     }
 }

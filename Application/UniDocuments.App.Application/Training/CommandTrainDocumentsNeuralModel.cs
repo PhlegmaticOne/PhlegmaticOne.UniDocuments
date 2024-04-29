@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using PhlegmaticOne.OperationResults;
+using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.App.Application.Training;
 
-public class CommandTrainDocumentsNeuralModel : IRequest
+public class CommandTrainDocumentsNeuralModel : IOperationResultCommand
 {
     public CommandTrainDocumentsNeuralModel(string savePath)
     {
@@ -13,7 +14,7 @@ public class CommandTrainDocumentsNeuralModel : IRequest
     public string SavePath { get; }
 }
 
-public class CommandTrainDocumentsNeuralModelHandler : IRequestHandler<CommandTrainDocumentsNeuralModel>
+public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandTrainDocumentsNeuralModel>
 {
     private readonly IDocumentsNeuralModel _documentsNeuralModel;
     private readonly IDocumentsTrainDatasetSource _documentsTrainDatasetSource;
@@ -26,9 +27,17 @@ public class CommandTrainDocumentsNeuralModelHandler : IRequestHandler<CommandTr
         _documentsTrainDatasetSource = documentsTrainDatasetSource;
     }
     
-    public async Task Handle(CommandTrainDocumentsNeuralModel request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CommandTrainDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
-        await _documentsNeuralModel.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
-        await _documentsNeuralModel.SaveAsync(request.SavePath, cancellationToken);
+        try
+        {
+            await _documentsNeuralModel.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
+            await _documentsNeuralModel.SaveAsync(request.SavePath, cancellationToken);
+            return OperationResult.Success;
+        }
+        catch(Exception e)
+        {
+            return OperationResult.Failed<string>(e.Message);
+        }
     }
 }

@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using PhlegmaticOne.OperationResults;
+using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Matching.Requests;
 using UniDocuments.Text.Domain.Providers.Matching.Responses;
 
 namespace UniDocuments.App.Application.Plagiarism;
 
-public class QueryMatchTexts : IRequest<MatchTextsResponse>
+public class QueryMatchTexts : IOperationResultQuery<MatchTextsResponse>
 {
     public MatchTextsRequest Request { get; }
 
@@ -15,7 +16,7 @@ public class QueryMatchTexts : IRequest<MatchTextsResponse>
     }
 }
 
-public class QueryMatchTextsRequestHandler : IRequestHandler<QueryMatchTexts, MatchTextsResponse>
+public class QueryMatchTextsRequestHandler : IOperationResultQueryHandler<QueryMatchTexts, MatchTextsResponse>
 {
     private readonly ITextMatchProvider _textMatchProvider;
 
@@ -24,8 +25,10 @@ public class QueryMatchTextsRequestHandler : IRequestHandler<QueryMatchTexts, Ma
         _textMatchProvider = textMatchProvider;
     }
     
-    public Task<MatchTextsResponse> Handle(QueryMatchTexts request, CancellationToken cancellationToken)
+    public async Task<OperationResult<MatchTextsResponse>> Handle(
+        QueryMatchTexts request, CancellationToken cancellationToken)
     {
-        return _textMatchProvider.MatchAsync(request.Request, cancellationToken);
+        var result = await _textMatchProvider.MatchAsync(request.Request, cancellationToken);
+        return OperationResult.Successful(result);
     }
 }

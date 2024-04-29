@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using PhlegmaticOne.OperationResults;
+using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.App.Application.Training;
 
-public class CommandLoadDocumentsNeuralModel : IRequest
+public class CommandLoadDocumentsNeuralModel : IOperationResultCommand
 {
     public CommandLoadDocumentsNeuralModel(string savePath)
     {
@@ -13,7 +14,7 @@ public class CommandLoadDocumentsNeuralModel : IRequest
     public string SavePath { get; }
 }
 
-public class CommandLoadDocumentsNeuralModelHandler : IRequestHandler<CommandLoadDocumentsNeuralModel>
+public class CommandLoadDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandLoadDocumentsNeuralModel>
 {
     private readonly IDocumentsNeuralModel _documentsNeuralModel;
 
@@ -22,8 +23,16 @@ public class CommandLoadDocumentsNeuralModelHandler : IRequestHandler<CommandLoa
         _documentsNeuralModel = documentsNeuralModel;
     }
     
-    public Task Handle(CommandLoadDocumentsNeuralModel request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CommandLoadDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
-        return _documentsNeuralModel.LoadAsync(request.SavePath, cancellationToken);
+        try
+        {
+            await _documentsNeuralModel.LoadAsync(request.SavePath, cancellationToken);
+            return OperationResult.Success;
+        }
+        catch(Exception e)
+        {
+            return OperationResult.Failed<string>(e.Message);
+        }
     }
 }

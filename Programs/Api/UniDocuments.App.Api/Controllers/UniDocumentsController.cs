@@ -24,6 +24,12 @@ public class UniDocumentsController : ControllerBase
         var activityId = Guid.NewGuid();
         var request = new CommandUploadDocument(profileId, activityId, formFile.OpenReadStream());
         var result = await _mediator.Send(request, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+        
         return new JsonResult(result.GetResult());
     }
 

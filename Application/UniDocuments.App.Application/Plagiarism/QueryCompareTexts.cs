@@ -1,11 +1,13 @@
 ﻿using MediatR;
+using PhlegmaticOne.OperationResults;
+using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
 using UniDocuments.Text.Domain.Providers.Comparing.Responses;
 
 namespace UniDocuments.App.Application.Plagiarism;
 
-public class QueryCompareTexts : IRequest<CompareTextsResponse>
+public class QueryCompareTexts : IOperationResultQuery<CompareTextsResponse>
 {
     public CompareTextsRequest Request { get; }
 
@@ -15,7 +17,7 @@ public class QueryCompareTexts : IRequest<CompareTextsResponse>
     }
 }
 
-public class QueryCompareTextsRequestHandler : IRequestHandler<QueryCompareTexts, CompareTextsResponse>
+public class QueryCompareTextsRequestHandler : IOperationResultQueryHandler<QueryCompareTexts, CompareTextsResponse>
 {
     private readonly ITextCompareProvider _similarityProvider;
 
@@ -24,8 +26,10 @@ public class QueryCompareTextsRequestHandler : IRequestHandler<QueryCompareTexts
         _similarityProvider = similarityProvider;
     }
     
-    public Task<CompareTextsResponse> Handle(QueryCompareTexts request, CancellationToken cancellationToken)
+    public async Task<OperationResult<CompareTextsResponse>> Handle(
+        QueryCompareTexts request, CancellationToken cancellationToken)
     {
-        return _similarityProvider.CompareAsync(request.Request, cancellationToken);
+        var result = await _similarityProvider.CompareAsync(request.Request, cancellationToken);
+        return OperationResult.Successful(result);
     }
 }
