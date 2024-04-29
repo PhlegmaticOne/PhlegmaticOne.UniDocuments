@@ -1,10 +1,10 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Services.Neural.Core;
-using UniDocuments.Text.Services.Neural.Keras.Core.Options;
-using UniDocuments.Text.Services.Neural.Keras.Core.Tasks;
+using UniDocuments.Text.Services.Neural.Keras.Options;
+using UniDocuments.Text.Services.Neural.Keras.Tasks;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core.Models;
+namespace UniDocuments.Text.Services.Neural.Keras.Models;
 
 public class KerasManagedModel
 {

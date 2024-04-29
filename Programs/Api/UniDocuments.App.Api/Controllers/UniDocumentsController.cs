@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 using UniDocuments.App.Application.ContentRead;
 using UniDocuments.App.Application.Uploading;
 

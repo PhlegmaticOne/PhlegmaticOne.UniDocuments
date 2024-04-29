@@ -38,6 +38,11 @@ public class DocumentMapper : IDocumentMapper
 
     public int GetDocumentId(Guid documentId)
     {
+        if (documentId == Guid.Empty)
+        {
+            return -1;
+        }
+        
         return _documentsIdMap[documentId];
     }
 

@@ -1,10 +1,10 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain.Services.Neural.Options;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core.Options;
+namespace UniDocuments.Text.Services.Neural.Keras.Options;
 
 [UseInPython]
-public abstract class KerasModelOptions : INeuralOptions, IInferOptions
+public class KerasModelOptions : INeuralOptions, IInferOptions
 {
     public string Name { get; set; } = null!;
     public string TokenizeRegex { get; set; } = null!;
@@ -14,5 +14,7 @@ public abstract class KerasModelOptions : INeuralOptions, IInferOptions
     public int Epochs { get; set; }
     public double LearningRate { get; set; }
     public int Verbose { get; set; }
+    public string Loss { get; set; } = null!;
+    public string[] Metrics { get; set; } = null!;
     public List<KerasLayerConfiguration> Layers { get; set; } = null!;
 }

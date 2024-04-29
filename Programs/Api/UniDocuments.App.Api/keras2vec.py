@@ -39,7 +39,6 @@ def train(input_data):
     options = input_data.Options
     source = input_data.Source
     stream = DocumentsStreamSource(source, options)
-    print('Invoke KerasDoc2VecModelCustom')
     model = KerasDoc2VecModelCustom(stream, options)
     model.build(is_infer=False)
     model.train(options.Epochs, options.LearningRate, options.Verbose)
@@ -271,7 +270,8 @@ class KerasDoc2VecModelBase(object):
     def train(self, epochs: int, learning_rate=0.1, verbose: int = 0):
         early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
         optimizer = Adam(learning_rate=learning_rate)
-        self.model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
+        metrics = list(self.options.Metrics)
+        self.model.compile(loss=self.options.Loss, optimizer=optimizer, metrics=metrics)
         self.model.fit(self.generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
         self.__retrieve_embeddings(self.model)
 
@@ -298,7 +298,8 @@ class KerasDoc2VecModelBase(object):
 
         optimizer = Adam(learning_rate=learning_rate)
         early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
-        self.infer_model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
+        metrics = list(self.options.Metrics)
+        self.infer_model.compile(loss=self.options.Loss, optimizer=optimizer, metrics=metrics)
         self.infer_model.fit(generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
         inferred_vector = self.__get_infer_documents_layer().get_weights()[0]
         return self.top_n(inferred_vector, n)

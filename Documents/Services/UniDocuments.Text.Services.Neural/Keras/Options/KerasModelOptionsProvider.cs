@@ -2,20 +2,20 @@
 using UniDocuments.Text.Domain.Services.Neural.Options;
 using UniDocuments.Text.Domain.Services.StreamReading.Options;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core.Options;
+namespace UniDocuments.Text.Services.Neural.Keras.Options;
 
-public class KerasModelOptionsProvider<T> : INeuralOptionsProvider<T> where T : KerasModelOptions, new()
+public class KerasModelOptionsProvider : INeuralOptionsProvider<KerasModelOptions>
 {
-    private readonly IOptions<T> _options;
+    private readonly IOptions<KerasModelOptions> _options;
     private readonly ITextProcessOptionsProvider _optionsProvider;
 
-    public KerasModelOptionsProvider(IOptions<T> options, ITextProcessOptionsProvider optionsProvider)
+    public KerasModelOptionsProvider(IOptions<KerasModelOptions> options, ITextProcessOptionsProvider optionsProvider)
     {
         _options = options;
         _optionsProvider = optionsProvider;
     }
     
-    public T GetOptions()
+    public KerasModelOptions GetOptions()
     {
         var options = _options.Value;
         options.TokenizeRegex = _optionsProvider.GetOptions().TokenizeRegex;

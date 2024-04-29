@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Services\UniDocuments.Text.Services.Neural\UniDocuments.Text.Services.Neural.csproj" />
       <ProjectReference Include="..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 

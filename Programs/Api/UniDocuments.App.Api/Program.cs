@@ -29,10 +29,8 @@ using UniDocuments.Text.Services.Fingerprinting.Hashing;
 using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
-using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
-using UniDocuments.Text.Services.Neural.Keras.Core.Options;
-using UniDocuments.Text.Services.Neural.Keras.Doc2Vec;
-using UniDocuments.Text.Services.Neural.Keras.Lstm;
+using UniDocuments.Text.Services.Neural.Doc2Vec;
+using UniDocuments.Text.Services.Neural.Keras;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
@@ -118,12 +116,12 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
     });
 
-    appBuilder.UseNeuralModel<DocumentNeuralModelKerasDoc2Vec>(b =>
+    appBuilder.UseNeuralModel<DocumentNeuralModelDoc2Vec>(b =>
     {
         b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
-        b.UseOptionsProvider<Doc2VecOptionsProvider, Doc2VecOptions>(builder.Configuration);
-        b.UseOptionsProvider<KerasModelOptionsProvider<KerasOptionsLstm>, KerasOptionsLstm>(builder.Configuration);
-        b.UseOptionsProvider<KerasModelOptionsProvider<KerasOptionsDoc2Vec>, KerasOptionsDoc2Vec>(builder.Configuration);
+        
+        b.BindDoc2VecOptions(builder.Configuration, "Doc2VecOptions");
+        b.BindKerasOptions(builder.Configuration, "KerasOptionsDoc2Vec");
     });
     
     appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>

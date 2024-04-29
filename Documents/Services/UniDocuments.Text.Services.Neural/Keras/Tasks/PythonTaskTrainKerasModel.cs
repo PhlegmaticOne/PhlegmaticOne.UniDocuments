@@ -1,9 +1,9 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain.Services.Neural;
-using UniDocuments.Text.Services.Neural.Keras.Core.Models;
-using UniDocuments.Text.Services.Neural.Keras.Core.Options;
+using UniDocuments.Text.Services.Neural.Keras.Models;
+using UniDocuments.Text.Services.Neural.Keras.Options;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core.Tasks;
+namespace UniDocuments.Text.Services.Neural.Keras.Tasks;
 
 [UseInPython]
 public class TrainKerasModelInput

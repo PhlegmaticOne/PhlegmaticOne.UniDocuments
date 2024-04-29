@@ -5,22 +5,22 @@ using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Options;
 using UniDocuments.Text.Services.Neural.Core;
-using UniDocuments.Text.Services.Neural.Keras.Core.Models;
-using UniDocuments.Text.Services.Neural.Keras.Core.Options;
-using UniDocuments.Text.Services.Neural.Keras.Core.Tasks;
+using UniDocuments.Text.Services.Neural.Keras.Models;
+using UniDocuments.Text.Services.Neural.Keras.Options;
+using UniDocuments.Text.Services.Neural.Keras.Tasks;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core;
+namespace UniDocuments.Text.Services.Neural.Keras;
 
-public abstract class DocumentNeuralModelKeras<T> : IDocumentsNeuralModel where T : KerasModelOptions, new()
+public class DocumentNeuralModelKeras : IDocumentsNeuralModel
 {
     private const string ModelNameFormat = "{0}.keras";
     
-    private readonly INeuralOptionsProvider<T> _optionsProvider;
+    private readonly INeuralOptionsProvider<KerasModelOptions> _optionsProvider;
     private readonly IDocumentMapper _documentMapper;
 
     private KerasManagedModel? _customManagedModel;
 
-    protected DocumentNeuralModelKeras(INeuralOptionsProvider<T> optionsProvider, IDocumentMapper documentMapper)
+    public DocumentNeuralModelKeras(INeuralOptionsProvider<KerasModelOptions> optionsProvider, IDocumentMapper documentMapper)
     {
         _optionsProvider = optionsProvider;
         _documentMapper = documentMapper;

@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core.Tasks;
+namespace UniDocuments.Text.Services.Neural.Keras.Tasks;
 
 [UseInPython]
 public class SaveKerasModelInput

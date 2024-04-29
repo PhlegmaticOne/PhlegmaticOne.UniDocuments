@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 
-namespace UniDocuments.Text.Services.Neural.Keras.Core.Options;
+namespace UniDocuments.Text.Services.Neural.Keras.Options;
 
 [UseInPython]
 public class KerasLayerConfiguration
