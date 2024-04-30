@@ -37,26 +37,33 @@ public class DocumentsStorageSql : IDocumentsStorage
             }
         }
 
-        var destinationStream = new MemoryStream();
-        
-        await using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
+        try
         {
-            await source.CopyToAsync(destinationStream, cancellationToken);
+            var destinationStream = new MemoryStream();
+        
+            await using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
+            {
+                await source.CopyToAsync(destinationStream, cancellationToken);
+            }
+
+            await command.Transaction.CommitAsync(cancellationToken);
+
+            return new DocumentLoadResponse(fileId, savedFileName, destinationStream);
         }
-
-        await command.Transaction.CommitAsync(cancellationToken);
-
-        return new DocumentLoadResponse(fileId, savedFileName, destinationStream);
+        catch
+        {
+            return DocumentLoadResponse.NoContent();
+        }
     }
 
-    public async Task<DocumentSaveResponse> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
     {
         var fileName = saveRequest.Name;
         var transactionContext = Array.Empty<byte>();
         var path = string.Empty;
         var sqlConnection = _sqlConnectionProvider.Connection;
 
-        await using var command = FileSqlCommands.CreateInsertFileCommand(sqlConnection, fileName);
+        await using var command = FileSqlCommands.CreateInsertFileCommand(sqlConnection, fileName, saveRequest.Id);
         await using var transaction = sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
@@ -76,7 +83,6 @@ public class DocumentsStorageSql : IDocumentsStorage
         }
 
         await command.Transaction.CommitAsync(cancellationToken);
-        return new DocumentSaveResponse(Guid.Empty);
     }
 
     private static byte[] ReadTransactionContext(SqlDataReader reader) => (byte[])reader["transactionContext"];

@@ -9,7 +9,10 @@ namespace UniDocuments.App.Application.Login.Commands;
 
 public class RegisterProfileCommand : IOperationResultCommand
 {
-    public RegisterProfileCommand(RegisterProfileDto registerProfileModel) => RegisterProfileModel = registerProfileModel;
+    public RegisterProfileCommand(RegisterProfileDto registerProfileModel)
+    {
+        RegisterProfileModel = registerProfileModel;
+    }
 
     public RegisterProfileDto RegisterProfileModel { get; }
 }
@@ -27,18 +30,17 @@ public class RegisterProfileCommandHandler : IOperationResultCommandHandler<Regi
     
     public async Task<OperationResult> Handle(RegisterProfileCommand request, CancellationToken cancellationToken)
     {
-        var prepared = PrepareProfile(request.RegisterProfileModel);
-        var repository = _dbContext.Set<Student>();
-        
         try
         {
+            var prepared = PrepareProfile(request.RegisterProfileModel);
+            var repository = _dbContext.Set<Student>();
             await repository.AddAsync(prepared, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return OperationResult.Success;
         }
         catch (Exception e)
         {
-            return OperationResult.Failed(e.Message);
+            return OperationResult.Failed("RegisterProfile.InternalError", e.Message);
         }
     }
     

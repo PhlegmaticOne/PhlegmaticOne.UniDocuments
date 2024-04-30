@@ -1,5 +1,4 @@
-﻿using MediatR;
-using PhlegmaticOne.OperationResults;
+﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
@@ -29,7 +28,14 @@ public class QueryCompareTextsRequestHandler : IOperationResultQueryHandler<Quer
     public async Task<OperationResult<CompareTextsResponse>> Handle(
         QueryCompareTexts request, CancellationToken cancellationToken)
     {
-        var result = await _similarityProvider.CompareAsync(request.Request, cancellationToken);
-        return OperationResult.Successful(result);
+        try
+        {
+            var result = await _similarityProvider.CompareAsync(request.Request, cancellationToken);
+            return OperationResult.Successful(result);
+        }
+        catch (Exception e)
+        {
+            return OperationResult.Failed<CompareTextsResponse>("CompareTexts.InternalError", e.Message);
+        }
     }
 }

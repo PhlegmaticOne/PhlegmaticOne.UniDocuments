@@ -16,6 +16,7 @@ using UniDocuments.Text.Application.Comparing;
 using UniDocuments.Text.Application.Loading;
 using UniDocuments.Text.Application.Matching;
 using UniDocuments.Text.Application.PlagiarismSearching;
+using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
@@ -30,6 +31,7 @@ using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
+using UniDocuments.Text.Services.Neural.Keras;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
@@ -41,6 +43,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 var isDevelopment = builder.Environment.IsDevelopment();
+var useRealDatabase = configuration.GetValue<bool>("UseRealDatabase");
+var connectionString = builder.Configuration.GetConnectionString("DbConnection");
 var useAuthorization = configuration.GetValue<bool>("UseAuthorization");
 var jwtSecrets = configuration.GetSection("JwtSecrets");
 var jwtOptions = new SymmetricKeyJwtOptions(jwtSecrets["Issuer"]!,
@@ -95,9 +99,9 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     
     appBuilder.UseDocumentsCache<UniDocumentsCache>();
     
-    appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageSql>(isDevelopment, b =>
+    appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageSql>(useRealDatabase, b =>
     {
-        b.UseSqlConnectionProvider<SqlConnectionProvider>();
+        b.UseSqlConnectionString(connectionString!);
     });
     
     appBuilder.UseFingerprint(b =>
@@ -116,8 +120,11 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
     });
 
-    appBuilder.UseNeuralModel<DocumentNeuralModelDoc2Vec>(b =>
+    appBuilder.UseNeuralModelProvider<NeuralModelsProvider>(b =>
     {
+        b.UseNeuralModel<DocumentNeuralModelKeras>();
+        b.UseNeuralModel<DocumentNeuralModelDoc2Vec>();
+        
         b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
         
         b.BindDoc2VecOptions(builder.Configuration, "Doc2VecOptions");
@@ -152,14 +159,13 @@ builder.Services.AddPythonTaskPool("keras2vec", "doc2vec");
 
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {
-    if (isDevelopment)
+    if (!useRealDatabase)
     {
         x.UseInMemoryDatabase("MEMORY");
     }
     else
     {
-        var connectionString = builder.Configuration.GetConnectionString("DbConnection");
-        x.UseSqlServer(connectionString!);
+        x.UseSqlServer(connectionString);
     }
 });
 

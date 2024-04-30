@@ -2,10 +2,11 @@
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
 namespace UniDocuments.App.Application.ContentRead;
 
-public class QueryGetDocumentById : IOperationResultQuery<Stream>
+public class QueryGetDocumentById : IOperationResultQuery<DocumentLoadResponse>
 {
     public Guid Id { get; }
 
@@ -15,7 +16,7 @@ public class QueryGetDocumentById : IOperationResultQuery<Stream>
     }
 }
 
-public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGetDocumentById, Stream>
+public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGetDocumentById, DocumentLoadResponse>
 {
     private readonly IDocumentsStorage _documentsStorage;
 
@@ -24,19 +25,18 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
         _documentsStorage = documentsStorage;
     }
     
-    public async Task<OperationResult<Stream>> Handle(
+    public async Task<OperationResult<DocumentLoadResponse>> Handle(
         QueryGetDocumentById request, CancellationToken cancellationToken)
     {
-        var loadRequest = new DocumentLoadRequest(request.Id);
-
         try
         {
+            var loadRequest = new DocumentLoadRequest(request.Id);
             var response = await _documentsStorage.LoadAsync(loadRequest, cancellationToken);
-            return OperationResult.Successful(response.Stream!);
+            return OperationResult.Successful(response);
         }
-        catch
+        catch(Exception e)
         {
-            return OperationResult.Failed<Stream>("Error.InternalLoadDocumentError");
+            return OperationResult.Failed<DocumentLoadResponse>("GetDocumentById.InternalError", e.Message);
         }
     }
 }

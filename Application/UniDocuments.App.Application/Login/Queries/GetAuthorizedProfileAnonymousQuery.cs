@@ -46,7 +46,7 @@ public class GetAuthorizedProfileAnonymousQueryHandler :
 
         if (authorizedProfile is null)
         {
-            return OperationResult.Failed<AuthorizedProfileDto>("Profile does not exist");
+            return OperationResult.Failed<AuthorizedProfileDto>("AuthorizeProfile.NotExist");
         }
 
         authorizedProfile.JwtToken = _jwtTokenGenerationService.GenerateJwtToken(authorizedProfile);

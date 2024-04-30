@@ -10,6 +10,7 @@ namespace UniDocuments.App.Api.Controllers;
 public class UniDocumentsController : ControllerBase
 {
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    
     private readonly IMediator _mediator;
 
     public UniDocumentsController(IMediator mediator)
@@ -22,7 +23,7 @@ public class UniDocumentsController : ControllerBase
     {
         var profileId = Guid.NewGuid();
         var activityId = Guid.NewGuid();
-        var request = new CommandUploadDocument(profileId, activityId, formFile.OpenReadStream());
+        var request = new CommandUploadDocument(profileId, activityId, formFile.OpenReadStream(), formFile.FileName);
         var result = await _mediator.Send(request, cancellationToken);
         
         if (!result.IsSuccess)
@@ -86,6 +87,6 @@ public class UniDocumentsController : ControllerBase
             return BadRequest(result);
         }
 
-        return File(result.Result!, ContentType, documentId.ToString());
+        return File(result.Result!.Stream!, ContentType, result.Result.Name);
     }
 }

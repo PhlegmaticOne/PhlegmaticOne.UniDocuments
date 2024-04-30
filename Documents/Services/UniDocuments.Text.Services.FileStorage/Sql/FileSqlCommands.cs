@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace UniDocuments.Text.Services.FileStorage.Sql;
 
@@ -9,7 +10,7 @@ internal static class FileSqlCommands
                     OUTPUT 
                         GET_FILESTREAM_TRANSACTION_CONTEXT() AS transactionContext, 
                         inserted.Content.PathName() AS filePath
-                    SELECT NEWID(), 0x, @fileName";
+                    SELECT @fileId, 0x, @fileName";
 
     private const string SelectFileCommandText = @"
                     SELECT
@@ -19,8 +20,7 @@ internal static class FileSqlCommands
                     FROM [uni_documents_db].[dbo].[StudyDocumentsContent]
                     WHERE Id = @fileId";
 
-    internal static SqlCommand CreateInsertFileCommand(
-        SqlConnection sqlConnection, string fileName)
+    internal static SqlCommand CreateInsertFileCommand(SqlConnection sqlConnection, string fileName, Guid id)
     {
         return new SqlCommand(InsertFileCommandText, sqlConnection)
         {
@@ -29,8 +29,14 @@ internal static class FileSqlCommands
                 new SqlParameter
                 {
                     ParameterName = "@fileName",
-                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    SqlDbType = SqlDbType.NVarChar,
                     Value = fileName
+                },
+                new SqlParameter
+                {
+                    ParameterName = "@fileId",
+                    SqlDbType = SqlDbType.UniqueIdentifier,
+                    Value = id
                 }
             }
         };
@@ -45,7 +51,7 @@ internal static class FileSqlCommands
                 new SqlParameter
                 {
                     ParameterName = "@fileId",
-                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    SqlDbType = SqlDbType.UniqueIdentifier,
                     Value = fileId
                 }
             }

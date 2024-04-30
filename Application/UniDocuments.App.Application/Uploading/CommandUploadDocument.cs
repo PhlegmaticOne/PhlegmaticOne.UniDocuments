@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Newtonsoft.Json;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
@@ -16,12 +17,14 @@ namespace UniDocuments.App.Application.Uploading;
 public class CommandUploadDocument : IdentityOperationResultCommand
 {
     public Stream DocumentStream { get; }
+    public string FileName { get; }
     public Guid ActivityId { get; }
 
-    public CommandUploadDocument(Guid profileId, Guid activityId, Stream documentStream) : base(profileId)
+    public CommandUploadDocument(Guid profileId, Guid activityId, Stream documentStream, string fileName) : base(profileId)
     {
         ActivityId = activityId;
         DocumentStream = documentStream;
+        FileName = fileName;
     }
 }
 
@@ -52,35 +55,64 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     
     public async Task<OperationResult> Handle(CommandUploadDocument request, CancellationToken cancellationToken)
     {
-        var documentId = await SaveDocumentAsync(request, cancellationToken);
-        var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
-        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
-
-        var document = new UniDocument(documentId, content);
-        _documentsCache.Cache(document);
-        _documentMapper.AddDocument(document, "test");
-
-        await _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument
+        try
         {
-            Id = documentId,
+            var result = await ExecuteAsync(request, cancellationToken);
+            return OperationResult.Successful(result);
+        }
+        catch (Exception e)
+        {
+            return OperationResult.Failed("UploadDocument.InternalError", e.Message);
+        }
+    }
+
+    private async Task<Guid> ExecuteAsync(CommandUploadDocument request, CancellationToken cancellationToken)
+    {
+        var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
+        
+        var newDocument = await _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument
+        {
             ActivityId = request.ActivityId,
             StudentId = request.ProfileId,
             DateLoaded = DateTime.UtcNow,
-            Fingerprint = JsonConvert.SerializeObject(fingerprint),
-            Name = "test",
+            Name = request.FileName,
             ValuableParagraphsCount = content.ParagraphsCount
         }, cancellationToken);
 
+        var documentId = newDocument.Entity.Id;
+
+        await CalculateFingerprintAsync(newDocument, content, cancellationToken);
+
+        await SaveDocumentFileAsync(documentId, request, cancellationToken);
+        
+        CacheDocument(newDocument, content);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
         
-        return OperationResult.Successful(documentId);
+        return documentId;
     }
 
-    private async Task<Guid> SaveDocumentAsync(CommandUploadDocument request, CancellationToken cancellationToken)
+    private void CacheDocument(EntityEntry<StudyDocument> newDocument, UniDocumentContent content)
+    {
+        var documentId = newDocument.Entity.Id;
+        var name = newDocument.Entity.Name;
+        var document = new UniDocument(documentId, content);
+        _documentsCache.Cache(document);
+        _documentMapper.AddDocument(document, name);
+    }
+
+    private async Task CalculateFingerprintAsync(
+        EntityEntry<StudyDocument> newDocument, UniDocumentContent content, CancellationToken cancellationToken)
+    {
+        var documentId = newDocument.Entity.Id;
+        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
+        newDocument.Property(x => x.Fingerprint).CurrentValue = JsonConvert.SerializeObject(fingerprint);
+    }
+
+    private async Task SaveDocumentFileAsync(Guid id, CommandUploadDocument request, CancellationToken cancellationToken)
     {
         var stream = request.DocumentStream;
-        var saveRequest = new DocumentSaveRequest("test", stream);
-        var saveResponse = await _documentsStorage.SaveAsync(saveRequest, cancellationToken);
-        return saveResponse.Id;
+        var saveRequest = new DocumentSaveRequest(id, request.FileName, stream);
+        await _documentsStorage.SaveAsync(saveRequest, cancellationToken);
     }
 }

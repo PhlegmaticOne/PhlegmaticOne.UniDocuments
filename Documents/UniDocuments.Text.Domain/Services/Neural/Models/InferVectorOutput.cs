@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Services.Neural.Core;
+﻿namespace UniDocuments.Text.Domain.Services.Neural.Models;
 
 public class InferVectorOutput
 {

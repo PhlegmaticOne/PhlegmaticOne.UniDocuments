@@ -4,15 +4,7 @@ using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.App.Application.Training;
 
-public class CommandTrainDocumentsNeuralModel : IOperationResultCommand
-{
-    public CommandTrainDocumentsNeuralModel(string savePath)
-    {
-        SavePath = savePath;
-    }
-
-    public string SavePath { get; }
-}
+public class CommandTrainDocumentsNeuralModel : IOperationResultCommand { }
 
 public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandTrainDocumentsNeuralModel>
 {
@@ -27,17 +19,18 @@ public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHa
         _documentsTrainDatasetSource = documentsTrainDatasetSource;
     }
     
-    public async Task<OperationResult> Handle(CommandTrainDocumentsNeuralModel request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(
+        CommandTrainDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
         try
         {
             await _documentsNeuralModel.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
-            await _documentsNeuralModel.SaveAsync(request.SavePath, cancellationToken);
+            await _documentsNeuralModel.SaveAsync(cancellationToken);
             return OperationResult.Success;
         }
         catch(Exception e)
         {
-            return OperationResult.Failed<string>(e.Message);
+            return OperationResult.Failed("TrainDocument.InternalError", e.Message);
         }
     }
 }

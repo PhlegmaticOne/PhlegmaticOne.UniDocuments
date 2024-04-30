@@ -35,7 +35,7 @@ public class QueryReadDocumentContentByGlobalIdHandler :
 
         if (documentData is null)
         {
-            return OperationResult.Failed<UniDocument>("Error.NoDocumentWithId");
+            return OperationResult.Failed<UniDocument>("ReadDocumentByGlobalId.DocumentNotExist");
         }
 
         var document = await _loadingProvider.LoadAsync(documentData.Id, true, cancellationToken);

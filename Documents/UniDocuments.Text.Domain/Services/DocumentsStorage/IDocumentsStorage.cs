@@ -6,5 +6,5 @@ namespace UniDocuments.Text.Domain.Services.DocumentsStorage;
 public interface IDocumentsStorage
 {
     Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken);
-    Task<DocumentSaveResponse> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken);
+    Task SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken);
 }

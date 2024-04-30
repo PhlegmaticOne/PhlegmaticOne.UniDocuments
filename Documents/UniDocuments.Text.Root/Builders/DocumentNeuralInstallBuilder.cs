@@ -15,6 +15,11 @@ public class DocumentNeuralInstallBuilder
     {
         _serviceCollection = serviceCollection;
     }
+    
+    public void UseNeuralModel<T>() where T : class, IDocumentsNeuralModel
+    {
+        _serviceCollection.AddSingleton<IDocumentsNeuralModel, T>();
+    }
 
     public void UseTrainDatasetSource<T>() where T : class, IDocumentsTrainDatasetSource
     {

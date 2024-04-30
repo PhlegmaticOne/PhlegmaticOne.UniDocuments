@@ -24,19 +24,22 @@ public class TextCompareProvider : ITextCompareProvider
         _matchingAlgorithm = matchingAlgorithm;
     }
     
-    public Task<CompareTextsResponse> CompareAsync(
+    public async Task<CompareTextsResponse> CompareAsync(
         CompareTextsRequest request, CancellationToken cancellationToken)
     {
         var response = new CompareTextsResponse(request.SourceText);
         var baseMetric = _baseMetricsProvider.GetBaseMetric(request.BaseMetric);
         var options = _matchingOptionsProvider.GetOptions();
 
-        Parallel.ForEach(request.SuspiciousTexts, suspiciousText =>
+        await Task.Run(() =>
         {
-            ExecuteSimilarityCheck(request.SourceText, suspiciousText, baseMetric, options, response);
-        });
+            foreach (var suspiciousText in request.SuspiciousTexts)
+            {
+                ExecuteSimilarityCheck(request.SourceText, suspiciousText, baseMetric, options, response);
+            }
+        }, cancellationToken);
 
-        return Task.FromResult(response);
+        return response;
     }
 
     private void ExecuteSimilarityCheck(
@@ -56,9 +59,6 @@ public class TextCompareProvider : ITextCompareProvider
             result = CompareTextResult.NoSimilar(suspiciousText, metricValue);       
         }
 
-        lock (response)
-        {
-            response.AddResult(result);
-        }
+        response.AddResult(result);
     }
 }

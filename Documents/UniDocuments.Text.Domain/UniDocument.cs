@@ -10,7 +10,13 @@ public class UniDocument : IEquatable<UniDocument>
 
     public static UniDocument Empty => new(Guid.Empty);
     
+    [JsonIgnore]
     public bool HasData => Content is not null;
+
+    public static UniDocument FromString(string value)
+    {
+        return new UniDocument(Guid.Empty, UniDocumentContent.FromString(value));
+    }
     
     [JsonConstructor]
     public UniDocument(Guid id, UniDocumentContent? content = null)

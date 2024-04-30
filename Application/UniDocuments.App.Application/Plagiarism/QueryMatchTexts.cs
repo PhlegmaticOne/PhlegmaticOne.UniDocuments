@@ -28,7 +28,14 @@ public class QueryMatchTextsRequestHandler : IOperationResultQueryHandler<QueryM
     public async Task<OperationResult<MatchTextsResponse>> Handle(
         QueryMatchTexts request, CancellationToken cancellationToken)
     {
-        var result = await _textMatchProvider.MatchAsync(request.Request, cancellationToken);
-        return OperationResult.Successful(result);
+        try
+        {
+            var result = await _textMatchProvider.MatchAsync(request.Request, cancellationToken);
+            return OperationResult.Successful(result);
+        }
+        catch (Exception e)
+        {
+            return OperationResult.Failed<MatchTextsResponse>("MatchText.InternalError", e.Message);
+        }
     }
 }

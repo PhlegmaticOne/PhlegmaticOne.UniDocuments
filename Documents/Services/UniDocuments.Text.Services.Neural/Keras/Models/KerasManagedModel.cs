@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Services.Neural.Core;
+using UniDocuments.Text.Domain.Services.Neural.Models;
 using UniDocuments.Text.Services.Neural.Keras.Options;
 using UniDocuments.Text.Services.Neural.Keras.Tasks;
 
@@ -21,9 +21,10 @@ public class KerasManagedModel
         await new PythonTaskSaveKerasModel(input);
     }
     
-    public Task<InferVectorOutput> InferDocumentAsync(UniDocumentContent content, int topN, KerasModelOptions options)
+    public async Task<InferVectorOutput[]> InferDocumentAsync(UniDocumentContent content, int topN, KerasModelOptions options)
     {
         var input = new InferVectorInput(content.Paragraphs[0], options, topN, _model);
-        return new PythonTaskInferKerasModel(input, 0).Execute()!; 
+        var result = await new PythonTaskInferKerasModel(input, 0).Execute();
+        return new[] { result! };
     }
 }

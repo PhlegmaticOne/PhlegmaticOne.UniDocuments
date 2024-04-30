@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
+using UniDocuments.Text.Services.FileStorage.Sql;
 
 namespace UniDocuments.Text.Root.Builders;
 
@@ -12,8 +13,11 @@ public class DocumentStorageInstallBuilder
         _serviceCollection = serviceCollection;
     }
         
-    public void UseSqlConnectionProvider<T>() where T : class, ISqlConnectionProvider
+    public void UseSqlConnectionString(string connectionString)
     {
-        _serviceCollection.AddSingleton<ISqlConnectionProvider, T>();
+        _serviceCollection.AddSingleton<ISqlConnectionProvider, SqlConnectionProvider>(_ =>
+        {
+            return new SqlConnectionProvider(connectionString);
+        });
     }
 }

@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
 namespace UniDocuments.Text.Services.FileStorage.InMemory;
 
-public class DocumentsStorageInMemory : IDocumentsStorage, IDocumentStorageIndexable
+public class DocumentsStorageInMemory : IDocumentsStorage
 {
     private class FileLoadResponsePrepared
     {
@@ -30,15 +30,6 @@ public class DocumentsStorageInMemory : IDocumentsStorage, IDocumentStorageIndex
 
     public int StorageSize => _fileContents.Count;
 
-    public DocumentLoadResponse Load(int documentIndex)
-    {
-        var fileId = _fileContents.ElementAt(documentIndex).Key;
-        
-        return _fileContents.TryGetValue(fileId, out var fileLoadResponsePrepared) ? 
-            fileLoadResponsePrepared.ToFileLoadResponse() : 
-            DocumentLoadResponse.NoContent();
-    }
-
     public Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
     {
         var fileId = loadRequest.Id;
@@ -50,12 +41,11 @@ public class DocumentsStorageInMemory : IDocumentsStorage, IDocumentStorageIndex
         return Task.FromResult(result);
     }
 
-    public async Task<DocumentSaveResponse> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
     {
         var fileBytes = await GetFileContentAsync(saveRequest, cancellationToken);
-        var fileId = Guid.NewGuid();
+        var fileId = saveRequest.Id;
         _fileContents[fileId] = new FileLoadResponsePrepared(fileId, saveRequest.Name, fileBytes);
-        return new DocumentSaveResponse(fileId);
     }
 
     private static async Task<byte[]> GetFileContentAsync(

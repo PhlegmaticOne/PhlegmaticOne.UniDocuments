@@ -39,10 +39,10 @@ public class PlagiarismController : ControllerBase
         return new JsonResult(result);
     }
 
-    [HttpGet("SearchPlagiarismDocument")]
-    public async Task<IActionResult> SearchPlagiarismDocument(Guid documentId, int topN, CancellationToken cancellationToken)
+    [HttpPost("SearchPlagiarismDocument")]
+    public async Task<IActionResult> SearchPlagiarismDocument(
+        QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
     {
-        var request = new QuerySearchPlagiarismDocument(documentId, topN);
         var result = await _mediator.Send(request, cancellationToken);
         
         if (!result.IsSuccess)
@@ -53,10 +53,10 @@ public class PlagiarismController : ControllerBase
         return new JsonResult(result);
     }
     
-    [HttpGet("SearchPlagiarismText")]
-    public async Task<IActionResult> SearchPlagiarismText(string text, int topN, CancellationToken cancellationToken)
+    [HttpPost("SearchPlagiarismText")]
+    public async Task<IActionResult> SearchPlagiarismText(
+        QuerySearchPlagiarismText request, CancellationToken cancellationToken)
     {
-        var request = new QuerySearchPlagiarismText(text, topN);
         var result = await _mediator.Send(request, cancellationToken);
         
         if (!result.IsSuccess)

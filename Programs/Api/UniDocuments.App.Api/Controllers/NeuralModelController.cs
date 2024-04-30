@@ -10,19 +10,16 @@ namespace UniDocuments.App.Api.Controllers;
 public class NeuralModelController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ISavePathProvider _savePathProvider;
 
-    public NeuralModelController(IMediator mediator, ISavePathProvider savePathProvider)
+    public NeuralModelController(IMediator mediator)
     {
         _mediator = mediator;
-        _savePathProvider = savePathProvider;
     }
     
     [HttpPost("Train")]
     public async Task<IActionResult> Train(CancellationToken cancellationToken)
     {
-        var path = _savePathProvider.SavePath;
-        var request = new CommandTrainDocumentsNeuralModel(path);
+        var request = new CommandTrainDocumentsNeuralModel();
         var result = await _mediator.Send(request, cancellationToken);
 
         if (result.IsSuccess)
@@ -36,8 +33,7 @@ public class NeuralModelController : ControllerBase
     [HttpPost("Load")]
     public async Task<IActionResult> Load(CancellationToken cancellationToken)
     {
-        var path = _savePathProvider.SavePath;
-        var request = new CommandLoadDocumentsNeuralModel(path);
+        var request = new CommandLoadDocumentsNeuralModel();
         var result = await _mediator.Send(request, cancellationToken);
 
         if (!result.IsSuccess)

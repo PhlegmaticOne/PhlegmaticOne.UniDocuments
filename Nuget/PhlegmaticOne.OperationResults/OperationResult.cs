@@ -6,6 +6,8 @@ public class OperationResult
     public bool IsSuccess { get; init; }
     public string? ErrorMessage { get; init; }
 
+    public string? ErrorCode { get; init; }
+
     public static OperationResult Success => new()
     {
         IsSuccess = true
@@ -18,7 +20,7 @@ public class OperationResult
 
     public static OperationResult<T> Successful<T>(T result)
     {
-        return new()
+        return new OperationResult<T>
         {
             IsSuccess = true,
             ErrorMessage = null,
@@ -26,22 +28,24 @@ public class OperationResult
         };
     }
 
-    public static OperationResult<T> Failed<T>(string? errorMessage = null)
+    public static OperationResult<T> Failed<T>(string? errorCode = null, string? errorMessage = null)
     {
-        return new()
+        return new OperationResult<T>
         {
             IsSuccess = false,
-            ErrorMessage = errorMessage ?? "Operation error",
-            Result = default
+            ErrorMessage = errorMessage ?? string.Empty,
+            Result = default,
+            ErrorCode = errorCode ?? string.Empty
         };
     }
 
-    public static OperationResult Failed(string? errorMessage = null)
+    public static OperationResult Failed(string? errorCode = null, string? errorMessage = null)
     {
-        return new()
+        return new OperationResult
         {
             IsSuccess = false,
-            ErrorMessage = errorMessage ?? "Operation error"
+            ErrorMessage = errorMessage ?? string.Empty,
+            ErrorCode = errorCode ?? string.Empty
         };
     }
 }

@@ -34,7 +34,7 @@ public class QueryReadParagraphByIdHandler : IOperationResultQueryHandler<QueryR
 
         if (documentData is null)
         {
-            return OperationResult.Failed<string>("Error.NoParagraphWithId");
+            return OperationResult.Failed<string>("ReadParagraphById.ParagraphNotExist");
         }
 
         var document = await _loadingProvider.LoadAsync(documentData.Id, true, cancellationToken);

@@ -4,7 +4,6 @@ using PhlegmaticOne.ApiRequesting.Services;
 using PhlegmaticOne.LocalStorage;
 using UniDocuments.App.Client.Web.Controllers.Base;
 using UniDocuments.App.Client.Web.Requests.Profile;
-using UniDocuments.App.Client.Web.ViewModels;
 using UniDocuments.App.Client.Web.ViewModels.Account;
 using UniDocuments.App.Shared.Users;
 

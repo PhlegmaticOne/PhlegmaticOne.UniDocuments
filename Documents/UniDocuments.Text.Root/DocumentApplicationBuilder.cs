@@ -2,6 +2,7 @@
 using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Providers.Matching;
+using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.Cache;
@@ -44,21 +45,20 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IUniDocumentsCache, T>();
     }
         
-    public void UseFileStorage<TDev, TProd>(bool isDevelopment, Action<DocumentStorageInstallBuilder> action) 
-        where TDev : class, IDocumentsStorage, IDocumentStorageIndexable
+    public void UseFileStorage<TDev, TProd>(bool useRealDatabase, Action<DocumentStorageInstallBuilder> action) 
+        where TDev : class, IDocumentsStorage
         where TProd : class, IDocumentsStorage
     {
-        if (isDevelopment)
+        var builder = new DocumentStorageInstallBuilder(_serviceCollection);
+        action(builder);
+        
+        if (!useRealDatabase)
         {
-            _serviceCollection.AddSingleton<TDev>();
-            _serviceCollection.AddSingleton<IDocumentsStorage>(x => x.GetRequiredService<TDev>());
-            _serviceCollection.AddSingleton<IDocumentStorageIndexable>(x => x.GetRequiredService<TDev>());
+            _serviceCollection.AddSingleton<IDocumentsStorage, TDev>();
         }
         else
         {
-            var builder = new DocumentStorageInstallBuilder(_serviceCollection);
             _serviceCollection.AddSingleton<IDocumentsStorage, TProd>();
-            action(builder);
         }
     }
 
@@ -87,10 +87,11 @@ public class DocumentApplicationBuilder
         builderAction(builder);
     }
 
-    public void UseNeuralModel<T>(Action<DocumentNeuralInstallBuilder> action) where T : class, IDocumentsNeuralModel
+    public void UseNeuralModelProvider<T>(Action<DocumentNeuralInstallBuilder> action)
+        where T : class, INeuralModelsProvider
     {
         var builder = new DocumentNeuralInstallBuilder(_serviceCollection);
-        _serviceCollection.AddSingleton<IDocumentsNeuralModel, T>();
+        _serviceCollection.AddSingleton<INeuralModelsProvider, T>();
         action(builder);
     }
 
