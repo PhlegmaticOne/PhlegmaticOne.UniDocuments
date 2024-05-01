@@ -3,19 +3,11 @@ import re
 from typing import List
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import nltk
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords as sw
 from pymorphy2 import MorphAnalyzer
 
-InputWordsLayerName = 'input_words'
-InputDocumentsLayerName = 'input_documents'
-InferredDocumentsLayerName = 'inferred_documents'
-WordEmbeddingsLayerName = 'word_embeddings'
-DocumentEmbeddingsLayerName = 'document_embeddings'
-MergedLayerName = 'merged'
-OutputLayerName = 'output'
-
 nltk.download('stopwords')
-sw = stopwords.words('russian')
+stopwords = sw.words('russian')
 analyzer = MorphAnalyzer()
 
 
@@ -26,15 +18,17 @@ def preprocess_text(input_data):
     return " ".join(tokenized)
 
 
-def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\"\\-−]+") -> List[str]:
+def preprocess_and_tokenize(text: str, patterns: str) -> List[str]:
     doc = re.sub(patterns, ' ', text).lower()
     tokens: List[str] = []
+    
     for token in doc.split():
-        if token and token not in sw:
+        if token and token not in stopwords:
             token = token.strip()
             token = analyzer.normal_forms(token)[0]
             if len(token) > 1:
                 tokens.append(token)
+                
     return tokens
 
 
@@ -56,8 +50,8 @@ class DocumentStream(object):
             for paragraph in document.Paragraphs:
                 words = preprocess_and_tokenize(paragraph.Content, patterns=self.options.TokenizeRegex)
                 yield TaggedDocument(words=words, tags=[paragraph.GlobalId])
-                
-                
+
+
 def train(input_data) -> Doc2Vec:
     options = input_data.Options
     source = input_data.Source
@@ -89,17 +83,17 @@ def save(input_data):
 
 
 def infer(input_data):
-    model = input_data.Model
+    model: Doc2Vec = input_data.Model
     text = input_data.Content
     options = input_data.Options
     top_n = input_data.TopN
 
     preprocess = preprocess_and_tokenize(text, patterns=options.TokenizeRegex)
-    infer_vector = model.infer_vector(preprocess)
+    infer_vector = model.infer_vector(preprocess, epochs=options.InferEpochs)
     return model.docvecs.most_similar(infer_vector, topn=top_n)
 
 
-def get_path(input_data):
+def get_path(input_data) -> str:
     name = "{0}.bin".format(input_data.Name)
     base_path = input_data.BasePath
     return os.path.join(base_path, name)

@@ -11,6 +11,7 @@ public class Doc2VecOptions : INeuralOptions, IInferOptions
     public string TokenizeRegex { get; set; } = null!;
     public int EmbeddingSize { get; set; }
     public int Epochs { get; set; }
+    public int InferEpochs { get; set; }
     public float Alpha { get; set; }
     public float MinAlpha { get; set; }
     public int Dm { get; set; }

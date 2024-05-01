@@ -8,7 +8,7 @@ import numpy as np
 import tensorflow as tf
 import keras
 import nltk
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords as sw
 import re
 from typing import List, Dict
 from sklearn.metrics.pairwise import cosine_similarity
@@ -24,19 +24,21 @@ MergedLayerName = 'merged'
 OutputLayerName = 'output'
 
 nltk.download('stopwords')
-sw = stopwords.words('russian')
+stopwords = sw.words('russian')
 analyzer = MorphAnalyzer()
 
 
-def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\"\\-−]+") -> List[str]:
+def preprocess_and_tokenize(text: str, patterns: str) -> List[str]:
     doc = re.sub(patterns, ' ', text).lower()
     tokens: List[str] = []
+    
     for token in doc.split():
-        if token and token not in sw:
+        if token and token not in stopwords:
             token = token.strip()
             token = analyzer.normal_forms(token)[0]
             if len(token) > 1:
                 tokens.append(token)
+                
     return tokens
 
 
@@ -67,7 +69,7 @@ def train(input_data):
     source = input_data.Source
     vocab = input_data.Vocab
     stream = DocumentsStreamSource(source, options)
-    model = KerasDoc2VecModel(stream, vocab, options)
+    model = KerasDoc2VecModel(vocab, options, stream)
     model.build(is_infer=False)
     model.train(options.Epochs, options.LearningRate, options.Verbose)
     return model
@@ -84,7 +86,7 @@ def load(input_data):
     vocab = input_data.Vocab
     path = get_path(input_data)
     model = load_model(path, safe_mode=False)
-    result = KerasDoc2VecModel(None, vocab, options, model)
+    result = KerasDoc2VecModel(vocab, options, model=model)
     return result
 
 
@@ -314,7 +316,7 @@ class DocumentsGenerator(keras.utils.Sequence):
 
 
 class KerasDoc2VecModel(object):
-    def __init__(self, stream: DocumentsStream, vocab: DocumentVocab, options, model=None):
+    def __init__(self, vocab: DocumentVocab, options, stream: DocumentsStream = None, model=None):
         self.options = options
         self.embedding_size = options.EmbeddingSize
         self.window_size = options.WindowSize

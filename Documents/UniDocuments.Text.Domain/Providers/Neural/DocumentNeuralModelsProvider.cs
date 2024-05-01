@@ -8,12 +8,12 @@ public class DocumentNeuralModelsProvider : IDocumentNeuralModelsProvider
     
     public DocumentNeuralModelsProvider(IEnumerable<IDocumentsNeuralModel> neuralModels)
     {
-        _neuralModels = neuralModels.ToDictionary(x => x.Name, x => x);
+        _neuralModels = neuralModels.ToDictionary(x => x.Name.ToLower(), x => x);
     }
     
     public async Task<IDocumentsNeuralModel?> GetModelAsync(string key, bool loadIfNotLoaded, CancellationToken cancellationToken)
     {
-        if (_neuralModels.TryGetValue(key, out var model) == false)
+        if (_neuralModels.TryGetValue(key.ToLower(), out var model) == false)
         {
             return null;
         }
