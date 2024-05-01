@@ -1,26 +1,34 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
-using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Providers.Neural;
 
 namespace UniDocuments.App.Application.Training;
 
-public class CommandLoadDocumentsNeuralModel : IOperationResultCommand { }
+public class CommandLoadDocumentsNeuralModel : IOperationResultCommand
+{
+    public CommandLoadDocumentsNeuralModel(string modelName)
+    {
+        ModelName = modelName;
+    }
+
+    public string ModelName { get; }
+}
 
 public class CommandLoadDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandLoadDocumentsNeuralModel>
 {
-    private readonly IDocumentsNeuralModel _documentsNeuralModel;
+    private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
 
-    public CommandLoadDocumentsNeuralModelHandler(IDocumentsNeuralModel documentsNeuralModel)
+    public CommandLoadDocumentsNeuralModelHandler(IDocumentNeuralModelsProvider neuralModelsProvider)
     {
-        _documentsNeuralModel = documentsNeuralModel;
+        _neuralModelsProvider = neuralModelsProvider;
     }
     
     public async Task<OperationResult> Handle(CommandLoadDocumentsNeuralModel request, CancellationToken cancellationToken)
     {
         try
         {
-            await _documentsNeuralModel.LoadAsync(cancellationToken);
-            return OperationResult.Success;
+            var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, true, cancellationToken);
+            return model is null ? OperationResult.Failed("LoadModel.ModelNotFound") : OperationResult.Success;
         }
         catch(Exception e)
         {

@@ -2,12 +2,12 @@
 
 public class PlagiarismSearchAlgorithmData
 {
-    public PlagiarismSearchAlgorithmData(bool useFingerprint, string neuralModelType)
+    public PlagiarismSearchAlgorithmData(bool useFingerprint, string modelName)
     {
         UseFingerprint = useFingerprint;
-        NeuralModelType = neuralModelType;
+        ModelName = modelName;
     }
 
     public bool UseFingerprint { get; }
-    public string NeuralModelType { get; }
+    public string ModelName { get; }
 }

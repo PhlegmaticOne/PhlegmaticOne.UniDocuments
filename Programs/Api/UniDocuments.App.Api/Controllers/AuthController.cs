@@ -8,7 +8,7 @@ using UniDocuments.App.Shared.Users;
 namespace UniDocuments.App.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {
@@ -19,7 +19,7 @@ public class AuthController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterProfileDto registerProfileDto, CancellationToken cancellationToken)
     {
         var registerCommand = new RegisterProfileCommand(registerProfileDto);
@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
         return await AuthorizeAsync(registerProfileDto.UserName, registerProfileDto.Password, cancellationToken);
     }
 
-    [HttpPost]
+    [HttpPost("Login")]
     public Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
     {
         return AuthorizeAsync(loginDto.UserName, loginDto.Password, cancellationToken);

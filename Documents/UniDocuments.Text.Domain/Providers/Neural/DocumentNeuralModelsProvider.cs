@@ -2,23 +2,23 @@
 
 namespace UniDocuments.Text.Domain.Providers.Neural;
 
-public class NeuralModelsProvider : INeuralModelsProvider
+public class DocumentNeuralModelsProvider : IDocumentNeuralModelsProvider
 {
     private readonly Dictionary<string, IDocumentsNeuralModel> _neuralModels;
     
-    public NeuralModelsProvider(IEnumerable<IDocumentsNeuralModel> neuralModels)
+    public DocumentNeuralModelsProvider(IEnumerable<IDocumentsNeuralModel> neuralModels)
     {
         _neuralModels = neuralModels.ToDictionary(x => x.Name, x => x);
     }
     
-    public async Task<IDocumentsNeuralModel?> GetNeuralModelAsync(string key, CancellationToken cancellationToken)
+    public async Task<IDocumentsNeuralModel?> GetModelAsync(string key, bool loadIfNotLoaded, CancellationToken cancellationToken)
     {
         if (_neuralModels.TryGetValue(key, out var model) == false)
         {
             return null;
         }
 
-        if (!model.IsLoaded)
+        if (!model.IsLoaded && loadIfNotLoaded)
         {
             await model.LoadAsync(cancellationToken);
         }

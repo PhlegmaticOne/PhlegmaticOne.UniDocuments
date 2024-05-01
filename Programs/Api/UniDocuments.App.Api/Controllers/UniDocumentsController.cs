@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Application.ContentRead;
 using UniDocuments.App.Application.Uploading;
@@ -6,7 +7,8 @@ using UniDocuments.App.Application.Uploading;
 namespace UniDocuments.App.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
+[AllowAnonymous]
 public class UniDocumentsController : ControllerBase
 {
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -35,9 +37,9 @@ public class UniDocumentsController : ControllerBase
     }
 
     [HttpGet("GetParagraphById")]
-    public async Task<IActionResult> GetParagraphById(int paragraphId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetParagraphById(
+        [FromQuery] QueryReadParagraphById query, CancellationToken cancellationToken)
     {
-        var query = new QueryReadParagraphById(paragraphId);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)
@@ -49,9 +51,9 @@ public class UniDocumentsController : ControllerBase
     }
     
     [HttpGet("GetDocumentContentByGlobalId")]
-    public async Task<IActionResult> GetDocumentContentByGlobalId(int documentId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDocumentContentByGlobalId(
+        [FromQuery] QueryReadDocumentContentByGlobalId query, CancellationToken cancellationToken)
     {
-        var query = new QueryReadDocumentContentByGlobalId(documentId);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)
@@ -63,9 +65,9 @@ public class UniDocumentsController : ControllerBase
     }
     
     [HttpGet("GetDocumentContentById")]
-    public async Task<IActionResult> GetDocumentContentById(Guid documentId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDocumentContentById(
+        [FromQuery] QueryReadDocumentContentById query, CancellationToken cancellationToken)
     {
-        var query = new QueryReadDocumentContentById(documentId);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)
@@ -77,9 +79,9 @@ public class UniDocumentsController : ControllerBase
     }
     
     [HttpGet("GetDocumentFileById")]
-    public async Task<IActionResult> GetDocumentFileById(Guid documentId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDocumentFileById(
+        [FromQuery] QueryGetDocumentById query, CancellationToken cancellationToken)
     {
-        var query = new QueryGetDocumentById(documentId);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)

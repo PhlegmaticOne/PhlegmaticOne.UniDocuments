@@ -87,10 +87,10 @@ public class DocumentApplicationBuilder
     }
 
     public void UseNeuralModelProvider<T>(Action<DocumentNeuralInstallBuilder> action)
-        where T : class, INeuralModelsProvider
+        where T : class, IDocumentNeuralModelsProvider
     {
         var builder = new DocumentNeuralInstallBuilder(_serviceCollection);
-        _serviceCollection.AddSingleton<INeuralModelsProvider, T>();
+        _serviceCollection.AddSingleton<IDocumentNeuralModelsProvider, T>();
         action(builder);
     }
 

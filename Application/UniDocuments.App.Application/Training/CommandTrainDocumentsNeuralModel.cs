@@ -1,21 +1,35 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.App.Application.Training;
 
-public class CommandTrainDocumentsNeuralModel : IOperationResultCommand { }
+public class CommandTrainDocumentsNeuralModel : IOperationResultCommand
+{
+    public CommandTrainDocumentsNeuralModel(string modelName, bool isRebuildVocab)
+    {
+        ModelName = modelName;
+        IsRebuildVocab = isRebuildVocab;
+    }
+
+    public string ModelName { get; set; }
+    public bool IsRebuildVocab { get; set; }
+}
 
 public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandTrainDocumentsNeuralModel>
 {
-    private readonly IDocumentsNeuralModel _documentsNeuralModel;
+    private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
+    private readonly IDocumentsVocabProvider _documentsVocabProvider;
     private readonly IDocumentsTrainDatasetSource _documentsTrainDatasetSource;
 
     public CommandTrainDocumentsNeuralModelHandler(
-        IDocumentsNeuralModel documentsNeuralModel,
+        IDocumentNeuralModelsProvider neuralModelsProvider,
+        IDocumentsVocabProvider documentsVocabProvider,
         IDocumentsTrainDatasetSource documentsTrainDatasetSource)
     {
-        _documentsNeuralModel = documentsNeuralModel;
+        _neuralModelsProvider = neuralModelsProvider;
+        _documentsVocabProvider = documentsVocabProvider;
         _documentsTrainDatasetSource = documentsTrainDatasetSource;
     }
     
@@ -24,8 +38,20 @@ public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHa
     {
         try
         {
-            await _documentsNeuralModel.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
-            await _documentsNeuralModel.SaveAsync(cancellationToken);
+            var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, false, cancellationToken);
+
+            if (model is null)
+            {
+                return OperationResult.Failed("TrainModel.ModelNotFound");
+            }
+            
+            if (request.IsRebuildVocab)
+            {
+                await _documentsVocabProvider.BuildAsync(cancellationToken);
+            }
+            
+            await model.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
+            await model.SaveAsync(cancellationToken);
             return OperationResult.Success;
         }
         catch(Exception e)

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Application.Plagiarism;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
@@ -7,7 +8,8 @@ using UniDocuments.Text.Domain.Providers.Matching.Requests;
 namespace UniDocuments.App.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
+[AllowAnonymous]
 public class PlagiarismController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -18,7 +20,8 @@ public class PlagiarismController : ControllerBase
     }
 
     [HttpPost("Match")]
-    public async Task<IActionResult> Match(MatchTextsRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Match(
+        [FromBody] MatchTextsRequest request, CancellationToken cancellationToken)
     {
         var query = new QueryMatchTexts(request);
         var result = await _mediator.Send(query, cancellationToken);
@@ -26,7 +29,8 @@ public class PlagiarismController : ControllerBase
     }
 
     [HttpPost("Compare")]
-    public async Task<IActionResult> Compare(CompareTextsRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Compare(
+        [FromBody] CompareTextsRequest request, CancellationToken cancellationToken)
     {
         var query = new QueryCompareTexts(request);
         var result = await _mediator.Send(query, cancellationToken);
@@ -41,7 +45,7 @@ public class PlagiarismController : ControllerBase
 
     [HttpPost("SearchPlagiarismDocument")]
     public async Task<IActionResult> SearchPlagiarismDocument(
-        QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
+        [FromBody] QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
         
@@ -55,7 +59,7 @@ public class PlagiarismController : ControllerBase
     
     [HttpPost("SearchPlagiarismText")]
     public async Task<IActionResult> SearchPlagiarismText(
-        QuerySearchPlagiarismText request, CancellationToken cancellationToken)
+        [FromBody] QuerySearchPlagiarismText request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
         

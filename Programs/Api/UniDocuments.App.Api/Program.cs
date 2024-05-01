@@ -121,7 +121,7 @@ builder.Services.AddDocumentsApplication(appBuilder =>
         b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
     });
 
-    appBuilder.UseNeuralModelProvider<NeuralModelsProvider>(b =>
+    appBuilder.UseNeuralModelProvider<DocumentNeuralModelsProvider>(b =>
     {
         b.UseNeuralModel<DocumentNeuralModelKeras>();
         b.UseNeuralModel<DocumentNeuralModelDoc2Vec>();

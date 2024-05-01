@@ -11,16 +11,16 @@ namespace UniDocuments.Text.Application.PlagiarismSearching;
 public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {
     private readonly IFingerprintSearcher _fingerprintSearcher;
-    private readonly INeuralModelsProvider _neuralModelsProvider;
+    private readonly IDocumentNeuralModelsProvider _documentNeuralModelsProvider;
     private readonly IDocumentMapper _documentMapper;
 
     public PlagiarismSearchProvider(
         IFingerprintSearcher fingerprintSearcher,
-        INeuralModelsProvider neuralModelsProvider,
+        IDocumentNeuralModelsProvider documentNeuralModelsProvider,
         IDocumentMapper documentMapper)
     {
         _fingerprintSearcher = fingerprintSearcher;
-        _neuralModelsProvider = neuralModelsProvider;
+        _documentNeuralModelsProvider = documentNeuralModelsProvider;
         _documentMapper = documentMapper;
     }
     
@@ -39,7 +39,7 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
             response.SuspiciousDocuments = topFingerprints;
         }
 
-        var model = await _neuralModelsProvider.GetNeuralModelAsync(algorithm.NeuralModelType, cancellationToken);
+        var model = await _documentNeuralModelsProvider.GetModelAsync(algorithm.ModelName, true, cancellationToken);
 
         if (model is null)
         {
