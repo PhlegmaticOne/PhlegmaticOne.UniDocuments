@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.JwtTokensGeneration.Options;
 
-namespace UniDocuments.App.Api;
+namespace UniDocuments.App.Api.Infrastructure;
 
 public class JwtApplicationSecrets
 {

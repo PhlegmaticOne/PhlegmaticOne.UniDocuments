@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.App.Api.Extensions;
+﻿namespace UniDocuments.App.Api.Infrastructure.Extensions;
 
 public static class ConfigurationExtensions
 {

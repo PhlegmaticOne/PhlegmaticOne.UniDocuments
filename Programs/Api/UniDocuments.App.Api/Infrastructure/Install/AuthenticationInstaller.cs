@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using PhlegmaticOne.JwtTokensGeneration.Options;
 
-namespace UniDocuments.App.Api.Install;
+namespace UniDocuments.App.Api.Infrastructure.Install;
 
 public static class AuthenticationInstaller
 {

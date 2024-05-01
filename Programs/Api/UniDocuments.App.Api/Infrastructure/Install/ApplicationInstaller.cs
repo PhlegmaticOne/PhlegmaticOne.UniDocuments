@@ -5,7 +5,7 @@ using PhlegmaticOne.PasswordHasher.Implementation;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Services.Jwt;
 
-namespace UniDocuments.App.Api.Install;
+namespace UniDocuments.App.Api.Infrastructure.Install;
 
 public static class ApplicationInstaller
 {

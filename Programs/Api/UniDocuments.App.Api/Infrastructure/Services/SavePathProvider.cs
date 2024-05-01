@@ -1,6 +1,6 @@
 ﻿using UniDocuments.Text.Domain.Services.SavePath;
 
-namespace UniDocuments.App.Api.Services;
+namespace UniDocuments.App.Api.Infrastructure.Services;
 
 public class SavePathProvider : ISavePathProvider
 {

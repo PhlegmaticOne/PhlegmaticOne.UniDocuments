@@ -1,6 +1,6 @@
-using UniDocuments.App.Api;
-using UniDocuments.App.Api.Extensions;
-using UniDocuments.App.Api.Install;
+using UniDocuments.App.Api.Infrastructure;
+using UniDocuments.App.Api.Infrastructure.Extensions;
+using UniDocuments.App.Api.Infrastructure.Install;
 
 var builder = WebApplication.CreateBuilder(args);
 

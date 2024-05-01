@@ -3,7 +3,7 @@ using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 
-namespace UniDocuments.App.Api;
+namespace UniDocuments.App.Api.Infrastructure;
 
 public static class AppInitializer
 {

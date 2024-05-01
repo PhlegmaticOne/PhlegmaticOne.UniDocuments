@@ -1,4 +1,4 @@
-﻿using UniDocuments.App.Api.Services;
+﻿using UniDocuments.App.Api.Infrastructure.Services;
 using UniDocuments.Text.Application.Comparing;
 using UniDocuments.Text.Application.Loading;
 using UniDocuments.Text.Application.Matching;
@@ -27,7 +27,7 @@ using UniDocuments.Text.Services.Preprocessing.StopWords;
 using UniDocuments.Text.Services.StreamReading;
 using UniDocuments.Text.Services.StreamReading.Options;
 
-namespace UniDocuments.App.Api.Install;
+namespace UniDocuments.App.Api.Infrastructure.Install;
 
 public static class DocumentApplicationInstaller
 {

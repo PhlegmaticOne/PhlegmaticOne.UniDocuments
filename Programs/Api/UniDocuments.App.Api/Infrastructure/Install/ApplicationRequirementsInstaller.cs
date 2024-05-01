@@ -3,7 +3,7 @@ using PhlegmaticOne.PythonTasks;
 using UniDocuments.App.Application;
 using UniDocuments.App.Data.EntityFramework.Context;
 
-namespace UniDocuments.App.Api.Install;
+namespace UniDocuments.App.Api.Infrastructure.Install;
 
 public static class ApplicationRequirementsInstaller
 {
