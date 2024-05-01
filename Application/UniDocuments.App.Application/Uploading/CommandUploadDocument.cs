@@ -106,7 +106,8 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     {
         var documentId = newDocument.Entity.Id;
         var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
-        newDocument.Property(x => x.Fingerprint).CurrentValue = JsonConvert.SerializeObject(fingerprint);
+        newDocument.Property(x => x.Fingerprint).CurrentValue =
+            await Task.Run(() => JsonConvert.SerializeObject(fingerprint), cancellationToken);
     }
 
     private async Task SaveDocumentFileAsync(Guid id, CommandUploadDocument request, CancellationToken cancellationToken)

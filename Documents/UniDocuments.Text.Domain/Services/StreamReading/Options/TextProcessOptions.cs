@@ -4,4 +4,5 @@ public class TextProcessOptions
 {
     public int MinWordsCount { get; set; }
     public string TokenizeRegex { get; set; } = null!;
+    public string[] BreakTexts { get; set; } = null!;
 }

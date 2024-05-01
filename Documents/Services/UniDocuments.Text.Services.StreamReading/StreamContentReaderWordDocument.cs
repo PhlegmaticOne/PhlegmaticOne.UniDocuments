@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Domain.Services.StreamReading.Options;
 
@@ -30,6 +31,7 @@ public class StreamContentReaderWordDocument : IStreamContentReader
     {
         var result = new UniDocumentContent();
         var options = _textProcessOptionsProvider.GetOptions();
+        var breakTexts = options.BreakTexts.ToHashSet(new StringComparerOrdinalIgnoreCase());
 
         using var wordDocument = WordprocessingDocument.Open(stream, false);
         var body = wordDocument.MainDocumentPart.Document.Body;
@@ -39,6 +41,11 @@ public class StreamContentReaderWordDocument : IStreamContentReader
             if (!TryGetParagraphText(xmlElement, out var text))
             {
                 continue;
+            }
+
+            if (breakTexts.Contains(text!))
+            {
+                break;
             }
 
             var wordsCount = _wordsCountApproximator.ApproximateWordsCount(text!);
@@ -63,6 +70,11 @@ public class StreamContentReaderWordDocument : IStreamContentReader
         }
                 
         var innerText = xmlElement.InnerText;
+
+        if (innerText == "СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ")
+        {
+            Console.WriteLine("");
+        }
 
         if (string.IsNullOrWhiteSpace(innerText))
         {

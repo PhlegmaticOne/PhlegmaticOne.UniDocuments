@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.Text.Services.Preprocessing.StopWords;
+﻿namespace UniDocuments.Text.Domain.Services.Preprocessing;
 
 public class StringComparerOrdinalIgnoreCase : IEqualityComparer<string>
 {
