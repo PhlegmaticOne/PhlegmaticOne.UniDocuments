@@ -1,8 +1,10 @@
-﻿using PhlegmaticOne.PythonTasks;
+﻿using System.Diagnostics;
+using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Models;
 using UniDocuments.Text.Domain.Services.Neural.Options;
+using UniDocuments.Text.Domain.Services.Neural.Vocab;
 using UniDocuments.Text.Domain.Services.SavePath;
 using UniDocuments.Text.Services.Neural.Keras.Models;
 using UniDocuments.Text.Services.Neural.Keras.Options;
@@ -45,13 +47,23 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
         IsLoaded = true;
     }
 
-    public async Task TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
+    public async Task<NeuralModelTrainResult> TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
     {
         var options = _optionsProvider.GetOptions();
         var vocab = _documentsVocabProvider.GetVocab();
         var input = new TrainKerasModelInput(source, options, vocab);
+        var timer = Stopwatch.StartNew();
         _customManagedModel = await new PythonTaskTrainKerasModel(input);
+        timer.Stop();
         IsLoaded = true;
+
+        return new NeuralModelTrainResult
+        {
+            Name = Name,
+            Epochs = options.Epochs,
+            EmbeddingSize = options.EmbeddingSize,
+            TrainTime = timer.Elapsed
+        };
     }
 
     public Task<InferVectorOutput[]> FindSimilarAsync(

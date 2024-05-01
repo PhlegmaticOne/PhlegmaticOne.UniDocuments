@@ -2,6 +2,7 @@
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Services.Neural.Vocab;
 
 namespace UniDocuments.App.Application.Training;
 
@@ -11,7 +12,8 @@ public class CommandTrainDocumentsNeuralModel : IOperationResultCommand
     public bool IsRebuildVocab { get; set; }
 }
 
-public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandTrainDocumentsNeuralModel>
+public class CommandTrainDocumentsNeuralModelHandler : 
+    IOperationResultCommandHandler<CommandTrainDocumentsNeuralModel>
 {
     private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
     private readonly IDocumentsVocabProvider _documentsVocabProvider;
@@ -44,9 +46,9 @@ public class CommandTrainDocumentsNeuralModelHandler : IOperationResultCommandHa
                 await _documentsVocabProvider.BuildAsync(cancellationToken);
             }
             
-            await model.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
+            var result = await model.TrainAsync(_documentsTrainDatasetSource, cancellationToken);
             await model.SaveAsync(cancellationToken);
-            return OperationResult.Success;
+            return OperationResult.Successful(result);
         }
         catch(Exception e)
         {

@@ -23,12 +23,12 @@ public class NeuralModelController : ControllerBase
         var request = new CommandBuildVocab();
         var result = await _mediator.Send(request, cancellationToken);
 
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
             return BadRequest(result);
         }
         
-        return Ok();
+        return new JsonResult(result);
     }
     
     [HttpPost("LoadVocab")]
@@ -37,12 +37,12 @@ public class NeuralModelController : ControllerBase
         var request = new CommandLoadVocab();
         var result = await _mediator.Send(request, cancellationToken);
 
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
             return BadRequest(result);
         }
         
-        return Ok();
+        return new JsonResult(result);
     }
     
     [HttpPost("Train")]
@@ -51,12 +51,12 @@ public class NeuralModelController : ControllerBase
     {
         var result = await _mediator.Send(command, cancellationToken);
 
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
             return BadRequest(result);
         }
         
-        return Ok();
+        return new JsonResult(result);
     }
 
     [HttpPost("Load")]
@@ -70,6 +70,6 @@ public class NeuralModelController : ControllerBase
             return BadRequest(result);
         }
         
-        return Ok();
+        return new JsonResult(result);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Options;
+using UniDocuments.Text.Domain.Services.Neural.Vocab;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Keras.Options;
 

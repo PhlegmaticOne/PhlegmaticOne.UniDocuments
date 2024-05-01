@@ -87,7 +87,7 @@ def infer(input_data):
     text = input_data.Content
     options = input_data.Options
     top_n = input_data.TopN
-
+    
     preprocess = preprocess_and_tokenize(text, patterns=options.TokenizeRegex)
     infer_vector = model.infer_vector(preprocess, epochs=options.InferEpochs)
     return model.docvecs.most_similar(infer_vector, topn=top_n)

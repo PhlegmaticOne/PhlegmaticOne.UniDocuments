@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
-using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Services.Neural.Vocab;
 
 namespace UniDocuments.App.Application.Training;
 
@@ -19,8 +19,8 @@ public class CommandBuildVocabHandler : IOperationResultCommandHandler<CommandBu
     {
         try
         {
-            await _documentsVocabProvider.BuildAsync(cancellationToken);
-            return OperationResult.Success;
+            var result = await _documentsVocabProvider.BuildAsync(cancellationToken);
+            return OperationResult.Successful(result);
         }
         catch (Exception e)
         {

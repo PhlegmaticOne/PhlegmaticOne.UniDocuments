@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
-using UniDocuments.Text.Domain.Services.Neural;
+using UniDocuments.Text.Domain.Services.Neural.Vocab;
 
 namespace UniDocuments.App.Application.Training;
 
