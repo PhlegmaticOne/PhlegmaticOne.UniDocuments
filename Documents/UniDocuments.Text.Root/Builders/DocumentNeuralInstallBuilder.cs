@@ -20,6 +20,11 @@ public class DocumentNeuralInstallBuilder
     {
         _serviceCollection.AddSingleton<IDocumentsNeuralModel, T>();
     }
+    
+    public void UseVocabProvider<T>() where T : class, IDocumentsVocabProvider
+    {
+        _serviceCollection.AddSingleton<IDocumentsVocabProvider, T>();
+    }
 
     public void UseTrainDatasetSource<T>() where T : class, IDocumentsTrainDatasetSource
     {

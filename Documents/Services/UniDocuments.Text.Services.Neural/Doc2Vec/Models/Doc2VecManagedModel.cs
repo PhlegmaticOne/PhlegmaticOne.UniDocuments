@@ -1,6 +1,7 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.Neural.Models;
+using UniDocuments.Text.Services.Neural.Common;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
 
@@ -29,7 +30,7 @@ public class Doc2VecManagedModel
         return Task.WhenAll(tasks);
     }
 
-    public async Task SaveAsync(string path)
+    public async Task SaveAsync(PythonModelPathData path)
     {
         var input = new SaveDoc2VecModelInput(path, _model);
         await new PythonTaskSaveDoc2VecModel(input);

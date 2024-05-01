@@ -33,6 +33,7 @@ using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
 using UniDocuments.Text.Services.Neural.Keras;
 using UniDocuments.Text.Services.Neural.Sources;
+using UniDocuments.Text.Services.Neural.Vocab;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.Preprocessing.StopWords;
@@ -124,6 +125,8 @@ builder.Services.AddDocumentsApplication(appBuilder =>
     {
         b.UseNeuralModel<DocumentNeuralModelKeras>();
         b.UseNeuralModel<DocumentNeuralModelDoc2Vec>();
+        
+        b.UseVocabProvider<DocumentsVocabProvider>();
         
         b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
         

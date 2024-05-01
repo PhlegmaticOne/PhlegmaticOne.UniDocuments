@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 
-namespace UniDocuments.Text.Services.Neural;
+namespace UniDocuments.Text.Services.Neural.Common;
 
 [UseInPython]
 public class InferVectorInput

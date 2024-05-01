@@ -1,4 +1,5 @@
-﻿from keras.models import Model, load_model
+﻿import os.path
+from keras.models import Model, load_model
 from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average, Flatten, GRU, Dropout
 from keras.callbacks import EarlyStopping
 from keras.optimizers import Adam
@@ -11,6 +12,8 @@ from nltk.corpus import stopwords
 import re
 from typing import List, Dict
 from sklearn.metrics.pairwise import cosine_similarity
+import pickle
+from pymorphy2 import MorphAnalyzer
 
 InputWordsLayerName = 'input_words'
 InputDocumentsLayerName = 'input_documents'
@@ -22,6 +25,7 @@ OutputLayerName = 'output'
 
 nltk.download('stopwords')
 sw = stopwords.words('russian')
+analyzer = MorphAnalyzer()
 
 
 def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\"\\-−]+") -> List[str]:
@@ -30,9 +34,25 @@ def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@
     for token in doc.split():
         if token and token not in sw:
             token = token.strip()
+            token = analyzer.normal_forms(token)[0]
             if len(token) > 1:
                 tokens.append(token)
     return tokens
+
+
+def build_vocab(input_data):
+    base_path = input_data.BasePath
+    options = input_data.Options
+    source = input_data.Source
+    stream = DocumentsStreamSource(source, options)
+    vocab = DocumentVocab.build_from_stream(stream)
+    vocab.save(base_path)
+    return vocab
+
+
+def load_vocab(input_data):
+    vocab = DocumentVocab.load(input_data)
+    return vocab
 
 
 def train(input_data):
@@ -148,8 +168,16 @@ class DocumentsStreamSource(DocumentsStream):
 
 class DocumentVocab(object):
     _UNKNOWN: str = '<unk>'
+    _NAME: str = 'vocab'
 
-    def __init__(self, stream: DocumentsStream):
+    def __init__(self, word2index, index2word, documents_count):
+        self.word2index = word2index
+        self.index2word = index2word
+        self.documents_count = documents_count
+        self.vocab_size = len(word2index)
+
+    @staticmethod
+    def build_from_stream(stream: DocumentsStream):
         current = 0
         documents_count = 0
 
@@ -172,18 +200,43 @@ class DocumentVocab(object):
             index2word[current] = token
             current += 1
 
-        word2index[self._UNKNOWN] = len(word2index)
+        word2index[DocumentVocab._UNKNOWN] = len(word2index)
+        index2word[len(word2index)] = DocumentVocab._UNKNOWN
 
-        self.word2index = word2index
-        self.index2word = index2word
-        self.documents_count = documents_count
-        self.vocab_size = len(index2word)
+        return DocumentVocab(word2index, index2word, documents_count)
 
+    @staticmethod
+    def load(base_path):
+        path = os.path.join(base_path, DocumentVocab._NAME)
+        
+        with open(path, 'rb') as f:
+            load_data = pickle.load(f) or {}
+        
+        word2index = load_data['word2index']
+        documents_count = load_data['documents_count']
+        index2word: Dict[int, str] = {}
+        
+        for item in word2index.items():
+            index2word[item[1]] = item[0]
+            
+        return DocumentVocab(word2index, index2word, documents_count)
+        
     def to_index(self, token: str) -> int:
-        return self.word2index.get(token, self.word2index[self._UNKNOWN])
+        return self.word2index.get(token, self.word2index[DocumentVocab._UNKNOWN])
 
     def to_token(self, index: int) -> str:
         return self.index2word[index]
+
+    def save(self, base_path):
+        path = os.path.join(base_path, DocumentVocab._NAME)
+        
+        with open(path, 'wb') as f:
+            save_data = {
+                'documents_count': self.documents_count,
+                'word2index': self.word2index
+            }
+            
+            pickle.dump(save_data, f)
 
 
 class DocumentsGenerator(keras.utils.Sequence):
@@ -257,7 +310,7 @@ class KerasDoc2VecModelBase(object):
         self.options = options
         self.embedding_size = options.EmbeddingSize
         self.window_size = options.WindowSize
-        self.vocab = DocumentVocab(stream)
+        self.vocab = DocumentVocab.build_from_stream(stream)
         self.stream = stream
         self.model = model
         self.infer_model = None
@@ -426,7 +479,7 @@ class KerasDoc2VecModelCustom(KerasDoc2VecModelBase):
             last_layer = current_layer(last_layer)
 
         return last_layer
-    
+
 
 def split_tensor(window_size):
     def _lambda(tensor):

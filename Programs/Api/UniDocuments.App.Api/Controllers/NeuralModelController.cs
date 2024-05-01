@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Application.Training;
-using UniDocuments.Text.Domain.Services.SavePath;
 
 namespace UniDocuments.App.Api.Controllers;
 
@@ -15,6 +14,34 @@ public class NeuralModelController : ControllerBase
     {
         _mediator = mediator;
     }
+
+    [HttpPost("BuildVocab")]
+    public async Task<IActionResult> BuildVocab(CancellationToken cancellationToken)
+    {
+        var request = new CommandBuildVocab();
+        var result = await _mediator.Send(request, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
+        return Ok();
+    }
+    
+    [HttpPost("LoadVocab")]
+    public async Task<IActionResult> LoadVocab(CancellationToken cancellationToken)
+    {
+        var request = new CommandLoadVocab();
+        var result = await _mediator.Send(request, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
+        return Ok();
+    }
     
     [HttpPost("Train")]
     public async Task<IActionResult> Train(CancellationToken cancellationToken)
@@ -24,7 +51,7 @@ public class NeuralModelController : ControllerBase
 
         if (result.IsSuccess)
         {
-            return BadRequest(result.ErrorMessage);
+            return BadRequest(result);
         }
         
         return Ok();
@@ -38,7 +65,7 @@ public class NeuralModelController : ControllerBase
 
         if (!result.IsSuccess)
         {
-            return BadRequest(result.ErrorMessage);
+            return BadRequest(result);
         }
         
         return Ok();

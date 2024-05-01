@@ -8,7 +8,6 @@ using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
-using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Domain.Services.SavePath;
 using UniDocuments.Text.Domain.Services.StreamReading;
