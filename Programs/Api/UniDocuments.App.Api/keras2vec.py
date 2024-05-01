@@ -98,7 +98,10 @@ def infer(input_data):
 
     preprocess = preprocess_and_tokenize(text, patterns=options.TokenizeRegex)
     document = DocumentModel(0, preprocess)
-    return model.infer_vector(document, top_n, verbose=1)
+    return model.infer_vector(document, top_n,
+                              learning_rate=options.LearningRate,
+                              epochs=options.InferEpochs,
+                              verbose=options.Verbose)
 
 
 class InferenceData(object):
@@ -367,8 +370,11 @@ class KerasDoc2VecModel(object):
         self.model.fit(self.generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
         self.__retrieve_embeddings(self.model)
 
-    def infer_vector(self, infer_document: DocumentModel, n: int = 5,
-                     epochs: int = 5, learning_rate: int = 0.1, verbose: int = 0):
+    def infer_vector(self, infer_document: DocumentModel,
+                     n: int = 5,
+                     epochs: int = 5,
+                     learning_rate: int = 0.1,
+                     verbose: int = 0):
 
         if self.infer_model is None:
             self.build(is_infer=True)

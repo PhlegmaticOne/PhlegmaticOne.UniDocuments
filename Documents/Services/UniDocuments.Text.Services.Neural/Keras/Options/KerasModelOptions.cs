@@ -13,6 +13,7 @@ public class KerasModelOptions : INeuralOptions, IInferOptions
     public int WindowSize { get; set; }
     public int BatchSize { get; set; }
     public int Epochs { get; set; }
+    public int InferEpochs { get; set; }
     public double LearningRate { get; set; }
     public int Verbose { get; set; }
     public string Loss { get; set; } = null!;
