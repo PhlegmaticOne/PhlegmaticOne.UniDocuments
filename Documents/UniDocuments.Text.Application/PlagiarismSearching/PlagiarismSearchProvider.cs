@@ -3,6 +3,7 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping.Models;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.Neural.Models;
 
@@ -24,12 +25,12 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
         _documentMapper = documentMapper;
     }
     
-    public async Task<PlagiarismSearchResponse> SearchAsync(
+    public async Task<PlagiarismSearchResponseDocument> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
         var documentId = request.Document.Id;
         var algorithm = request.AlgorithmData;
-        var response = new PlagiarismSearchResponse();
+        var response = new PlagiarismSearchResponseDocument();
 
         if (algorithm.UseFingerprint)
         {
@@ -70,20 +71,36 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
                     continue;
                 }
                 
-                var documentData = _documentMapper.GetDocumentData(documentId)!;
-                    
-                paragraphPlagiarism.Add(new ParagraphSearchData
-                {
-                    DocumentId = documentData.Id,
-                    DocumentName = documentData.Name,
-                    Similarity = inferEntry.Similarity,
-                    Id = inferEntry.ParagraphId - documentData.GlobalFirstParagraphId
-                });
+                var documentData = _documentMapper.GetDocumentData(documentId);
+                var resultData = documentData is null ? CreateUnknown(inferEntry) : CreateKnown(documentData, inferEntry);
+                paragraphPlagiarism.Add(resultData);
             }
 
             result.Add(new ParagraphPlagiarismData(inferOutput.ParagraphId, paragraphPlagiarism));
         }
 
         return result;
+    }
+
+    private static ParagraphSearchData CreateUnknown(InferVectorEntry inferEntry)
+    {
+        return new ParagraphSearchData
+        {
+            DocumentId = Guid.Empty,
+            Similarity = inferEntry.Similarity,
+            DocumentName = string.Empty,
+            Id = inferEntry.ParagraphId
+        };
+    }
+
+    private static ParagraphSearchData CreateKnown(DocumentGlobalMapData documentData, InferVectorEntry inferEntry)
+    {
+        return new ParagraphSearchData
+        {
+            DocumentId = documentData.Id,
+            DocumentName = documentData.Name,
+            Similarity = inferEntry.Similarity,
+            Id = documentData.GetLocalParagraphId(inferEntry.ParagraphId)
+        };
     }
 }

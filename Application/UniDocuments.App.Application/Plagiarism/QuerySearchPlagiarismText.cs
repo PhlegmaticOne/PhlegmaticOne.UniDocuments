@@ -7,15 +7,15 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
 namespace UniDocuments.App.Application.Plagiarism;
 
-public class QuerySearchPlagiarismText : IOperationResultQuery<PlagiarismSearchResponse>
+public class QuerySearchPlagiarismText : IOperationResultQuery<PlagiarismSearchResponseText>
 {
-    public string Text { get; set; }
+    public string Text { get; set; } = null!;
+    public string ModelName { get; set; } = null!;
     public int TopN { get; set; }
-    public PlagiarismSearchAlgorithmData AlgorithmData { get; set; } = null!;
 }
 
 public class QuerySearchPlagiarismTextHandler : 
-    IOperationResultQueryHandler<QuerySearchPlagiarismText, PlagiarismSearchResponse>
+    IOperationResultQueryHandler<QuerySearchPlagiarismText, PlagiarismSearchResponseText>
 {
     private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
 
@@ -24,20 +24,22 @@ public class QuerySearchPlagiarismTextHandler :
         _plagiarismSearchProvider = plagiarismSearchProvider;
     }
     
-    public async Task<OperationResult<PlagiarismSearchResponse>> Handle(
+    public async Task<OperationResult<PlagiarismSearchResponseText>> Handle(
         QuerySearchPlagiarismText request, CancellationToken cancellationToken)
     {
         try
         {
             var document = UniDocument.FromString(request.Text);
-            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, request.AlgorithmData);
+            var algorithmData = new PlagiarismSearchAlgorithmData(false, request.ModelName);
+            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, algorithmData);
             var topParagraphs = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
-            return OperationResult.Successful(topParagraphs);
+            var result = new PlagiarismSearchResponseText(topParagraphs.SuspiciousParagraphs);
+            return OperationResult.Successful(result);
         }
         catch (Exception e)
         {
             return OperationResult
-                .Failed<PlagiarismSearchResponse>("SearchPlagiarismText.InternalError", e.Message);
+                .Failed<PlagiarismSearchResponseText>("SearchPlagiarismText.InternalError", e.Message);
         }
     }
 }

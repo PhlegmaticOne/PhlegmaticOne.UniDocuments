@@ -83,7 +83,7 @@ def load(input_data):
     options = input_data.Options
     vocab = input_data.Vocab
     path = get_path(input_data)
-    model = load_model(path)
+    model = load_model(path, safe_mode=False)
     result = KerasDoc2VecModel(None, vocab, options, model)
     return result
 
@@ -322,8 +322,10 @@ class KerasDoc2VecModel(object):
         self.stream = stream
         self.model = model
         self.infer_model = None
-        self.generator = DocumentsGenerator(stream, self.vocab, self.vocab.documents_count,
-                                            self.window_size, options.BatchSize)
+        self.generator =\
+            DocumentsGenerator(stream, self.vocab, self.vocab.documents_count, self.window_size, options.BatchSize)
+        if model is not None:
+            self.__retrieve_embeddings(self.model)
 
     def build(self, is_infer: bool = False):
         words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)

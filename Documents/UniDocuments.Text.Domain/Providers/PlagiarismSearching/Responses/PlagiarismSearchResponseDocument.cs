@@ -3,12 +3,12 @@
 namespace UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
 [Serializable]
-public class PlagiarismSearchResponse
+public class PlagiarismSearchResponseDocument
 {
-    public PlagiarismSearchResponse() : this(new List<ParagraphPlagiarismData>(), Array.Empty<DocumentSearchData>()) { }
+    public PlagiarismSearchResponseDocument() : this(new List<ParagraphPlagiarismData>(), Array.Empty<DocumentSearchData>()) { }
     
     [JsonConstructor]
-    public PlagiarismSearchResponse(List<ParagraphPlagiarismData> suspiciousParagraphs, DocumentSearchData[] suspiciousDocuments)
+    public PlagiarismSearchResponseDocument(List<ParagraphPlagiarismData> suspiciousParagraphs, DocumentSearchData[] suspiciousDocuments)
     {
         SuspiciousParagraphs = suspiciousParagraphs;
         SuspiciousDocuments = suspiciousDocuments;
