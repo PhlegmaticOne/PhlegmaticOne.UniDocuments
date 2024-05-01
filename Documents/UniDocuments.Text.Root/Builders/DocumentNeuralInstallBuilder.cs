@@ -25,6 +25,11 @@ public class DocumentNeuralInstallBuilder
     {
         _serviceCollection.AddSingleton<IDocumentsVocabProvider, T>();
     }
+    
+    public void UseTextPreprocessor<T>() where T : class, IDocumentTextPreprocessor
+    {
+        _serviceCollection.AddSingleton<IDocumentTextPreprocessor, T>();
+    }
 
     public void UseTrainDatasetSource<T>() where T : class, IDocumentsTrainDatasetSource
     {

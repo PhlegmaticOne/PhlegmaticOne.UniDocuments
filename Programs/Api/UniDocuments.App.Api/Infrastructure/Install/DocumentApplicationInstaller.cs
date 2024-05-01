@@ -19,6 +19,7 @@ using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
 using UniDocuments.Text.Services.Neural.Keras;
+using UniDocuments.Text.Services.Neural.Preprocessors;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Neural.Vocab;
 using UniDocuments.Text.Services.Preprocessing;
@@ -75,6 +76,8 @@ public static class DocumentApplicationInstaller
                 b.UseNeuralModel<DocumentNeuralModelDoc2Vec>();
 
                 b.UseVocabProvider<DocumentsVocabProvider>();
+                
+                b.UseTextPreprocessor<DocumentTextPreprocessor>();
 
                 b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
 

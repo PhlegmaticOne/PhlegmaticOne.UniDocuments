@@ -19,6 +19,13 @@ sw = stopwords.words('russian')
 analyzer = MorphAnalyzer()
 
 
+def preprocess_text(input_data):
+    text = input_data.Text
+    patterns = input_data.TokenizeRegex
+    tokenized = preprocess_and_tokenize(text, patterns)
+    return " ".join(tokenized)
+
+
 def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@[\\]^_`{|}~\"\\-−]+") -> List[str]:
     doc = re.sub(patterns, ' ', text).lower()
     tokens: List[str] = []
