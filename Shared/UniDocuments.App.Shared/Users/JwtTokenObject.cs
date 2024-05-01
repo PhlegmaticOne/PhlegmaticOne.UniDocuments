@@ -1,8 +1,8 @@
 ﻿namespace UniDocuments.App.Shared.Users;
 
-public class JwtTokenDto
+public class JwtTokenObject
 {
-    public JwtTokenDto(string token)
+    public JwtTokenObject(string token)
     {
         Token = token;
     }

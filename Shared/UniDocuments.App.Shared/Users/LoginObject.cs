@@ -1,5 +1,5 @@
 ﻿namespace UniDocuments.App.Shared.Users;
 
-public class LoginDto : IdentityDtoBase
+public class LoginObject : IdentityBaseObject
 {
 }

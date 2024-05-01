@@ -1,6 +1,6 @@
 ﻿namespace UniDocuments.App.Shared.Users;
 
-public class IdentityDtoBase
+public class IdentityBaseObject
 {
     public string UserName { get; set; } = null!;
     public string Password { get; set; } = null!;

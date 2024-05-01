@@ -86,19 +86,19 @@ public class ClientRequestsController : Controller
         return View(viewName, viewModel);
     }
 
-    protected async Task AuthenticateAsync(AuthorizedProfileDto profileDto)
+    protected async Task AuthenticateAsync(AuthorizedProfileObject profileObject)
     {
-        var claimsPrincipal = ClaimsPrincipalGenerator.GenerateClaimsPrincipal(profileDto);
-        await SignInAsync(claimsPrincipal, profileDto.JwtToken);
+        var claimsPrincipal = ClaimsPrincipalGenerator.GenerateClaimsPrincipal(profileObject);
+        await SignInAsync(claimsPrincipal, profileObject.JwtToken);
     }
 
     protected async Task SignOutAsync()
     {
-        SetJwtToken(new JwtTokenDto(string.Empty));
+        SetJwtToken(new JwtTokenObject(string.Empty));
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 
-    protected async Task SignInAsync(ClaimsPrincipal claimsPrincipal, JwtTokenDto jwtToken)
+    protected async Task SignInAsync(ClaimsPrincipal claimsPrincipal, JwtTokenObject jwtToken)
     {
         SetJwtToken(jwtToken);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
@@ -106,10 +106,10 @@ public class ClientRequestsController : Controller
 
     protected string? JwtToken()
     {
-        return LocalStorageService.GetValue<JwtTokenDto>(User.Username())!.Token;
+        return LocalStorageService.GetValue<JwtTokenObject>(User.Username())!.Token;
     }
 
-    protected void SetJwtToken(JwtTokenDto jwtToken)
+    protected void SetJwtToken(JwtTokenObject jwtToken)
     {
         LocalStorageService.SetValue(User.Username(), jwtToken);
     }

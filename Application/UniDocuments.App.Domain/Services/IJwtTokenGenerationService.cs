@@ -4,5 +4,5 @@ namespace UniDocuments.App.Domain.Services;
 
 public interface IJwtTokenGenerationService
 {
-    JwtTokenDto GenerateJwtToken(AuthorizedProfileDto profile);
+    JwtTokenObject GenerateJwtToken(AuthorizedProfileObject profile);
 }

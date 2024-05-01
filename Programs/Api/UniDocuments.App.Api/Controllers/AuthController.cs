@@ -20,9 +20,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(RegisterProfileDto registerProfileDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Register(RegisterProfileObject registerProfileObject, CancellationToken cancellationToken)
     {
-        var registerCommand = new RegisterProfileCommand(registerProfileDto);
+        var registerCommand = new RegisterProfileCommand(registerProfileObject);
         var registerResult = await _mediator.Send(registerCommand, cancellationToken);
 
         if (registerResult.IsSuccess == false)
@@ -30,13 +30,13 @@ public class AuthController : ControllerBase
             return BadRequest(registerResult.ErrorMessage);
         }
 
-        return await AuthorizeAsync(registerProfileDto.UserName, registerProfileDto.Password, cancellationToken);
+        return await AuthorizeAsync(registerProfileObject.UserName, registerProfileObject.Password, cancellationToken);
     }
 
     [HttpPost("Login")]
-    public Task<IActionResult> Login(LoginDto loginDto, CancellationToken cancellationToken)
+    public Task<IActionResult> Login(LoginObject loginObject, CancellationToken cancellationToken)
     {
-        return AuthorizeAsync(loginDto.UserName, loginDto.Password, cancellationToken);
+        return AuthorizeAsync(loginObject.UserName, loginObject.Password, cancellationToken);
     }
 
     private async Task<IActionResult> AuthorizeAsync(string email, string password, CancellationToken cancellationToken)

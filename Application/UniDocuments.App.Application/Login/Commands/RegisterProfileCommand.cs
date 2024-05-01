@@ -9,12 +9,12 @@ namespace UniDocuments.App.Application.Login.Commands;
 
 public class RegisterProfileCommand : IOperationResultCommand
 {
-    public RegisterProfileCommand(RegisterProfileDto registerProfileModel)
+    public RegisterProfileCommand(RegisterProfileObject registerProfileObjectModel)
     {
-        RegisterProfileModel = registerProfileModel;
+        RegisterProfileObjectModel = registerProfileObjectModel;
     }
 
-    public RegisterProfileDto RegisterProfileModel { get; }
+    public RegisterProfileObject RegisterProfileObjectModel { get; }
 }
 
 public class RegisterProfileCommandHandler : IOperationResultCommandHandler<RegisterProfileCommand>
@@ -32,7 +32,7 @@ public class RegisterProfileCommandHandler : IOperationResultCommandHandler<Regi
     {
         try
         {
-            var prepared = PrepareProfile(request.RegisterProfileModel);
+            var prepared = PrepareProfile(request.RegisterProfileObjectModel);
             var repository = _dbContext.Set<Student>();
             await repository.AddAsync(prepared, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -44,14 +44,14 @@ public class RegisterProfileCommandHandler : IOperationResultCommandHandler<Regi
         }
     }
     
-    private Student PrepareProfile(RegisterProfileDto registerProfileDto)
+    private Student PrepareProfile(RegisterProfileObject registerProfileObject)
     {
         return new Student
         {
-            FirstName = registerProfileDto.FirstName,
-            LastName = registerProfileDto.LastName,
-            UserName = registerProfileDto.UserName,
-            Password = _passwordHasher.Hash(registerProfileDto.Password)
+            FirstName = registerProfileObject.FirstName,
+            LastName = registerProfileObject.LastName,
+            UserName = registerProfileObject.UserName,
+            Password = _passwordHasher.Hash(registerProfileObject.Password)
         };
     }
 }

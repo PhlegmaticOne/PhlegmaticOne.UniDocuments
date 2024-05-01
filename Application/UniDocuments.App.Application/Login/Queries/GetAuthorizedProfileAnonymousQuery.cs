@@ -9,7 +9,7 @@ using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Application.Login.Queries;
 
-public class GetAuthorizedProfileAnonymousQuery : IOperationResultQuery<AuthorizedProfileDto>
+public class GetAuthorizedProfileAnonymousQuery : IOperationResultQuery<AuthorizedProfileObject>
 {
     public GetAuthorizedProfileAnonymousQuery(string userName, string password)
     {
@@ -22,7 +22,7 @@ public class GetAuthorizedProfileAnonymousQuery : IOperationResultQuery<Authoriz
 }
 
 public class GetAuthorizedProfileAnonymousQueryHandler :
-    IOperationResultQueryHandler<GetAuthorizedProfileAnonymousQuery, AuthorizedProfileDto>
+    IOperationResultQueryHandler<GetAuthorizedProfileAnonymousQuery, AuthorizedProfileObject>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IJwtTokenGenerationService _jwtTokenGenerationService;
@@ -39,14 +39,14 @@ public class GetAuthorizedProfileAnonymousQueryHandler :
     }
 
 
-    public async Task<OperationResult<AuthorizedProfileDto>> Handle(
+    public async Task<OperationResult<AuthorizedProfileObject>> Handle(
         GetAuthorizedProfileAnonymousQuery request, CancellationToken cancellationToken)
     {
         var authorizedProfile = await GetAuthorizedProfileAsync(request, cancellationToken);
 
         if (authorizedProfile is null)
         {
-            return OperationResult.Failed<AuthorizedProfileDto>("AuthorizeProfile.NotExist");
+            return OperationResult.Failed<AuthorizedProfileObject>("AuthorizeProfile.NotExist");
         }
 
         authorizedProfile.JwtToken = _jwtTokenGenerationService.GenerateJwtToken(authorizedProfile);
@@ -54,7 +54,7 @@ public class GetAuthorizedProfileAnonymousQueryHandler :
         return OperationResult.Successful(authorizedProfile);
     }
 
-    private async Task<AuthorizedProfileDto?> GetAuthorizedProfileAsync(GetAuthorizedProfileAnonymousQuery request,
+    private async Task<AuthorizedProfileObject?> GetAuthorizedProfileAsync(GetAuthorizedProfileAnonymousQuery request,
         CancellationToken cancellationToken)
     {
         var repository = _dbContext.Set<Student>();
@@ -69,7 +69,7 @@ public class GetAuthorizedProfileAnonymousQueryHandler :
             return null;
         }
 
-        return new AuthorizedProfileDto
+        return new AuthorizedProfileObject
         {
             UserName = student.UserName,
             FirstName = student.FirstName,

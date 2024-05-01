@@ -14,10 +14,10 @@ public class JwtTokenGenerationService : IJwtTokenGenerationService
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public JwtTokenDto GenerateJwtToken(AuthorizedProfileDto profile)
+    public JwtTokenObject GenerateJwtToken(AuthorizedProfileObject profile)
     {
         var userInfo = new UserRegisteringModel(profile.Id, profile.FirstName, profile.LastName, profile.UserName);
         var tokenValue = _jwtTokenGenerator.GenerateToken(userInfo);
-        return new JwtTokenDto(tokenValue);
+        return new JwtTokenObject(tokenValue);
     }
 }

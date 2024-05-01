@@ -28,7 +28,7 @@ public class AuthController : ClientRequestsController
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
-        var dto = new RegisterProfileDto
+        var dto = new RegisterProfileObject
         {
             Password = registerViewModel.Password,
             FirstName = registerViewModel.FirstName,
@@ -46,7 +46,7 @@ public class AuthController : ClientRequestsController
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
-        var dto = new LoginDto
+        var dto = new LoginObject
         {
             Password = loginViewModel.Password,
             UserName = loginViewModel.Email
