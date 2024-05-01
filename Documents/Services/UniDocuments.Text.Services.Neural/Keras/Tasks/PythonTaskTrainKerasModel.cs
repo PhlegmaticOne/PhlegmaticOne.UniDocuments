@@ -10,11 +10,13 @@ public class TrainKerasModelInput
 {
     public IDocumentsTrainDatasetSource Source { get; }
     public KerasModelOptions Options { get; }
+    public object Vocab { get; }
 
-    public TrainKerasModelInput(IDocumentsTrainDatasetSource source, KerasModelOptions options)
+    public TrainKerasModelInput(IDocumentsTrainDatasetSource source, KerasModelOptions options, object vocab)
     {
         Source = source;
         Options = options;
+        Vocab = vocab;
     }
 }
 

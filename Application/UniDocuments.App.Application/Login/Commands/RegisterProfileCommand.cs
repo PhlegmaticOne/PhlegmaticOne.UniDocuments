@@ -9,12 +9,12 @@ namespace UniDocuments.App.Application.Login.Commands;
 
 public class RegisterProfileCommand : IOperationResultCommand
 {
-    public RegisterProfileCommand(RegisterProfileObject registerProfileObjectModel)
+    public RegisterProfileCommand(RegisterProfileObject registerProfileObject)
     {
-        RegisterProfileObjectModel = registerProfileObjectModel;
+        RegisterProfileObject = registerProfileObject;
     }
 
-    public RegisterProfileObject RegisterProfileObjectModel { get; }
+    public RegisterProfileObject RegisterProfileObject { get; }
 }
 
 public class RegisterProfileCommandHandler : IOperationResultCommandHandler<RegisterProfileCommand>
@@ -32,7 +32,7 @@ public class RegisterProfileCommandHandler : IOperationResultCommandHandler<Regi
     {
         try
         {
-            var prepared = PrepareProfile(request.RegisterProfileObjectModel);
+            var prepared = PrepareProfile(request.RegisterProfileObject);
             var repository = _dbContext.Set<Student>();
             await repository.AddAsync(prepared, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);

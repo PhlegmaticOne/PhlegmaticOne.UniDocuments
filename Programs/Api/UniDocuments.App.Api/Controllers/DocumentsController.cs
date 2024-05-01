@@ -9,19 +9,19 @@ namespace UniDocuments.App.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [AllowAnonymous]
-public class UniDocumentsController : ControllerBase
+public class DocumentsController : ControllerBase
 {
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     
     private readonly IMediator _mediator;
 
-    public UniDocumentsController(IMediator mediator)
+    public DocumentsController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFile(IFormFile formFile, CancellationToken cancellationToken)
+    [HttpPost("Upload")]
+    public async Task<IActionResult> Upload(IFormFile formFile, CancellationToken cancellationToken)
     {
         var profileId = Guid.NewGuid();
         var activityId = Guid.NewGuid();

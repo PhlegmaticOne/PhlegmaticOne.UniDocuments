@@ -7,12 +7,7 @@ namespace UniDocuments.App.Application.ContentRead;
 
 public class QueryReadParagraphById : IOperationResultQuery<string>
 {
-    public int ParagraphId { get; }
-
-    public QueryReadParagraphById(int paragraphId)
-    {
-        ParagraphId = paragraphId;
-    }
+    public int ParagraphId { get; set; }
 }
 
 public class QueryReadParagraphByIdHandler : IOperationResultQueryHandler<QueryReadParagraphById, string>

@@ -5,7 +5,7 @@ using UniDocuments.Text.Domain.Services.Preprocessing;
 
 namespace UniDocuments.App.Api;
 
-public class AppInitializer
+public static class AppInitializer
 {
     public static async Task InitializeAsync(WebApplication application, CancellationToken cancellationToken)
     {

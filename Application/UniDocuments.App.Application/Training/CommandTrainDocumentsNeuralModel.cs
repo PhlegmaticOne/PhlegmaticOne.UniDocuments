@@ -7,13 +7,7 @@ namespace UniDocuments.App.Application.Training;
 
 public class CommandTrainDocumentsNeuralModel : IOperationResultCommand
 {
-    public CommandTrainDocumentsNeuralModel(string modelName, bool isRebuildVocab)
-    {
-        ModelName = modelName;
-        IsRebuildVocab = isRebuildVocab;
-    }
-
-    public string ModelName { get; set; }
+    public string ModelName { get; set; } = null!;
     public bool IsRebuildVocab { get; set; }
 }
 

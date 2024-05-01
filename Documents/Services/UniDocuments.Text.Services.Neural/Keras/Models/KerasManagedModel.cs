@@ -16,16 +16,23 @@ public class KerasManagedModel
         _model = model;
     }
 
-    public async Task SaveAsync(string path)
+    public async Task SaveAsync(string path, string name)
     {
-        var input = new SaveKerasModelInput(path, _model);
+        var input = new SaveKerasModelInput(path, name, _model);
         await new PythonTaskSaveKerasModel(input);
     }
     
-    public async Task<InferVectorOutput[]> InferDocumentAsync(UniDocumentContent content, int topN, KerasModelOptions options)
+    public Task<InferVectorOutput[]> InferDocumentAsync(UniDocumentContent content, int topN, KerasModelOptions options)
     {
-        var input = new InferVectorInput(content.Paragraphs[0], options, topN, _model);
-        var result = await new PythonTaskInferKerasModel(input, 0).Execute();
-        return new[] { result! };
+        var tasks = new Task<InferVectorOutput>[content.ParagraphsCount];
+
+        for (var i = 0; i < content.ParagraphsCount; i++)
+        {
+            var input = new InferVectorInput(content.Paragraphs[i], options, topN, _model);
+            var inferTask = new PythonTaskInferKerasModel(input, i);
+            tasks[i] = inferTask.Execute()!;
+        }
+
+        return Task.WhenAll(tasks);
     }
 }

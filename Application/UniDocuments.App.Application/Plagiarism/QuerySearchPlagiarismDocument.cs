@@ -9,16 +9,9 @@ namespace UniDocuments.App.Application.Plagiarism;
 
 public class QuerySearchPlagiarismDocument : IOperationResultQuery<PlagiarismSearchResponse>
 {
-    public Guid DocumentId { get; }
-    public int TopN { get; }
-    public PlagiarismSearchAlgorithmData AlgorithmData { get; }
-
-    public QuerySearchPlagiarismDocument(Guid documentId, int topN, PlagiarismSearchAlgorithmData algorithmData)
-    {
-        DocumentId = documentId;
-        TopN = topN;
-        AlgorithmData = algorithmData;
-    }
+    public Guid DocumentId { get; set; }
+    public int TopN { get; set; }
+    public PlagiarismSearchAlgorithmData AlgorithmData { get; set; } = null!;
 }
 
 public class QuerySearchPlagiarismDocumentHandler : IOperationResultQueryHandler<QuerySearchPlagiarismDocument, PlagiarismSearchResponse>

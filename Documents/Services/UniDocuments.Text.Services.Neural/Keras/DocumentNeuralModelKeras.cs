@@ -12,16 +12,19 @@ namespace UniDocuments.Text.Services.Neural.Keras;
 
 public class DocumentNeuralModelKeras : IDocumentsNeuralModel
 {
-    private const string ModelNameFormat = "{0}.keras";
-    
     private readonly INeuralOptionsProvider<KerasModelOptions> _optionsProvider;
+    private readonly IDocumentsVocabProvider _documentsVocabProvider;
     private readonly ISavePathProvider _savePathProvider;
 
     private KerasManagedModel? _customManagedModel;
 
-    public DocumentNeuralModelKeras(INeuralOptionsProvider<KerasModelOptions> optionsProvider, ISavePathProvider savePathProvider)
+    public DocumentNeuralModelKeras(
+        INeuralOptionsProvider<KerasModelOptions> optionsProvider,
+        IDocumentsVocabProvider documentsVocabProvider,
+        ISavePathProvider savePathProvider)
     {
         _optionsProvider = optionsProvider;
+        _documentsVocabProvider = documentsVocabProvider;
         _savePathProvider = savePathProvider;
     }
 
@@ -30,36 +33,31 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
 
     public Task SaveAsync(CancellationToken cancellationToken)
     {
-        var savePath = GetModelPath();
-        return _customManagedModel!.SaveAsync(savePath);
+        return _customManagedModel!.SaveAsync(_savePathProvider.SavePath, Name);
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken)
     {
-        var loadPath = GetModelPath();
-        _customManagedModel = await new PythonTaskLoadKerasModel(loadPath);
+        var vocab = _documentsVocabProvider.GetVocab();
+        var options = _optionsProvider.GetOptions();
+        var input = new LoadKerasModelInput(_savePathProvider.SavePath, Name, vocab, options);
+        _customManagedModel = await new PythonTaskLoadKerasModel(input);
         IsLoaded = true;
     }
 
     public async Task TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
     {
         var options = _optionsProvider.GetOptions();
-        var input = new TrainKerasModelInput(source, options);
+        var vocab = _documentsVocabProvider.GetVocab();
+        var input = new TrainKerasModelInput(source, options, vocab);
         _customManagedModel = await new PythonTaskTrainKerasModel(input);
         IsLoaded = true;
     }
 
-    public async Task<InferVectorOutput[]> FindSimilarAsync(
+    public Task<InferVectorOutput[]> FindSimilarAsync(
         UniDocument document, int topN, CancellationToken cancellationToken)
     {
         var options = _optionsProvider.GetOptions();
-        return await _customManagedModel!.InferDocumentAsync(document.Content!, topN, options);
-    }
-    
-    private string GetModelPath()
-    {
-        var basePath = _savePathProvider.SavePath;
-        var name = string.Format(ModelNameFormat, Name);
-        return Path.Combine(basePath, name);
+        return _customManagedModel!.InferDocumentAsync(document.Content!, topN, options);
     }
 }

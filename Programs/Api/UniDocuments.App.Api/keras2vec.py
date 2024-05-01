@@ -40,6 +40,13 @@ def preprocess_and_tokenize(text: str, patterns: str = "[0-9!#$%&'()*+,./:;<=>?@
     return tokens
 
 
+def get_path(input_data):
+    path = input_data.Path
+    name = input_data.Name
+    result_name = "{0}.keras".format(name)
+    return os.path.join(path, result_name)
+
+
 def build_vocab(input_data):
     base_path = input_data.BasePath
     options = input_data.Options
@@ -58,8 +65,9 @@ def load_vocab(input_data):
 def train(input_data):
     options = input_data.Options
     source = input_data.Source
+    vocab = input_data.Vocab
     stream = DocumentsStreamSource(source, options)
-    model = KerasDoc2VecModelCustom(stream, options)
+    model = KerasDoc2VecModel(stream, vocab, options)
     model.build(is_infer=False)
     model.train(options.Epochs, options.LearningRate, options.Verbose)
     return model
@@ -67,16 +75,16 @@ def train(input_data):
 
 def save(input_data):
     model = input_data.Model
-    path = input_data.Path
-    model.save(path)
+    result_path = get_path(input_data)
+    model.save(result_path)
 
 
 def load(input_data):
     options = input_data.Options
-    source = input_data.Source
-    model = load_model(input_data)
-    stream = DocumentsStreamSource(source, options)
-    result = KerasDoc2VecModelCustom(stream, options, model)
+    vocab = input_data.Vocab
+    path = get_path(input_data)
+    model = load_model(path)
+    result = KerasDoc2VecModel(None, vocab, options, model)
     return result
 
 
@@ -305,12 +313,12 @@ class DocumentsGenerator(keras.utils.Sequence):
         return inputs, outputs
 
 
-class KerasDoc2VecModelBase(object):
-    def __init__(self, stream: DocumentsStream, options, model=None):
+class KerasDoc2VecModel(object):
+    def __init__(self, stream: DocumentsStream, vocab: DocumentVocab, options, model=None):
         self.options = options
         self.embedding_size = options.EmbeddingSize
         self.window_size = options.WindowSize
-        self.vocab = DocumentVocab.build_from_stream(stream)
+        self.vocab = vocab
         self.stream = stream
         self.model = model
         self.infer_model = None
@@ -318,7 +326,34 @@ class KerasDoc2VecModelBase(object):
                                             self.window_size, options.BatchSize)
 
     def build(self, is_infer: bool = False):
-        raise NotImplementedError()
+        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
+        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
+
+        document_inference = Embedding(input_dim=1,
+                                       output_dim=self.embedding_size,
+                                       input_shape=(1,),
+                                       name=InferredDocumentsLayerName,
+                                       embeddings_initializer="uniform")(document_id_input)
+
+        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
+                                    output_dim=self.embedding_size,
+                                    input_shape=(self.window_size - 1,),
+                                    name=WordEmbeddingsLayerName)(words_input)
+
+        document_embedding = Embedding(input_dim=self.vocab.documents_count,
+                                       output_dim=self.embedding_size,
+                                       input_shape=(1,),
+                                       name=DocumentEmbeddingsLayerName)(document_id_input)
+
+        merged = self._concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
+
+        squeezed = self.__create_hidden_layers(merged, self.options.Layers)
+
+        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(squeezed)
+
+        model = Model(inputs=[document_id_input, words_input], outputs=output)
+
+        self._update_main_model(model, is_infer)
 
     def train(self, epochs: int, learning_rate=0.1, verbose: int = 0):
         early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
@@ -408,46 +443,6 @@ class KerasDoc2VecModelBase(object):
         else:
             self.model = model
 
-    @staticmethod
-    def _concatenate_layers(on_infer: Layer, on_train: Layer, shared: Layer, is_infer: bool):
-        if is_infer:
-            return Concatenate(name=MergedLayerName, axis=1)([on_infer, shared])
-        else:
-            return Concatenate(name=MergedLayerName, axis=1)([on_train, shared])
-
-
-class KerasDoc2VecModelCustom(KerasDoc2VecModelBase):
-
-    def build(self, is_infer: bool = False):
-        words_input = Input(shape=(self.window_size - 1,), name=InputWordsLayerName)
-        document_id_input = Input(shape=(1,), name=InputDocumentsLayerName)
-
-        document_inference = Embedding(input_dim=1,
-                                       output_dim=self.embedding_size,
-                                       input_shape=(1,),
-                                       name=InferredDocumentsLayerName,
-                                       embeddings_initializer="uniform")(document_id_input)
-
-        words_embedding = Embedding(input_dim=self.vocab.vocab_size,
-                                    output_dim=self.embedding_size,
-                                    input_shape=(self.window_size - 1,),
-                                    name=WordEmbeddingsLayerName)(words_input)
-
-        document_embedding = Embedding(input_dim=self.vocab.documents_count,
-                                       output_dim=self.embedding_size,
-                                       input_shape=(1,),
-                                       name=DocumentEmbeddingsLayerName)(document_id_input)
-
-        merged = self._concatenate_layers(document_inference, document_embedding, words_embedding, is_infer)
-
-        squeezed = self.__create_hidden_layers(merged, self.options.Layers)
-
-        output = Dense(self.vocab.vocab_size, activation='softmax', name=OutputLayerName)(squeezed)
-
-        model = Model(inputs=[document_id_input, words_input], outputs=output)
-
-        self._update_main_model(model, is_infer)
-
     def __create_hidden_layers(self, merged, options):
         last_layer = merged
 
@@ -479,6 +474,13 @@ class KerasDoc2VecModelCustom(KerasDoc2VecModelBase):
             last_layer = current_layer(last_layer)
 
         return last_layer
+
+    @staticmethod
+    def _concatenate_layers(on_infer: Layer, on_train: Layer, shared: Layer, is_infer: bool):
+        if is_infer:
+            return Concatenate(name=MergedLayerName, axis=1)([on_infer, shared])
+        else:
+            return Concatenate(name=MergedLayerName, axis=1)([on_train, shared])
 
 
 def split_tensor(window_size):

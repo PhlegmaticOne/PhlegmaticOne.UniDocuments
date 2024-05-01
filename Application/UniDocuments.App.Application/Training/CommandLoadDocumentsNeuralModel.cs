@@ -6,12 +6,7 @@ namespace UniDocuments.App.Application.Training;
 
 public class CommandLoadDocumentsNeuralModel : IOperationResultCommand
 {
-    public CommandLoadDocumentsNeuralModel(string modelName)
-    {
-        ModelName = modelName;
-    }
-
-    public string ModelName { get; }
+    public string ModelName { get; set; } = null!;
 }
 
 public class CommandLoadDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandLoadDocumentsNeuralModel>

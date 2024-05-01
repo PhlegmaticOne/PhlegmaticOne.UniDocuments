@@ -8,12 +8,7 @@ namespace UniDocuments.App.Application.ContentRead;
 
 public class QueryReadDocumentContentByGlobalId : IOperationResultQuery<UniDocument>
 {
-    public int GlobalId { get; }
-
-    public QueryReadDocumentContentByGlobalId(int globalId)
-    {
-        GlobalId = globalId;
-    }
+    public int GlobalId { get; set; }
 }
 
 public class QueryReadDocumentContentByGlobalIdHandler : 
