@@ -76,6 +76,7 @@ public static class DocumentApplicationInstaller
                 b.UseNeuralModel<DocumentNeuralModelDoc2Vec>();
 
                 b.UseVocabProvider<DocumentsVocabProvider>();
+                b.UseVocabProvider<DocumentsVocabProvider>();
                 
                 b.UseTextPreprocessor<DocumentTextPreprocessor>();
 
@@ -97,6 +98,7 @@ public static class DocumentApplicationInstaller
             appBuilder.UseStreamContentReader<StreamContentReaderWordDocument>(b =>
             {
                 b.UseOptionsProvider<TextProcessOptionsProvider>(configuration);
+                b.UseWordCountApproximator<WordCountApproximatorRegex>();
             });
 
             appBuilder.UsePlagiarismSearcher<PlagiarismSearchProvider>();

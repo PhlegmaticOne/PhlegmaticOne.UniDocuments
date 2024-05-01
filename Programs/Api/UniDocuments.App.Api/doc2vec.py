@@ -9,7 +9,7 @@ from pymorphy2 import MorphAnalyzer
 nltk.download('stopwords')
 stopwords = sw.words('russian')
 analyzer = MorphAnalyzer()
-
+    
 
 def preprocess_text(input_data):
     text = input_data.Text
