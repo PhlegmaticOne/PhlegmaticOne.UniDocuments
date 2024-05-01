@@ -30,7 +30,7 @@ public class DocumentsController : ControllerBase
         
         if (!result.IsSuccess)
         {
-            return BadRequest(result.ErrorMessage);
+            return BadRequest(result);
         }
         
         return new JsonResult(result);

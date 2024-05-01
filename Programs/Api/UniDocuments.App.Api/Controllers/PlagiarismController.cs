@@ -25,6 +25,12 @@ public class PlagiarismController : ControllerBase
     {
         var query = new QueryMatchTexts(request);
         var result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
         return new JsonResult(result);
     }
 
@@ -37,7 +43,7 @@ public class PlagiarismController : ControllerBase
 
         if (!result.IsSuccess)
         {
-            return BadRequest(result.ErrorMessage);
+            return BadRequest(result);
         }
         
         return new JsonResult(result);
@@ -48,6 +54,12 @@ public class PlagiarismController : ControllerBase
         [FromBody] QueryPreprocessText request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
         return new JsonResult(result);
     }
 
@@ -59,7 +71,7 @@ public class PlagiarismController : ControllerBase
         
         if (!result.IsSuccess)
         {
-            return BadRequest(result.ErrorMessage);
+            return BadRequest(result);
         }
         
         return new JsonResult(result);
@@ -73,7 +85,7 @@ public class PlagiarismController : ControllerBase
         
         if (!result.IsSuccess)
         {
-            return BadRequest(result.ErrorMessage);
+            return BadRequest(result);
         }
         
         return new JsonResult(result);

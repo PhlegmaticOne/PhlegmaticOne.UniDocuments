@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
 
         if (registerResult.IsSuccess == false)
         {
-            return BadRequest(registerResult.ErrorMessage);
+            return BadRequest(registerResult);
         }
 
         return await AuthorizeAsync(registerProfileObject.UserName, registerProfileObject.Password, cancellationToken);
@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
 
         if (profile.IsSuccess == false)
         {
-            return BadRequest(profile.ErrorMessage);
+            return BadRequest(profile);
         }
 
         return Ok(profile);
