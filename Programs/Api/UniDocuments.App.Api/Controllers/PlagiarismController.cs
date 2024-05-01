@@ -19,6 +19,20 @@ public class PlagiarismController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpPost("Preprocess")]
+    public async Task<IActionResult> Preprocess(
+        [FromBody] QueryPreprocessText request, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(request, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
+        return new JsonResult(result);
+    }
+    
     [HttpPost("Match")]
     public async Task<IActionResult> Match(
         [FromBody] MatchTextsRequest request, CancellationToken cancellationToken)
@@ -49,12 +63,26 @@ public class PlagiarismController : ControllerBase
         return new JsonResult(result);
     }
     
-    [HttpPost("Preprocess")]
-    public async Task<IActionResult> Preprocess(
-        [FromBody] QueryPreprocessText request, CancellationToken cancellationToken)
+    [HttpGet("CalculateFingerprintDocument")]
+    public async Task<IActionResult> CalculateFingerprintDocument(
+        [FromQuery] QueryCalculateFingerprintDocument request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
-
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
+        return new JsonResult(result);
+    }
+    
+    [HttpPost("CalculateFingerprintText")]
+    public async Task<IActionResult> CalculateFingerprintText(
+        [FromBody] QueryCalculateFingerprintText request, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(request, cancellationToken);
+        
         if (!result.IsSuccess)
         {
             return BadRequest(result);

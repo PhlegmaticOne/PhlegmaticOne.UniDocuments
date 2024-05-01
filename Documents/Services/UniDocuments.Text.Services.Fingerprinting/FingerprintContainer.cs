@@ -17,9 +17,9 @@ public class FingerprintContainer : IFingerprintContainer
         return _fingerprints;
     }
 
-    public TextFingerprint Get(Guid documentId)
+    public TextFingerprint? Get(Guid documentId)
     {
-        return _fingerprints[documentId];
+        return _fingerprints.GetValueOrDefault(documentId, null);
     }
 
     public void AddOrReplace(Guid documentId, TextFingerprint fingerprint)
