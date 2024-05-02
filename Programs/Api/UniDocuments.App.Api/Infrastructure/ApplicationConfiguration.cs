@@ -14,6 +14,7 @@ public class ApplicationConfiguration
 {
     public bool UseAuthentication { get; set; }
     public bool UseRealDatabase { get; set; }
+    public string CurrentKerasOptions { get; set; } = null!;
     public JwtApplicationSecrets JwtSecrets { get; set; } = null!;
 
     public IJwtOptions CreateJwtOptions()

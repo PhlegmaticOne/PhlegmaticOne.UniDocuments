@@ -115,6 +115,4 @@ public partial class TextMatchingAlgorithm : ITextMatchingAlgorithm
 
     [GeneratedRegex("[^\\s\\.,\\?\\/\\\\#!$%\\^&\\*;:{}=\\-_`~()\\\"]{2,}")]
     private static partial Regex WordsRegex();
-
-
 }

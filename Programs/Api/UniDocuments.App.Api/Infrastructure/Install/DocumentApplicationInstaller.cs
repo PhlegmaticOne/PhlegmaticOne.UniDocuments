@@ -18,6 +18,7 @@ using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
+using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Keras;
 using UniDocuments.Text.Services.Neural.Preprocessors;
 using UniDocuments.Text.Services.Neural.Sources;
@@ -82,8 +83,8 @@ public static class DocumentApplicationInstaller
 
                 b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
 
-                b.BindDoc2VecOptions(configuration, "Doc2VecOptions");
-                b.BindKerasOptions(configuration, "KerasOptionsDoc2Vec");
+                b.BindDoc2VecOptions(configuration, nameof(Doc2VecOptions));
+                b.BindKerasOptions(configuration, applicationConfiguration.CurrentKerasOptions);
             });
 
             appBuilder.UseTextPreprocessor<TextPreprocessor>(b =>

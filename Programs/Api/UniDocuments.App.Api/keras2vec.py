@@ -1,4 +1,6 @@
 ﻿import os.path
+import time
+
 from keras.models import Model, load_model
 from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average, Flatten, GRU, Dropout
 from keras.callbacks import EarlyStopping
@@ -14,6 +16,7 @@ from typing import List, Dict
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 from pymorphy2 import MorphAnalyzer
+import matplotlib.pyplot as plt
 
 InputWordsLayerName = 'input_words'
 InputDocumentsLayerName = 'input_documents'
@@ -363,12 +366,20 @@ class KerasDoc2VecModel(object):
         self._update_main_model(model, is_infer)
 
     def train(self, epochs: int, learning_rate=0.1, verbose: int = 0):
-        early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
-        optimizer = Adam(learning_rate=learning_rate)
         metrics = list(self.options.Metrics)
+        callback_loss = EarlyStopping(monitor='loss', patience=7, verbose=1, min_delta=0.01)
+        start_time = time.time()
+        optimizer = Adam(learning_rate=learning_rate)
         self.model.compile(loss=self.options.Loss, optimizer=optimizer, metrics=metrics)
-        self.model.fit(self.generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])
+        history = self.model.fit(self.generator,
+                                 epochs=epochs,
+                                 verbose=verbose,
+                                 callbacks=[callback_loss])
         self.__retrieve_embeddings(self.model)
+        train_time = time.time() - start_time
+        
+        if self.options.IsPlotResults:
+            KerasDoc2VecModel.plot_history(history, metrics, self.options.Name, self.vocab.documents_count, train_time)
 
     def infer_vector(self, infer_document: DocumentModel,
                      n: int = 5,
@@ -439,6 +450,18 @@ class KerasDoc2VecModel(object):
                         break
 
         return result
+    
+    @staticmethod
+    def plot_history(history, metrics, name, documents, train_time):
+        epochs_range = range(len(history.history[metrics[0]]))
+        
+        for metric in metrics:
+            plt.plot(epochs_range, history.history[metric], label=metric)
+            
+        plt.title('{0}. Documents: {1}. Time: {2} s'.format(name, documents, train_time))
+        plt.xlabel('Epoch')
+        plt.legend(loc='best')
+        plt.show()
 
     def __get_infer_documents_layer(self):
         return self.infer_model.get_layer(InferredDocumentsLayerName)
