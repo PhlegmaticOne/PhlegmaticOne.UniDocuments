@@ -2,7 +2,7 @@
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.Neural;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.Text;
 
 public class QueryPreprocessText : IOperationResultQuery<string>
 {

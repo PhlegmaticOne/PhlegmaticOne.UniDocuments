@@ -18,6 +18,11 @@ public class UniDocument : IEquatable<UniDocument>
         return new UniDocument(Guid.Empty, UniDocumentContent.FromString(value));
     }
     
+    public static UniDocument FromContent(UniDocumentContent value)
+    {
+        return new UniDocument(Guid.Empty, value);
+    }
+    
     [JsonConstructor]
     public UniDocument(Guid id, UniDocumentContent? content = null)
     {

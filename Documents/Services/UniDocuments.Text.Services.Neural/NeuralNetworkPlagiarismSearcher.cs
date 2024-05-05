@@ -22,7 +22,7 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
     public async Task<List<ParagraphPlagiarismData>> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var model = await _neuralModelsProvider.GetModelAsync(request.AlgorithmData.ModelName, true, cancellationToken);
+        var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, true, cancellationToken);
 
         if (model is null)
         {

@@ -5,7 +5,7 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.RawSearching;
 
 public class QuerySearchPlagiarismText : IOperationResultQuery<PlagiarismSearchResponseText>
 {
@@ -30,8 +30,7 @@ public class QuerySearchPlagiarismTextHandler :
         try
         {
             var document = UniDocument.FromString(request.Text);
-            var algorithmData = new PlagiarismSearchAlgorithmData(false, request.ModelName);
-            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, algorithmData);
+            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, request.ModelName);
             var topParagraphs = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
             var result = new PlagiarismSearchResponseText(topParagraphs.SuspiciousParagraphs);
             return OperationResult.Successful(result);

@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
 using UniDocuments.Text.Domain.Providers.Comparing.Responses;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.Text;
 
 public class QueryCompareTexts : IOperationResultQuery<CompareTextsResponse>
 {

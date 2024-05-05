@@ -5,7 +5,7 @@ using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
 
 public class QueryCalculateFingerprintText : IOperationResultQuery<TextFingerprint>
 {

@@ -39,7 +39,7 @@ public class DocumentNeuralInstallBuilder
 
     public void UseTrainDatasetSource<T>() where T : class, IDocumentsTrainDatasetSource
     {
-        _serviceCollection.AddSingleton<IDocumentsTrainDatasetSource, T>();
+        _serviceCollection.AddScoped<IDocumentsTrainDatasetSource, T>();
     }
     
     public void BindDoc2VecOptions(IConfiguration configuration, string sectionName)

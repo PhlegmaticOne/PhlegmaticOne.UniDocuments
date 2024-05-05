@@ -59,7 +59,7 @@ public class DocumentApplicationBuilder
         }
         else
         {
-            _serviceCollection.AddSingleton<IDocumentsStorage, TProd>();
+            _serviceCollection.AddScoped<IDocumentsStorage, TProd>();
         }
     }
 
@@ -115,12 +115,12 @@ public class DocumentApplicationBuilder
     
     public void UseDocumentLoadingProvider<T>() where T : class, IDocumentLoadingProvider
     {
-        _serviceCollection.AddSingleton<IDocumentLoadingProvider, T>();
+        _serviceCollection.AddScoped<IDocumentLoadingProvider, T>();
     }
     
     public void UseParagraphGlobalReader<T>() where T : class, IParagraphGlobalReader
     {
-        _serviceCollection.AddSingleton<IParagraphGlobalReader, T>();
+        _serviceCollection.AddScoped<IParagraphGlobalReader, T>();
     }
 
     public void UseReportProvider<T>(Action<ReportInstallBuilder> builderAction)

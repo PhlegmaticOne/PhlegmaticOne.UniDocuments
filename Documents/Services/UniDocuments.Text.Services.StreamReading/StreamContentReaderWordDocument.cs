@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Extensions;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Domain.Services.StreamReading.Options;
@@ -32,7 +33,8 @@ public class StreamContentReaderWordDocument : IStreamContentReader
         var result = new UniDocumentContent();
         var options = _textProcessOptionsProvider.GetOptions();
         var breakTexts = options.BreakTexts.ToHashSet(new StringComparerOrdinalIgnoreCase());
-
+        stream.SeekToZero();
+        
         using var wordDocument = WordprocessingDocument.Open(stream, false);
         var body = wordDocument.MainDocumentPart.Document.Body;
 

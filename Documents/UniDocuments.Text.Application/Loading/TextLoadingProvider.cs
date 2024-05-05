@@ -44,6 +44,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
                 _documentsCache.Cache(result);
             }
 
+            await loadResponse.DisposeAsync();
             return result;
         }
     }

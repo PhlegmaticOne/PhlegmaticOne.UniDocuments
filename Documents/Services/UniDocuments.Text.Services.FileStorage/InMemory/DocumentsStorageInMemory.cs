@@ -8,13 +8,11 @@ public class DocumentsStorageInMemory : IDocumentsStorage
 {
     private class FileLoadResponsePrepared
     {
-        private readonly Guid _fileId;
         private readonly string _fileName;
         private readonly byte[] _fileContent;
 
-        public FileLoadResponsePrepared(Guid fileId, string fileName, byte[] fileContent)
+        public FileLoadResponsePrepared(string fileName, byte[] fileContent)
         {
-            _fileId = fileId;
             _fileName = fileName;
             _fileContent = fileContent;
         }
@@ -22,13 +20,11 @@ public class DocumentsStorageInMemory : IDocumentsStorage
         public DocumentLoadResponse ToFileLoadResponse()
         {
             var stream = new MemoryStream(_fileContent);
-            return new DocumentLoadResponse(_fileId, _fileName, stream);
+            return new DocumentLoadResponse(_fileName, stream);
         }
     }
     
     private readonly Dictionary<Guid, FileLoadResponsePrepared> _fileContents = new();
-
-    public int StorageSize => _fileContents.Count;
 
     public Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
     {
@@ -41,11 +37,12 @@ public class DocumentsStorageInMemory : IDocumentsStorage
         return Task.FromResult(result);
     }
 
-    public async Task SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<Guid> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
     {
         var fileBytes = await GetFileContentAsync(saveRequest, cancellationToken);
         var fileId = saveRequest.Id;
-        _fileContents[fileId] = new FileLoadResponsePrepared(fileId, saveRequest.Name, fileBytes);
+        _fileContents[fileId] = new FileLoadResponsePrepared(saveRequest.Name, fileBytes);
+        return saveRequest.Id;
     }
 
     private static async Task<byte[]> GetFileContentAsync(

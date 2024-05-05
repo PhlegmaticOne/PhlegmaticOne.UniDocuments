@@ -7,20 +7,18 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Providers.Reports.Data;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.Reports;
 
 public class QueryBuildPlagiarismReport : IOperationResultQuery<PlagiarismReport>
 {
     public Guid DocumentId { get; set; }
     public int TopN { get; set; }
-    public bool UseFingerprint { get; set; }
     public string ModelName { get; set; } = null!;
     public string BaseMetric { get; set; } = null!;
 
     public PlagiarismSearchRequest ToPlagiarismSearchRequest(UniDocument document)
     {
-        return new PlagiarismSearchRequest(document, TopN,
-            new PlagiarismSearchAlgorithmData(UseFingerprint, ModelName));
+        return new PlagiarismSearchRequest(document, TopN, ModelName);
     }
 }
 

@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Matching.Requests;
 using UniDocuments.Text.Domain.Providers.Matching.Responses;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.Text;
 
 public class QueryMatchTexts : IOperationResultQuery<MatchTextsResponse>
 {

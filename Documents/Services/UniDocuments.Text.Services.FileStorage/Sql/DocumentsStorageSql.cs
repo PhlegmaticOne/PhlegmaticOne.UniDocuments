@@ -39,24 +39,26 @@ public class DocumentsStorageSql : IDocumentsStorage
 
         try
         {
-            var destinationStream = new MemoryStream();
-        
-            await using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
-            {
-                await source.CopyToAsync(destinationStream, cancellationToken);
-            }
-
-            await command.Transaction.CommitAsync(cancellationToken);
-
-            return new DocumentLoadResponse(fileId, savedFileName, destinationStream);
+            var stream = new SqlFileStream(path, transactionContext, FileAccess.Read);
+            return new DocumentLoadResponse(savedFileName, stream);
+            // await using (var source = new SqlFileStream(path, transactionContext, FileAccess.Read))
+            // {
+            //     var destinationStream = new MemoryStream();
+            //
+            //     await source.CopyToAsync(destinationStream, cancellationToken);
+            //
+            //     destinationStream.Position = 0;
+            //     
+            //     return new DocumentLoadResponse(savedFileName, destinationStream);
+            // }
         }
-        catch
+        catch(Exception e)
         {
             return DocumentLoadResponse.NoContent();
         }
     }
 
-    public async Task SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<Guid> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
     {
         var fileName = saveRequest.Name;
         var transactionContext = Array.Empty<byte>();
@@ -83,6 +85,7 @@ public class DocumentsStorageSql : IDocumentsStorage
         }
 
         await command.Transaction.CommitAsync(cancellationToken);
+        return saveRequest.Id;
     }
 
     private static byte[] ReadTransactionContext(SqlDataReader reader) => (byte[])reader["transactionContext"];

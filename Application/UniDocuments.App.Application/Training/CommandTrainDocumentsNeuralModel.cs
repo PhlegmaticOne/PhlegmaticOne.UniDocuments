@@ -18,15 +18,18 @@ public class CommandTrainDocumentsNeuralModelHandler :
     private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
     private readonly IDocumentsVocabProvider _documentsVocabProvider;
     private readonly IDocumentsTrainDatasetSource _documentsTrainDatasetSource;
+    private readonly IDocumentsTrainDatasetSource _source;
 
     public CommandTrainDocumentsNeuralModelHandler(
         IDocumentNeuralModelsProvider neuralModelsProvider,
         IDocumentsVocabProvider documentsVocabProvider,
-        IDocumentsTrainDatasetSource documentsTrainDatasetSource)
+        IDocumentsTrainDatasetSource documentsTrainDatasetSource,
+        IDocumentsTrainDatasetSource source)
     {
         _neuralModelsProvider = neuralModelsProvider;
         _documentsVocabProvider = documentsVocabProvider;
         _documentsTrainDatasetSource = documentsTrainDatasetSource;
+        _source = source;
     }
     
     public async Task<OperationResult> Handle(
@@ -43,7 +46,7 @@ public class CommandTrainDocumentsNeuralModelHandler :
             
             if (request.IsRebuildVocab)
             {
-                await _documentsVocabProvider.BuildAsync(cancellationToken);
+                await _documentsVocabProvider.BuildAsync(_source, cancellationToken);
             }
             
             var result = await model.TrainAsync(_documentsTrainDatasetSource, cancellationToken);

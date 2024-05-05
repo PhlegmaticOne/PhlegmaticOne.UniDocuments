@@ -3,7 +3,7 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
 
 public class QueryCalculateFingerprintDocument : IOperationResultQuery<TextFingerprint>
 {

@@ -30,6 +30,10 @@ public class StudyDocumentConfiguration : IEntityTypeConfiguration<StudyDocument
             .WithMany(x => x.Documents)
             .HasForeignKey(x => x.StudentId);
 
+        builder.HasOne(x => x.StudyDocumentFile)
+            .WithOne(x => x.StudyDocument)
+            .HasForeignKey<StudyDocumentFile>(x => x.StudyDocumentId);
+
         builder.HasIndex(x => x.Name);
     }
 }

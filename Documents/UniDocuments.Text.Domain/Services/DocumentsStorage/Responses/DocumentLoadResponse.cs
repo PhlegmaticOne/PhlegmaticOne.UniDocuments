@@ -1,9 +1,14 @@
 ﻿namespace UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
-public record DocumentLoadResponse(Guid Id, string Name, Stream? Stream)
+public record DocumentLoadResponse(string Name, Stream? Stream)
 {
     public static DocumentLoadResponse NoContent()
     {
-        return new DocumentLoadResponse(Guid.Empty, string.Empty, null);
+        return new DocumentLoadResponse(string.Empty, null);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return Stream?.DisposeAsync() ?? ValueTask.CompletedTask;
     }
 }

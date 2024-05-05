@@ -12,6 +12,7 @@ using UniDocuments.Text.Services.BaseMetrics;
 using UniDocuments.Text.Services.Cache;
 using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.DocumentMapping.Initializers;
+using UniDocuments.Text.Services.FileStorage.EntityFramework;
 using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.FileStorage.Sql;
 using UniDocuments.Text.Services.Fingerprinting;
@@ -38,7 +39,7 @@ namespace UniDocuments.App.Api.Infrastructure.Install;
 public static class DocumentApplicationInstaller
 {
     public static IServiceCollection AddDocumentApplication(this IServiceCollection serviceCollection,
-        IConfiguration configuration, string connectionString, bool isDevelopment, ApplicationConfiguration applicationConfiguration)
+        IConfiguration configuration, string connectionString, ApplicationConfiguration applicationConfiguration)
     {
         serviceCollection.AddDocumentsApplication(appBuilder =>
         {
@@ -56,7 +57,7 @@ public static class DocumentApplicationInstaller
 
             appBuilder.UseDocumentsCache<UniDocumentsCache>();
 
-            appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageSql>(applicationConfiguration.UseRealDatabase,
+            appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageEntityFramework>(applicationConfiguration.UseRealDatabase,
                 b =>
                 {
                     b.UseSqlConnectionString(connectionString);

@@ -23,8 +23,8 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
         var id = request.Document.Id;
-        var documentData = _documentMapper.GetDocumentData(id)!;
-        var response = new PlagiarismSearchResponseDocument(id, documentData.Name);
+        var documentData = _documentMapper.GetDocumentData(id);
+        var response = new PlagiarismSearchResponseDocument(id, documentData?.Name ?? string.Empty);
 
         await FindNeuralPlagiarismAsync(request, response, cancellationToken);
 

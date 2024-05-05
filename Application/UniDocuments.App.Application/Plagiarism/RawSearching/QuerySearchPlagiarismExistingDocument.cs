@@ -5,22 +5,21 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
-namespace UniDocuments.App.Application.Plagiarism;
+namespace UniDocuments.App.Application.Plagiarism.RawSearching;
 
-public class QuerySearchPlagiarismDocument : IOperationResultQuery<PlagiarismSearchResponseDocument>
+public class QuerySearchPlagiarismExistingDocument : IOperationResultQuery<PlagiarismSearchResponseDocument>
 {
     public Guid DocumentId { get; set; }
     public int TopN { get; set; }
-    public bool UseFingerprint { get; set; }
     public string ModelName { get; set; } = null!;
 }
 
-public class QuerySearchPlagiarismDocumentHandler : IOperationResultQueryHandler<QuerySearchPlagiarismDocument, PlagiarismSearchResponseDocument>
+public class QuerySearchPlagiarismDocumentExistingHandler : IOperationResultQueryHandler<QuerySearchPlagiarismExistingDocument, PlagiarismSearchResponseDocument>
 {
     private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
     private readonly IDocumentLoadingProvider _loadingProvider;
 
-    public QuerySearchPlagiarismDocumentHandler(
+    public QuerySearchPlagiarismDocumentExistingHandler(
         IPlagiarismSearchProvider plagiarismSearchProvider,
         IDocumentLoadingProvider loadingProvider)
     {
@@ -29,13 +28,12 @@ public class QuerySearchPlagiarismDocumentHandler : IOperationResultQueryHandler
     }
     
     public async Task<OperationResult<PlagiarismSearchResponseDocument>> Handle(
-        QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
+        QuerySearchPlagiarismExistingDocument request, CancellationToken cancellationToken)
     {
         try
         {
             var document = await _loadingProvider.LoadAsync(request.DocumentId, true, cancellationToken);
-            var algorithmData = new PlagiarismSearchAlgorithmData(request.UseFingerprint, request.ModelName);
-            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, algorithmData); 
+            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, request.ModelName); 
             var result = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
             return OperationResult.Successful(result);
         }

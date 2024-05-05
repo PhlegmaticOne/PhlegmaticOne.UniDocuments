@@ -69,19 +69,21 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     private async Task<Guid> ExecuteAsync(CommandUploadDocument request, CancellationToken cancellationToken)
     {
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
-        
+
         var newDocument = await CreateDocumentAsync(request, content, cancellationToken);
-        
+
         var documentId = newDocument.Entity.Id;
+        
+        var fileId = await SaveDocumentFileAsync(documentId, request, cancellationToken);
+
+        newDocument.Property(x => x.StudyDocumentFileId).CurrentValue = fileId;
 
         await CalculateFingerprintAsync(newDocument, content, cancellationToken);
-        
-        CacheDocument(newDocument, content);
 
+        CacheDocument(newDocument, content);
+        
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await SaveDocumentFileAsync(documentId, request, cancellationToken);
-        
         return documentId;
     }
 
@@ -116,10 +118,10 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
             await Task.Run(() => JsonConvert.SerializeObject(fingerprint.Entries), cancellationToken);
     }
 
-    private async Task SaveDocumentFileAsync(Guid id, CommandUploadDocument request, CancellationToken cancellationToken)
+    private Task<Guid> SaveDocumentFileAsync(Guid id, CommandUploadDocument request, CancellationToken cancellationToken)
     {
         var stream = request.DocumentStream;
         var saveRequest = new DocumentSaveRequest(id, request.FileName, stream);
-        await _documentsStorage.SaveAsync(saveRequest, cancellationToken);
+        return _documentsStorage.SaveAsync(saveRequest, cancellationToken);
     }
 }

@@ -10,27 +10,24 @@ namespace UniDocuments.Text.Services.Neural.Vocab;
 
 public class DocumentsVocabProvider : IDocumentsVocabProvider
 {
-    private readonly IDocumentsTrainDatasetSource _source;
     private readonly ITextProcessOptionsProvider _optionsProvider;
     private readonly ISavePathProvider _savePathProvider;
 
     private dynamic _kerasVocab = null!;
 
     public DocumentsVocabProvider(
-        IDocumentsTrainDatasetSource source,
         ITextProcessOptionsProvider optionsProvider,
         ISavePathProvider savePathProvider)
     {
-        _source = source;
         _optionsProvider = optionsProvider;
         _savePathProvider = savePathProvider;
     }
 
     public bool IsLoaded { get; private set; }
 
-    public async Task<DocumentVocabData> BuildAsync(CancellationToken cancellationToken)
+    public async Task<DocumentVocabData> BuildAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
     {
-        var input = new BuildVocabInput(_savePathProvider.SavePath, _source, _optionsProvider.GetOptions());
+        var input = new BuildVocabInput(_savePathProvider.SavePath, source, _optionsProvider.GetOptions());
         var timer = Stopwatch.StartNew();
         _kerasVocab = (await new PythonTaskBuildVocab(input))!;
         timer.Stop();

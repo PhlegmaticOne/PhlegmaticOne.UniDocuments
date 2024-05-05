@@ -16,7 +16,7 @@ if (applicationConfiguration.UseAuthentication)
 
 builder.Services.Configure<ApplicationConfiguration>(builder.Configuration.GetSection(nameof(ApplicationConfiguration)));
 builder.Services.AddApplication(jwtOptions);
-builder.Services.AddDocumentApplication(builder.Configuration, connectionString, isDevelopment, applicationConfiguration);
+builder.Services.AddDocumentApplication(builder.Configuration, connectionString, applicationConfiguration);
 builder.Services.AddApplicationRequirements(connectionString, applicationConfiguration);
 
 builder.Services.AddControllers().AddNewtonsoftJson();

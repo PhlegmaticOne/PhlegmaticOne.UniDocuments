@@ -12,4 +12,7 @@ public class StudyDocument : EntityBase
     public StudyActivity Activity { get; set; } = null!;
     public string Fingerprint { get; set; } = null!;
     public int ValuableParagraphsCount { get; set; }
+
+    public Guid StudyDocumentFileId { get; set; }
+    public StudyDocumentFile StudyDocumentFile { get; set; } = null!;
 }

@@ -1,11 +1,21 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UniDocuments.App.Application.Plagiarism;
+using UniDocuments.App.Application.Plagiarism.Fingerprinting;
+using UniDocuments.App.Application.Plagiarism.RawSearching;
+using UniDocuments.App.Application.Plagiarism.Reports;
+using UniDocuments.App.Application.Plagiarism.Text;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
 using UniDocuments.Text.Domain.Providers.Matching.Requests;
 
 namespace UniDocuments.App.Api.Controllers;
+
+public class FileSearchPlagiarismRequest
+{
+    public IFormFile File { get; set; } = null!;
+    public int TopN { get; set; }
+    public string ModelName { get; set; } = null!;
+}
 
 [ApiController]
 [Route("api/[controller]")]
@@ -91,11 +101,26 @@ public class PlagiarismController : ControllerBase
         return new JsonResult(result);
     }
 
-    [HttpGet("SearchPlagiarismDocument")]
-    public async Task<IActionResult> SearchPlagiarismDocument(
-        [FromQuery] QuerySearchPlagiarismDocument request, CancellationToken cancellationToken)
+    [HttpGet("SearchPlagiarismExistingDocument")]
+    public async Task<IActionResult> SearchPlagiarismExistingDocument(
+        [FromQuery] QuerySearchPlagiarismExistingDocument request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        
+        return new JsonResult(result);
+    }
+    
+    [HttpPost("SearchPlagiarismDocument")]
+    public async Task<IActionResult> SearchPlagiarismDocument(
+        [FromForm] FileSearchPlagiarismRequest request, CancellationToken cancellationToken)
+    {
+        var query = new QuerySearchPlagiarismDocument(request.File.OpenReadStream(), request.TopN, request.ModelName);
+        var result = await _mediator.Send(query, cancellationToken);
         
         if (!result.IsSuccess)
         {
@@ -130,6 +155,6 @@ public class PlagiarismController : ControllerBase
             return BadRequest(result);
         }
 
-        return File(result.Result!.ResponseStream, result.Result.ContentType, "test.pdf");
+        return File(result.Result!.ResponseStream, result.Result.ContentType, result.Result.Name);
     }
 }
