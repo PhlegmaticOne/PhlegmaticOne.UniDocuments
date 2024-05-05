@@ -29,9 +29,9 @@ public class FingerprintingInstallBuilder
         _serviceCollection.AddSingleton<IFingerprintHash, T>();
     }
     
-    public void UseFingerprintSearcher<T>() where T : class, IFingerprintSearcher
+    public void UseFingerprintSearcher<T>() where T : class, IFingerprintPlagiarismSearcher
     {
-        _serviceCollection.AddSingleton<IFingerprintSearcher, T>();
+        _serviceCollection.AddSingleton<IFingerprintPlagiarismSearcher, T>();
     }
     
     public void UseFingerprintAlgorithm<T>() where T : class, IFingerprintAlgorithm

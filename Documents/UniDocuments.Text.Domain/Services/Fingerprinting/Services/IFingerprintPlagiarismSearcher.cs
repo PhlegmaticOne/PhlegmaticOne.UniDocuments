@@ -2,7 +2,7 @@
 
 namespace UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
-public interface IFingerprintSearcher
+public interface IFingerprintPlagiarismSearcher
 {
     Task<DocumentSearchData[]> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken);
 }

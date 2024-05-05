@@ -8,14 +8,14 @@ namespace UniDocuments.Text.Application.PlagiarismSearching;
 
 public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {
-    private readonly IFingerprintSearcher _fingerprintSearcher;
+    private readonly IFingerprintPlagiarismSearcher _fingerprintPlagiarismSearcher;
     private readonly INeuralNetworkPlagiarismSearcher _networkPlagiarismSearcher;
 
     public PlagiarismSearchProvider(
-        IFingerprintSearcher fingerprintSearcher,
+        IFingerprintPlagiarismSearcher fingerprintPlagiarismSearcher,
         INeuralNetworkPlagiarismSearcher networkPlagiarismSearcher)
     {
-        _fingerprintSearcher = fingerprintSearcher;
+        _fingerprintPlagiarismSearcher = fingerprintPlagiarismSearcher;
         _networkPlagiarismSearcher = networkPlagiarismSearcher;
     }
     
@@ -40,7 +40,7 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
     private async Task FindFingerprintPlagiarismAsync(
         PlagiarismSearchRequest request, PlagiarismSearchResponseDocument response, CancellationToken cancellationToken)
     {
-        var topFingerprints = await _fingerprintSearcher
+        var topFingerprints = await _fingerprintPlagiarismSearcher
             .SearchTopAsync(request.Document.Id, request.NDocuments, cancellationToken);
 
         response.SuspiciousDocuments = topFingerprints;

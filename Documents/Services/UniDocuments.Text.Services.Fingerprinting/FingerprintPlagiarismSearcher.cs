@@ -4,12 +4,12 @@ using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
 
-public class FingerprintSearcher : IFingerprintSearcher
+public class FingerprintPlagiarismSearcher : IFingerprintPlagiarismSearcher
 {
     private readonly IFingerprintContainer _fingerprintContainer;
     private readonly IDocumentMapper _documentMapper;
 
-    public FingerprintSearcher(IFingerprintContainer fingerprintContainer, IDocumentMapper documentMapper)
+    public FingerprintPlagiarismSearcher(IFingerprintContainer fingerprintContainer, IDocumentMapper documentMapper)
     {
         _fingerprintContainer = fingerprintContainer;
         _documentMapper = documentMapper;

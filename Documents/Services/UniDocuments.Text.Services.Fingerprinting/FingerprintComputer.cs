@@ -24,9 +24,12 @@ public class FingerprintComputer : IFingerprintComputer
     public Task<TextFingerprint> ComputeAsync(
         Guid documentId, UniDocumentContent text, CancellationToken cancellationToken)
     {
-        var options = _optionsProvider.GetOptions();
-        var fingerprint = _algorithm.Fingerprint(text, options);
-        _container.AddOrReplace(documentId, fingerprint);
-        return Task.FromResult(fingerprint);
+        return Task.Run(() =>
+        {
+            var options = _optionsProvider.GetOptions();
+            var fingerprint = _algorithm.Fingerprint(text, options);
+            _container.AddOrReplace(documentId, fingerprint);
+            return Task.FromResult(fingerprint);
+        }, cancellationToken);
     }
 }

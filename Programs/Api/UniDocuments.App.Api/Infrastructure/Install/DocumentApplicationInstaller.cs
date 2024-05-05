@@ -63,7 +63,7 @@ public static class DocumentApplicationInstaller
                 b.UseFingerprintComputer<FingerprintComputer>();
                 b.UseFingerprintContainer<FingerprintContainer>();
                 b.UseFingerprintHash<FingerprintHashCrc32C>();
-                b.UseFingerprintSearcher<FingerprintSearcher>();
+                b.UseFingerprintSearcher<FingerprintPlagiarismSearcher>();
             });
 
             appBuilder.UseMatchingService<TextMatchProvider>(b =>
