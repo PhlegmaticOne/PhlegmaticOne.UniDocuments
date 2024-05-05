@@ -1,106 +1,55 @@
-﻿using UniDocuments.Text.Domain.Providers.Neural;
-using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
+﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
-using UniDocuments.Text.Domain.Services.DocumentMapping;
-using UniDocuments.Text.Domain.Services.DocumentMapping.Models;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
-using UniDocuments.Text.Domain.Services.Neural.Models;
+using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.Text.Application.PlagiarismSearching;
 
 public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {
     private readonly IFingerprintSearcher _fingerprintSearcher;
-    private readonly IDocumentNeuralModelsProvider _documentNeuralModelsProvider;
-    private readonly IDocumentMapper _documentMapper;
+    private readonly INeuralNetworkPlagiarismSearcher _networkPlagiarismSearcher;
 
     public PlagiarismSearchProvider(
         IFingerprintSearcher fingerprintSearcher,
-        IDocumentNeuralModelsProvider documentNeuralModelsProvider,
-        IDocumentMapper documentMapper)
+        INeuralNetworkPlagiarismSearcher networkPlagiarismSearcher)
     {
         _fingerprintSearcher = fingerprintSearcher;
-        _documentNeuralModelsProvider = documentNeuralModelsProvider;
-        _documentMapper = documentMapper;
+        _networkPlagiarismSearcher = networkPlagiarismSearcher;
     }
     
     public async Task<PlagiarismSearchResponseDocument> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var documentId = request.Document.Id;
-        var algorithm = request.AlgorithmData;
         var response = new PlagiarismSearchResponseDocument();
+        var searchTasks = new List<Task>();
 
-        if (algorithm.UseFingerprint)
+        if (request.AlgorithmData.UseFingerprint)
         {
-            var topFingerprints = await _fingerprintSearcher
-                .SearchTopAsync(documentId, request.NDocuments, cancellationToken);
-
-            response.SuspiciousDocuments = topFingerprints;
-        }
-
-        var model = await _documentNeuralModelsProvider.GetModelAsync(algorithm.ModelName, true, cancellationToken);
-
-        if (model is null)
-        {
-            return response;
+            searchTasks.Add(FindFingerprintPlagiarismAsync(request, response, cancellationToken));
         }
         
-        var ingerOutputs = await model.FindSimilarAsync(request.Document, request.NDocuments, cancellationToken);
-        var topParagraphs = MapResults(ingerOutputs, documentId);
-        response.SuspiciousParagraphs = topParagraphs;
+        searchTasks.Add(FindNeuralPlagiarismAsync(request, response, cancellationToken));
+
+        await Task.WhenAll(searchTasks);
+        
         return response;
     }
-    
-    private List<ParagraphPlagiarismData> MapResults(InferVectorOutput[] inferOutputs, Guid sourceId)
+
+    private async Task FindFingerprintPlagiarismAsync(
+        PlagiarismSearchRequest request, PlagiarismSearchResponseDocument response, CancellationToken cancellationToken)
     {
-        var result = new List<ParagraphPlagiarismData>();
-        var sourceDocumentId = _documentMapper.GetDocumentId(sourceId);
-        
-        foreach (var inferOutput in inferOutputs)
-        {
-            var paragraphPlagiarism = new List<ParagraphSearchData>();
+        var topFingerprints = await _fingerprintSearcher
+            .SearchTopAsync(request.Document.Id, request.NDocuments, cancellationToken);
 
-            foreach (var inferEntry in inferOutput.InferEntries)
-            {
-                var documentId = _documentMapper.GetDocumentIdFromGlobalParagraphId(inferEntry.ParagraphId);
-
-                if (documentId == sourceDocumentId)
-                {
-                    continue;
-                }
-                
-                var documentData = _documentMapper.GetDocumentData(documentId);
-                var resultData = documentData is null ? CreateUnknown(inferEntry) : CreateKnown(documentData, inferEntry);
-                paragraphPlagiarism.Add(resultData);
-            }
-
-            result.Add(new ParagraphPlagiarismData(inferOutput.ParagraphId, paragraphPlagiarism));
-        }
-
-        return result;
+        response.SuspiciousDocuments = topFingerprints;
     }
 
-    private static ParagraphSearchData CreateUnknown(InferVectorEntry inferEntry)
+    private async Task FindNeuralPlagiarismAsync(
+        PlagiarismSearchRequest request, PlagiarismSearchResponseDocument response, CancellationToken cancellationToken)
     {
-        return new ParagraphSearchData
-        {
-            DocumentId = Guid.Empty,
-            Similarity = inferEntry.Similarity,
-            DocumentName = string.Empty,
-            Id = inferEntry.ParagraphId
-        };
-    }
-
-    private static ParagraphSearchData CreateKnown(DocumentGlobalMapData documentData, InferVectorEntry inferEntry)
-    {
-        return new ParagraphSearchData
-        {
-            DocumentId = documentData.Id,
-            DocumentName = documentData.Name,
-            Similarity = inferEntry.Similarity,
-            Id = documentData.GetLocalParagraphId(inferEntry.ParagraphId)
-        };
+        var result = await _networkPlagiarismSearcher.SearchAsync(request, cancellationToken);
+        response.SuspiciousParagraphs = result;
     }
 }

@@ -31,6 +31,11 @@ public class DocumentNeuralInstallBuilder
     {
         _serviceCollection.AddSingleton<IDocumentTextPreprocessor, T>();
     }
+    
+    public void UsePlagiarismSearcher<T>() where T : class, INeuralNetworkPlagiarismSearcher
+    {
+        _serviceCollection.AddSingleton<INeuralNetworkPlagiarismSearcher, T>();
+    }
 
     public void UseTrainDatasetSource<T>() where T : class, IDocumentsTrainDatasetSource
     {

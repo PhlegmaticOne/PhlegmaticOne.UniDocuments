@@ -3,7 +3,7 @@ import time
 
 from keras.models import Model, load_model
 from keras.layers import Layer, Embedding, Input, Concatenate, LSTM, Dense, Lambda, Average, Flatten, GRU, Dropout
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.optimizers import Adam
 from keras.utils import to_categorical
 import numpy as np
@@ -406,7 +406,7 @@ class KerasDoc2VecModel(object):
         self.__get_infer_documents_layer().trainable = True
 
         optimizer = Adam(learning_rate=learning_rate)
-        early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1)
+        early_stop_callback = EarlyStopping(monitor='loss', patience=7, verbose=1, min_delta=0.01)
         metrics = list(self.options.Metrics)
         self.infer_model.compile(loss=self.options.Loss, optimizer=optimizer, metrics=metrics)
         self.infer_model.fit(generator, epochs=epochs, verbose=verbose, callbacks=[early_stop_callback])

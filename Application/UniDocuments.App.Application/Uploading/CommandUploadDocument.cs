@@ -70,15 +70,8 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     {
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
         
-        var newDocument = await _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument
-        {
-            ActivityId = request.ActivityId,
-            StudentId = request.ProfileId,
-            DateLoaded = DateTime.UtcNow,
-            Name = request.FileName,
-            ValuableParagraphsCount = content.ParagraphsCount
-        }, cancellationToken);
-
+        var newDocument = await CreateDocumentAsync(request, content, cancellationToken);
+        
         var documentId = newDocument.Entity.Id;
 
         await CalculateFingerprintAsync(newDocument, content, cancellationToken);
@@ -90,6 +83,19 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         await _dbContext.SaveChangesAsync(cancellationToken);
         
         return documentId;
+    }
+
+    private ValueTask<EntityEntry<StudyDocument>> CreateDocumentAsync(
+        CommandUploadDocument request, UniDocumentContent content, CancellationToken cancellationToken)
+    {
+        return _dbContext.Set<StudyDocument>().AddAsync(new StudyDocument
+        {
+            ActivityId = request.ActivityId,
+            StudentId = request.ProfileId,
+            DateLoaded = DateTime.UtcNow,
+            Name = request.FileName,
+            ValuableParagraphsCount = content.ParagraphsCount
+        }, cancellationToken);
     }
 
     private void CacheDocument(EntityEntry<StudyDocument> newDocument, UniDocumentContent content)

@@ -17,6 +17,7 @@ using UniDocuments.Text.Services.Fingerprinting.Hashing;
 using UniDocuments.Text.Services.Fingerprinting.Options;
 using UniDocuments.Text.Services.Matching;
 using UniDocuments.Text.Services.Matching.Options;
+using UniDocuments.Text.Services.Neural;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Keras;
@@ -80,6 +81,8 @@ public static class DocumentApplicationInstaller
                 b.UseVocabProvider<DocumentsVocabProvider>();
                 
                 b.UseTextPreprocessor<DocumentTextPreprocessor>();
+                
+                b.UsePlagiarismSearcher<NeuralNetworkPlagiarismSearcher>();
 
                 b.UseTrainDatasetSource<DocumentTrainDatasetSource>();
 

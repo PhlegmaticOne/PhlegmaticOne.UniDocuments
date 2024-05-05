@@ -25,14 +25,17 @@ public class DocumentsVocabProvider : IDocumentsVocabProvider
         _optionsProvider = optionsProvider;
         _savePathProvider = savePathProvider;
     }
-    
+
+    public bool IsLoaded { get; private set; }
+
     public async Task<DocumentVocabData> BuildAsync(CancellationToken cancellationToken)
     {
         var input = new BuildVocabInput(_savePathProvider.SavePath, _source, _optionsProvider.GetOptions());
         var timer = Stopwatch.StartNew();
         _kerasVocab = (await new PythonTaskBuildVocab(input))!;
         timer.Stop();
-
+        IsLoaded = true;
+        
         return new DocumentVocabData
         {
             BuildTime = timer.Elapsed,
@@ -44,6 +47,7 @@ public class DocumentsVocabProvider : IDocumentsVocabProvider
     public async Task LoadAsync(CancellationToken cancellationToken)
     {
         _kerasVocab = (await new PythonTaskLoadVocab(_savePathProvider.SavePath))!;
+        IsLoaded = true;
     }
 
     public object GetVocab()

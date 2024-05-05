@@ -31,20 +31,6 @@ public class NeuralModelController : ControllerBase
         return new JsonResult(result);
     }
     
-    [HttpPost("LoadVocab")]
-    public async Task<IActionResult> LoadVocab(CancellationToken cancellationToken)
-    {
-        var request = new CommandLoadVocab();
-        var result = await _mediator.Send(request, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result);
-        }
-        
-        return new JsonResult(result);
-    }
-    
     [HttpPost("Train")]
     public async Task<IActionResult> Train(
         [FromQuery] CommandTrainDocumentsNeuralModel command, CancellationToken cancellationToken)

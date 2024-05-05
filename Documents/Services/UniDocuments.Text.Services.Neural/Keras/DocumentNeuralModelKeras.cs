@@ -40,7 +40,7 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
 
     public async Task LoadAsync(CancellationToken cancellationToken)
     {
-        var vocab = _documentsVocabProvider.GetVocab();
+        var vocab = await GetLoadedVocabAsync(cancellationToken);
         var options = _optionsProvider.GetOptions();
         var input = new LoadKerasModelInput(_savePathProvider.SavePath, Name, vocab, options);
         _customManagedModel = await new PythonTaskLoadKerasModel(input);
@@ -71,5 +71,15 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
     {
         var options = _optionsProvider.GetOptions();
         return _customManagedModel!.InferDocumentAsync(document.Content!, topN, options);
+    }
+
+    private async Task<object> GetLoadedVocabAsync(CancellationToken cancellationToken)
+    {
+        if (!_documentsVocabProvider.IsLoaded)
+        {
+            await _documentsVocabProvider.LoadAsync(cancellationToken);
+        }
+        
+        return _documentsVocabProvider.GetVocab();
     }
 }
