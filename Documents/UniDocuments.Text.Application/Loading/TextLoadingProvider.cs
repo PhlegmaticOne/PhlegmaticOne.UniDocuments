@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Domain;
+﻿using KeyedSemaphores;
+using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
@@ -25,22 +26,25 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
     
     public async Task<UniDocument> LoadAsync(Guid documentId, bool cache, CancellationToken cancellationToken)
     {
-        var cached = _documentsCache.Get(documentId);
-
-        if (cached is not null)
+        using (await KeyedSemaphore.LockAsync(documentId.ToString(), cancellationToken))
         {
-            return cached;
+            var cached = _documentsCache.Get(documentId);
+
+            if (cached is not null)
+            {
+                return cached;
+            }
+
+            var loadResponse = await _documentsStorage.LoadAsync(new DocumentLoadRequest(documentId), cancellationToken);
+            var content = await _streamContentReader.ReadAsync(loadResponse.Stream!, cancellationToken);
+            var result = new UniDocument(documentId, content);
+
+            if (cache)
+            {
+                _documentsCache.Cache(result);
+            }
+
+            return result;
         }
-
-        var loadResponse = await _documentsStorage.LoadAsync(new DocumentLoadRequest(documentId), cancellationToken);
-        var content = await _streamContentReader.ReadAsync(loadResponse.Stream!, cancellationToken);
-        var result = new UniDocument(documentId, content);
-
-        if (cache)
-        {
-            _documentsCache.Cache(result);
-        }
-
-        return result;
     }
 }

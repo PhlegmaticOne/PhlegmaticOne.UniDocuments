@@ -10,9 +10,7 @@ public class CompareTextsResponse
     [JsonProperty]
     public List<CompareTextResult> SimilarityResults { get; }
 
-    public CompareTextsResponse(string sourceText) : this(sourceText, new List<CompareTextResult>())
-    {
-    }
+    public CompareTextsResponse(string sourceText) : this(sourceText, new List<CompareTextResult>()) { }
 
     [JsonConstructor]
     public CompareTextsResponse(string sourceText, List<CompareTextResult> similarityResults)

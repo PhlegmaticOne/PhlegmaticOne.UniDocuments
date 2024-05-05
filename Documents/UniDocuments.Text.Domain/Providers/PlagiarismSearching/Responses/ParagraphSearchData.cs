@@ -8,5 +8,4 @@ public struct ParagraphSearchData
     [JsonProperty] public int Id;
     [JsonProperty] public Guid DocumentId;
     [JsonProperty] public double Similarity;
-    [JsonProperty] public string DocumentName;
 }

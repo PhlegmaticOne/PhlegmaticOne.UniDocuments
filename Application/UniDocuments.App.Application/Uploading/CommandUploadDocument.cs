@@ -75,12 +75,12 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var documentId = newDocument.Entity.Id;
 
         await CalculateFingerprintAsync(newDocument, content, cancellationToken);
-
-        await SaveDocumentFileAsync(documentId, request, cancellationToken);
         
         CacheDocument(newDocument, content);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        await SaveDocumentFileAsync(documentId, request, cancellationToken);
         
         return documentId;
     }
@@ -113,7 +113,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var documentId = newDocument.Entity.Id;
         var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
         newDocument.Property(x => x.Fingerprint).CurrentValue =
-            await Task.Run(() => JsonConvert.SerializeObject(fingerprint), cancellationToken);
+            await Task.Run(() => JsonConvert.SerializeObject(fingerprint.Entries), cancellationToken);
     }
 
     private async Task SaveDocumentFileAsync(Guid id, CommandUploadDocument request, CancellationToken cancellationToken)

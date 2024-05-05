@@ -1,8 +1,10 @@
 ﻿using UniDocuments.App.Api.Infrastructure.Services;
 using UniDocuments.Text.Application.Comparing;
+using UniDocuments.Text.Application.ContentReading;
 using UniDocuments.Text.Application.Loading;
 using UniDocuments.Text.Application.Matching;
 using UniDocuments.Text.Application.PlagiarismSearching;
+using UniDocuments.Text.Application.Reports;
 using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Root;
@@ -27,6 +29,7 @@ using UniDocuments.Text.Services.Neural.Vocab;
 using UniDocuments.Text.Services.Preprocessing;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.Preprocessing.StopWords;
+using UniDocuments.Text.Services.Reporting;
 using UniDocuments.Text.Services.StreamReading;
 using UniDocuments.Text.Services.StreamReading.Options;
 
@@ -48,13 +51,16 @@ public static class DocumentApplicationInstaller
 
             appBuilder.UseDocumentMapper<DocumentMapper>(b =>
             {
-                b.UseInitializer<DocumentMappingInitializerNone, DocumentMappingInitializer>(isDevelopment);
+                b.UseInitializer<DocumentMappingInitializerNone, DocumentMappingInitializer>(applicationConfiguration.UseRealDatabase);
             });
 
             appBuilder.UseDocumentsCache<UniDocumentsCache>();
 
             appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageSql>(applicationConfiguration.UseRealDatabase,
-                b => { b.UseSqlConnectionString(connectionString!); });
+                b =>
+                {
+                    b.UseSqlConnectionString(connectionString);
+                });
 
             appBuilder.UseFingerprint(b =>
             {
@@ -110,6 +116,13 @@ public static class DocumentApplicationInstaller
             appBuilder.UseSimilarityService<TextCompareProvider>();
 
             appBuilder.UseDocumentLoadingProvider<DocumentLoadingProvider>();
+            
+            appBuilder.UseParagraphGlobalReader<ParagraphGlobalReader>();
+            
+            appBuilder.UseReportProvider<PlagiarismReportProviderPdf>(b =>
+            {
+                b.UseReportDataBuilder<PlagiarismReportDataBuilder>();
+            });
         });
 
         return serviceCollection;

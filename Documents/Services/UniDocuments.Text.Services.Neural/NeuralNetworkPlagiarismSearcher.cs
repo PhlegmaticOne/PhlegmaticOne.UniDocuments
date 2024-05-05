@@ -68,7 +68,6 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
         {
             DocumentId = Guid.Empty,
             Similarity = inferEntry.Similarity,
-            DocumentName = string.Empty,
             Id = inferEntry.ParagraphId
         };
     }
@@ -78,7 +77,6 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
         return new ParagraphSearchData
         {
             DocumentId = documentData.Id,
-            DocumentName = documentData.Name,
             Similarity = inferEntry.Similarity,
             Id = documentData.GetLocalParagraphId(inferEntry.ParagraphId)
         };

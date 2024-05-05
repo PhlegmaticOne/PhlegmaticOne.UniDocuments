@@ -118,4 +118,18 @@ public class PlagiarismController : ControllerBase
         
         return new JsonResult(result);
     }
+    
+    [HttpPost("Report")]
+    public async Task<IActionResult> Report(
+        [FromBody] QueryBuildPlagiarismReport request, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(request, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return File(result.Result!.ResponseStream, result.Result.ContentType, "test.pdf");
+    }
 }

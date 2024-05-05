@@ -14,6 +14,11 @@ public class CompareTextResult
     [JsonProperty("me")]
     public List<MatchTextEntry>? MatchEntry { get; set; }
 
+    public bool IsNoSimilar()
+    {
+        return MatchEntry is null;
+    }
+
     public CompareTextResult(string text, double similarityValue, List<MatchTextEntry>? matchEntry)
     {
         Text = text;

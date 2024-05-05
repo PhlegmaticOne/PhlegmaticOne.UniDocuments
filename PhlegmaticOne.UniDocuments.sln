@@ -77,6 +77,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.ApiRequesting
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhlegmaticOne.LocalStorage", "Nuget\PhlegmaticOne.LocalStorage\PhlegmaticOne.LocalStorage.csproj", "{3E344C6A-B5E0-45B9-915A-162EE6C730F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDocuments.Text.Services.Reporting", "Documents\Services\UniDocuments.Text.Services.Reporting\UniDocuments.Text.Services.Reporting.csproj", "{85CC8E08-28F4-4F87-9652-43C6DED70CDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +193,10 @@ Global
 		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E344C6A-B5E0-45B9-915A-162EE6C730F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85CC8E08-28F4-4F87-9652-43C6DED70CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85CC8E08-28F4-4F87-9652-43C6DED70CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85CC8E08-28F4-4F87-9652-43C6DED70CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85CC8E08-28F4-4F87-9652-43C6DED70CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -228,6 +234,7 @@ Global
 		{A81837E3-282D-4162-BF47-97CF49A5C503} = {C101BCC4-76ED-4BF5-9C53-BE019972BB84}
 		{08D5701A-E3C8-41F2-B991-3036CECD0425} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
 		{3E344C6A-B5E0-45B9-915A-162EE6C730F2} = {0732877E-5898-4081-97BF-6583ADDFEB6A}
+		{85CC8E08-28F4-4F87-9652-43C6DED70CDE} = {C3557AAC-B79D-4433-8349-4E3D2106B9A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54789FC2-24A6-4820-B310-FAF26BB9D94C}

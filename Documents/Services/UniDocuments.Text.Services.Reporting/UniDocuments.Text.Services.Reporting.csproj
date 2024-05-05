@@ -4,15 +4,14 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>UniDocuments.Text.Application</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
+      <ProjectReference Include="..\..\UniDocuments.Text.Domain\UniDocuments.Text.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="KeyedSemaphores" Version="5.0.0" />
+      <PackageReference Include="DS.Documents.Pdf" Version="7.1.1" />
     </ItemGroup>
 
 </Project>

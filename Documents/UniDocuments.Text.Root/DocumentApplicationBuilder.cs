@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using UniDocuments.Text.Domain.Providers.Comparing;
+using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
+using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
@@ -114,5 +116,18 @@ public class DocumentApplicationBuilder
     public void UseDocumentLoadingProvider<T>() where T : class, IDocumentLoadingProvider
     {
         _serviceCollection.AddSingleton<IDocumentLoadingProvider, T>();
+    }
+    
+    public void UseParagraphGlobalReader<T>() where T : class, IParagraphGlobalReader
+    {
+        _serviceCollection.AddSingleton<IParagraphGlobalReader, T>();
+    }
+
+    public void UseReportProvider<T>(Action<ReportInstallBuilder> builderAction)
+        where T : class, IPlagiarismReportProvider
+    {
+        _serviceCollection.AddScoped<IPlagiarismReportProvider, T>();
+        var builder = new ReportInstallBuilder(_serviceCollection);
+        builderAction(builder);
     }
 }

@@ -5,5 +5,6 @@ namespace UniDocuments.Text.Domain.Providers.Comparing;
 
 public interface ITextCompareProvider
 {
+    CompareTextsResponse Compare(CompareTextsRequest request);
     Task<CompareTextsResponse> CompareAsync(CompareTextsRequest request, CancellationToken cancellationToken);
 }

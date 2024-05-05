@@ -12,11 +12,11 @@ public class DocumentMapperInstallBuilder
         _serviceCollection = serviceCollection;
     }
 
-    public void UseInitializer<TDev, TProd>(bool isDevelopment)
+    public void UseInitializer<TDev, TProd>(bool useRealDatabase)
         where TDev : class, IDocumentMappingInitializer
         where TProd : class, IDocumentMappingInitializer
     {
-        if (isDevelopment)
+        if (!useRealDatabase)
         {
             _serviceCollection.AddScoped<IDocumentMappingInitializer, TDev>();
         }

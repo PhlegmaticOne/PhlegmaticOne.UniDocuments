@@ -10,12 +10,19 @@ public class JwtApplicationSecrets
     public string SecretKey { get; set; } = null!;
 }
 
+public class TestConfiguration
+{
+    public Guid UserId { get; set; }
+    public Guid ActivityId { get; set; }
+}
+
 public class ApplicationConfiguration
 {
     public bool UseAuthentication { get; set; }
     public bool UseRealDatabase { get; set; }
     public string CurrentKerasOptions { get; set; } = null!;
     public JwtApplicationSecrets JwtSecrets { get; set; } = null!;
+    public TestConfiguration TestConfiguration { get; set; } = null!;
 
     public IJwtOptions CreateJwtOptions()
     {

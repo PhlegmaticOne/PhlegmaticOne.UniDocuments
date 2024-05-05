@@ -1,5 +1,4 @@
 ﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
-using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
@@ -7,12 +6,10 @@ namespace UniDocuments.Text.Services.Fingerprinting;
 public class FingerprintPlagiarismSearcher : IFingerprintPlagiarismSearcher
 {
     private readonly IFingerprintContainer _fingerprintContainer;
-    private readonly IDocumentMapper _documentMapper;
 
-    public FingerprintPlagiarismSearcher(IFingerprintContainer fingerprintContainer, IDocumentMapper documentMapper)
+    public FingerprintPlagiarismSearcher(IFingerprintContainer fingerprintContainer)
     {
         _fingerprintContainer = fingerprintContainer;
-        _documentMapper = documentMapper;
     }
     
     public Task<DocumentSearchData[]> SearchTopAsync(Guid documentId, int topN, CancellationToken cancellationToken)
@@ -26,7 +23,7 @@ public class FingerprintPlagiarismSearcher : IFingerprintPlagiarismSearcher
         var currentIndex = 0;
         var allFingerprints = _fingerprintContainer.GetAll();
         var n = allFingerprints.Count - 1 < topN ? allFingerprints.Count - 1 : topN;
-        var documentFingerprint = _fingerprintContainer.Get(documentId);
+        var documentFingerprint = _fingerprintContainer.Get(documentId)!;
         var result = new DocumentSearchData[n];
 
         foreach (var (id, fingerprint) in allFingerprints)
@@ -37,30 +34,38 @@ public class FingerprintPlagiarismSearcher : IFingerprintPlagiarismSearcher
             }
 
             var similarity = documentFingerprint.CalculateJaccard(fingerprint);
-            var documentName = _documentMapper.GetDocumentData(id)!.Name;
 
             if (currentIndex < topN)
             {
-                result[currentIndex] = new DocumentSearchData(id, documentName, similarity);
+                result[currentIndex] = new DocumentSearchData(id, similarity);
                 currentIndex++;
                 continue;
             }
 
-            if (!isSorted)
-            {
-                Array.Sort(result, (a, b) => a.Similarity.CompareTo(b.Similarity));
-                isSorted = true;
-            }
-
-            for (var i = topN - 1; i >= 0; i--)
-            {
-                if (similarity > result[i].Similarity)
-                {
-                    result[i] = new DocumentSearchData(id, documentName, similarity);
-                }
-            }
+            SortTopFingerprints(ref isSorted, result);
+            RebuildTopFingerprints(topN, similarity, id, result);
         }
 
         return result;
+    }
+
+    private void SortTopFingerprints(ref bool isSorted, DocumentSearchData[] result)
+    {
+        if (!isSorted)
+        {
+            Array.Sort(result, (a, b) => a.Similarity.CompareTo(b.Similarity));
+            isSorted = true;
+        }
+    }
+
+    private static void RebuildTopFingerprints(int topN, double similarity, Guid id, DocumentSearchData[] result)
+    {
+        for (var i = topN - 1; i >= 0; i--)
+        {
+            if (similarity > result[i].Similarity)
+            {
+                result[i] = new DocumentSearchData(id, similarity);
+            }
+        }
     }
 }

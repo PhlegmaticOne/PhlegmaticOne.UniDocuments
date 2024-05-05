@@ -23,7 +23,21 @@ public class TextCompareProvider : ITextCompareProvider
         _matchingOptionsProvider = matchingOptionsProvider;
         _matchingAlgorithm = matchingAlgorithm;
     }
-    
+
+    public CompareTextsResponse Compare(CompareTextsRequest request)
+    {
+        var response = new CompareTextsResponse(request.SourceText);
+        var baseMetric = _baseMetricsProvider.GetBaseMetric(request.BaseMetric);
+        var options = _matchingOptionsProvider.GetOptions();
+        
+        foreach (var suspiciousText in request.SuspiciousTexts)
+        {
+            ExecuteSimilarityCheck(request.SourceText, suspiciousText, baseMetric, options, response);
+        }
+        
+        return response;
+    }
+
     public async Task<CompareTextsResponse> CompareAsync(
         CompareTextsRequest request, CancellationToken cancellationToken)
     {

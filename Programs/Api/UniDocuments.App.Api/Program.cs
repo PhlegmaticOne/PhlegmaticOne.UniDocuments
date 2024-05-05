@@ -14,6 +14,7 @@ if (applicationConfiguration.UseAuthentication)
     builder.Services.AddAuthentication(jwtOptions);
 }
 
+builder.Services.Configure<ApplicationConfiguration>(builder.Configuration.GetSection(nameof(ApplicationConfiguration)));
 builder.Services.AddApplication(jwtOptions);
 builder.Services.AddDocumentApplication(builder.Configuration, connectionString, isDevelopment, applicationConfiguration);
 builder.Services.AddApplicationRequirements(connectionString, applicationConfiguration);
@@ -24,7 +25,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-await AppInitializer.InitializeAsync(app, app.Lifetime.ApplicationStopped);
+await AppInitializer.InitializeAsync(app, applicationConfiguration, app.Lifetime.ApplicationStopped);
 
 if (isDevelopment)
 {

@@ -1,49 +1,34 @@
 ﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
+using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.Text.Application.PlagiarismSearching;
 
 public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {
-    private readonly IFingerprintPlagiarismSearcher _fingerprintPlagiarismSearcher;
     private readonly INeuralNetworkPlagiarismSearcher _networkPlagiarismSearcher;
+    private readonly IDocumentMapper _documentMapper;
 
     public PlagiarismSearchProvider(
-        IFingerprintPlagiarismSearcher fingerprintPlagiarismSearcher,
-        INeuralNetworkPlagiarismSearcher networkPlagiarismSearcher)
+        INeuralNetworkPlagiarismSearcher networkPlagiarismSearcher,
+        IDocumentMapper documentMapper)
     {
-        _fingerprintPlagiarismSearcher = fingerprintPlagiarismSearcher;
         _networkPlagiarismSearcher = networkPlagiarismSearcher;
+        _documentMapper = documentMapper;
     }
     
     public async Task<PlagiarismSearchResponseDocument> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var response = new PlagiarismSearchResponseDocument();
-        var searchTasks = new List<Task>();
+        var id = request.Document.Id;
+        var documentData = _documentMapper.GetDocumentData(id)!;
+        var response = new PlagiarismSearchResponseDocument(id, documentData.Name);
 
-        if (request.AlgorithmData.UseFingerprint)
-        {
-            searchTasks.Add(FindFingerprintPlagiarismAsync(request, response, cancellationToken));
-        }
-        
-        searchTasks.Add(FindNeuralPlagiarismAsync(request, response, cancellationToken));
+        await FindNeuralPlagiarismAsync(request, response, cancellationToken);
 
-        await Task.WhenAll(searchTasks);
-        
         return response;
-    }
-
-    private async Task FindFingerprintPlagiarismAsync(
-        PlagiarismSearchRequest request, PlagiarismSearchResponseDocument response, CancellationToken cancellationToken)
-    {
-        var topFingerprints = await _fingerprintPlagiarismSearcher
-            .SearchTopAsync(request.Document.Id, request.NDocuments, cancellationToken);
-
-        response.SuspiciousDocuments = topFingerprints;
     }
 
     private async Task FindNeuralPlagiarismAsync(
