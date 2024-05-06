@@ -10,11 +10,19 @@ using UniDocuments.Text.Domain.Providers.Matching.Requests;
 
 namespace UniDocuments.App.Api.Controllers;
 
-public class FileSearchPlagiarismRequest
+public class DocumentSearchPlagiarismRequest
 {
     public IFormFile File { get; set; } = null!;
     public int TopN { get; set; }
     public string ModelName { get; set; } = null!;
+}
+
+public class DocumentBuildReportRequest
+{
+    public IFormFile File { get; set; } = null!;
+    public int TopN { get; set; } = 3;
+    public string ModelName { get; set; } = "doc2vec";
+    public string BaseMetric { get; set; } = "cosine";
 }
 
 [ApiController]
@@ -117,7 +125,7 @@ public class PlagiarismController : ControllerBase
     
     [HttpPost("SearchPlagiarismDocument")]
     public async Task<IActionResult> SearchPlagiarismDocument(
-        [FromForm] FileSearchPlagiarismRequest request, CancellationToken cancellationToken)
+        [FromForm] DocumentSearchPlagiarismRequest request, CancellationToken cancellationToken)
     {
         var query = new QuerySearchPlagiarismDocument(request.File.OpenReadStream(), request.TopN, request.ModelName);
         var result = await _mediator.Send(query, cancellationToken);
@@ -144,11 +152,33 @@ public class PlagiarismController : ControllerBase
         return new JsonResult(result);
     }
     
-    [HttpPost("Report")]
-    public async Task<IActionResult> Report(
-        [FromBody] QueryBuildPlagiarismReport request, CancellationToken cancellationToken)
+    [HttpPost("BuildReportExistingDocument")]
+    public async Task<IActionResult> BuildReportExistingDocument(
+        [FromBody] QueryBuildPlagiarismExistingDocumentReport request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return File(result.Result!.ResponseStream, result.Result.ContentType, result.Result.Name);
+    }
+    
+    [HttpPost("BuildReportDocument")]
+    public async Task<IActionResult> BuildReportDocument(
+        [FromForm] DocumentBuildReportRequest request, CancellationToken cancellationToken)
+    {
+        var query = new QueryBuildPlagiarismDocumentReport
+        {
+            FileStream = request.File.OpenReadStream(),
+            ModelName = request.ModelName,
+            TopN = request.TopN,
+            BaseMetric = request.BaseMetric
+        };
+        
+        var result = await _mediator.Send(query, cancellationToken);
         
         if (!result.IsSuccess)
         {

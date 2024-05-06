@@ -2,11 +2,11 @@
 
 public class PlagiarismReport
 {
-    public Stream ResponseStream { get; }
+    public byte[] ResponseStream { get; }
     public string ContentType { get; }
     public string Name { get; }
 
-    public PlagiarismReport(Stream responseStream, string contentType, string name)
+    public PlagiarismReport(byte[] responseStream, string contentType, string name)
     {
         ResponseStream = responseStream;
         ContentType = contentType;

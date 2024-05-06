@@ -37,22 +37,18 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
         PlagiarismReportDataRequest request, CancellationToken cancellationToken)
     {
         var result = new List<ReportParagraphsData>();
+        var paragraphs = request.Document.Content!.Paragraphs;
 
-        var paragraphPairs = request.PlagiarismSearchResponse.SuspiciousParagraphs
-            .Zip(request.Document.Content!.Paragraphs, (paragraphsData, paragraph) => (paragraphsData, paragraph));
-
-        await Parallel.ForEachAsync(paragraphPairs, cancellationToken, async (data, token) =>
+        for (var i = 0; i < paragraphs.Count; i++)
         {
-            var suspiciousParagraphs = await LoadSuspiciousParagraphs(data.paragraphsData, token);
-            var compareRequest = new CompareTextsRequest(data.paragraph, suspiciousParagraphs, request.BaseMetric);
-            var compareResponse = _textCompareProvider.Compare(compareRequest);
-            var reportData = MapToReportParagraphData(data.paragraph, data.paragraphsData, compareResponse);
-            
-            lock (result)
-            {
-                result.Add(reportData);
-            }
-        });
+            var paragraph = paragraphs[i];
+            var suspicious = request.PlagiarismSearchResponse.SuspiciousParagraphs[i];
+            var suspiciousParagraphs = await LoadSuspiciousParagraphs(suspicious, cancellationToken);
+            var compareRequest = new CompareTextsRequest(paragraph, suspiciousParagraphs, request.BaseMetric);
+            var compareResponse = await _textCompareProvider.CompareAsync(compareRequest, cancellationToken);
+            var reportData = MapToReportParagraphData(paragraph, suspicious, compareResponse);
+            result.Add(reportData);
+        }
 
         return result;
     }
@@ -76,8 +72,14 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
             var suspiciousParagraph = plagiarismData.SuspiciousParagraphs[i];
             var documentId = suspiciousParagraph.DocumentId;
             var compareResult = compareTextsResponse.SimilarityResults[i];
+
+            if (compareResult.IsNoSimilar())
+            {
+                continue;
+            }
+            
             var documentName = _documentMapper.GetDocumentData(documentId)!.Name;
-            data.AddParagraphData(documentId, documentName, compareResult);
+            data.AddParagraphData(documentId, documentName, suspiciousParagraph.Id, compareResult);
         }
 
         return data;

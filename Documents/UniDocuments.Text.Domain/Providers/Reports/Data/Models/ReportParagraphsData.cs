@@ -13,10 +13,10 @@ public class ReportParagraphsData
         ParagraphsData = new List<ReportParagraphData>();
     }
 
-    public void AddParagraphData(Guid documentId, string documentName, CompareTextResult compareTextResult)
+    public void AddParagraphData(Guid documentId, string documentName, int localId, CompareTextResult compareTextResult)
     {
         var data = ReportParagraphData
-            .WithDocumentData(documentId, documentName)
+            .WithDocumentData(documentId, documentName, localId)
             .FillFromCompareResult(compareTextResult);
         
         ParagraphsData.Add(data);   

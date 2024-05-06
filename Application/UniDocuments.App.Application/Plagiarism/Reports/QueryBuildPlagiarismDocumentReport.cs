@@ -1,17 +1,17 @@
 ﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Providers.Reports.Data;
+using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.App.Application.Plagiarism.Reports;
 
-public class QueryBuildPlagiarismReport : IOperationResultQuery<PlagiarismReport>
+public class QueryBuildPlagiarismDocumentReport : IOperationResultQuery<PlagiarismReport>
 {
-    public Guid DocumentId { get; set; }
+    public Stream FileStream { get; set; } = null!;
     public int TopN { get; set; }
     public string ModelName { get; set; } = null!;
     public string BaseMetric { get; set; } = null!;
@@ -22,29 +22,32 @@ public class QueryBuildPlagiarismReport : IOperationResultQuery<PlagiarismReport
     }
 }
 
-public class QueryBuildPlagiarismReportHandler : IOperationResultQueryHandler<QueryBuildPlagiarismReport, PlagiarismReport>
+public class QueryBuildPlagiarismDocumentReportHandler : 
+    IOperationResultQueryHandler<QueryBuildPlagiarismDocumentReport, PlagiarismReport>
 {
     private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
     private readonly IPlagiarismReportDataBuilder _reportDataBuilder;
     private readonly IPlagiarismReportProvider _reportProvider;
-    private readonly IDocumentLoadingProvider _loadingProvider;
+    private readonly IStreamContentReader _contentReader;
 
-    public QueryBuildPlagiarismReportHandler(
+    public QueryBuildPlagiarismDocumentReportHandler(
         IPlagiarismSearchProvider plagiarismSearchProvider,
         IPlagiarismReportDataBuilder reportDataBuilder,
         IPlagiarismReportProvider reportProvider,
-        IDocumentLoadingProvider loadingProvider)
+        IStreamContentReader contentReader)
     {
         _plagiarismSearchProvider = plagiarismSearchProvider;
         _reportDataBuilder = reportDataBuilder;
         _reportProvider = reportProvider;
-        _loadingProvider = loadingProvider;
+        _contentReader = contentReader;
     }
     
     public async Task<OperationResult<PlagiarismReport>> Handle(
-        QueryBuildPlagiarismReport request, CancellationToken cancellationToken)
+        QueryBuildPlagiarismDocumentReport request, CancellationToken cancellationToken)
     {
-        var document = await _loadingProvider.LoadAsync(request.DocumentId, true, cancellationToken);
+        var content = await _contentReader.ReadAsync(request.FileStream, cancellationToken);
+        var document = UniDocument.FromContent(content);
+        
         var plagiarismRequest = request.ToPlagiarismSearchRequest(document);
         var plagiarismResponse = await _plagiarismSearchProvider.SearchAsync(plagiarismRequest, cancellationToken);
         var reportDataRequest = new PlagiarismReportDataRequest(document, plagiarismResponse, request.BaseMetric);
