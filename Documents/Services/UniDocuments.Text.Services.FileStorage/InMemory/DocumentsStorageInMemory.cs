@@ -26,11 +26,9 @@ public class DocumentsStorageInMemory : IDocumentsStorage
     
     private readonly Dictionary<Guid, FileLoadResponsePrepared> _fileContents = new();
 
-    public Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
+    public Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
-        var fileId = loadRequest.Id;
-        
-        var result = _fileContents.TryGetValue(fileId, out var fileLoadResponsePrepared) ? 
+        var result = _fileContents.TryGetValue(id, out var fileLoadResponsePrepared) ? 
             fileLoadResponsePrepared.ToFileLoadResponse() : 
             DocumentLoadResponse.NoContent();
 

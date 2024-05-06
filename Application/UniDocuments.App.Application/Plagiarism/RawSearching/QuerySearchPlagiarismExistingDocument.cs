@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using UniDocuments.App.Application.Plagiarism.RawSearching.Base;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
@@ -8,11 +9,9 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 
 namespace UniDocuments.App.Application.Plagiarism.RawSearching;
 
-public class QuerySearchPlagiarismExistingDocument : IOperationResultQuery<PlagiarismSearchResponseDocument>
+public class QuerySearchPlagiarismExistingDocument : QuerySearchPlagiarism
 {
     public Guid DocumentId { get; set; }
-    public int TopN { get; set; }
-    public string ModelName { get; set; } = null!;
 }
 
 public class QuerySearchPlagiarismDocumentExistingHandler : IOperationResultQueryHandler<QuerySearchPlagiarismExistingDocument, PlagiarismSearchResponseDocument>
@@ -39,7 +38,7 @@ public class QuerySearchPlagiarismDocumentExistingHandler : IOperationResultQuer
         try
         {
             var document = await _loadingProvider.LoadAsync(request.DocumentId, true, cancellationToken);
-            var searchRequest = new PlagiarismSearchRequest(document, request.TopN, request.ModelName); 
+            var searchRequest = new PlagiarismSearchRequest(document, request.TopCount, request.ModelName); 
             var result = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
             return OperationResult.Successful(result);
         }

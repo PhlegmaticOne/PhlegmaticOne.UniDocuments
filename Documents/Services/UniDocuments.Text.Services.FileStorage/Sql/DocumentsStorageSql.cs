@@ -15,15 +15,14 @@ public class DocumentsStorageSql : IDocumentsStorage
         _sqlConnectionProvider = sqlConnectionProvider;
     }
 
-    public async Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
+    public async Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
-        var fileId = loadRequest.Id;
         var transactionContext = Array.Empty<byte>();
         var savedFileName = string.Empty;
         var path = string.Empty;
         var sqlConnection = _sqlConnectionProvider.Connection;
 
-        await using var command = FileSqlCommands.CreateSelectFileCommand(sqlConnection, fileId);
+        await using var command = FileSqlCommands.CreateSelectFileCommand(sqlConnection, id);
         await using var transaction = sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 

@@ -17,10 +17,10 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         _dbContext = dbContext;
     }
     
-    public async Task<DocumentLoadResponse> LoadAsync(DocumentLoadRequest loadRequest, CancellationToken cancellationToken)
+    public async Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
         var document = await _dbContext.Set<StudyDocumentFile>()
-            .FirstOrDefaultAsync(x => x.StudyDocumentId == loadRequest.Id, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.StudyDocumentId == id, cancellationToken: cancellationToken);
 
         var stream = new MemoryStream(document!.Content);
         return new DocumentLoadResponse(document.Name, stream);

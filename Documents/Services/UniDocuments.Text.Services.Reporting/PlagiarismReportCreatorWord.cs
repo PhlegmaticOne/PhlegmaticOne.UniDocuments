@@ -7,7 +7,7 @@ using UniDocuments.Text.Domain.Providers.Reports.Data.Models;
 
 namespace UniDocuments.Text.Services.Reporting;
 
-public class PlagiarismReportProviderWord : IPlagiarismReportProvider
+public class PlagiarismReportCreatorWord : IPlagiarismReportCreator
 {
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private const string NamePattern = "report_{0}.docx";

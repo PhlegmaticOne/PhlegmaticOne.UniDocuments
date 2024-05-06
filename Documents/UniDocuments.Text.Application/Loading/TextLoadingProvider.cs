@@ -3,7 +3,6 @@ using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
-using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.Text.Application.Loading;
@@ -35,7 +34,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
                 return cached;
             }
 
-            var loadResponse = await _documentsStorage.LoadAsync(new DocumentLoadRequest(documentId), cancellationToken);
+            var loadResponse = await _documentsStorage.LoadAsync(documentId, cancellationToken);
             var content = await _streamContentReader.ReadAsync(loadResponse.Stream!, cancellationToken);
             var result = new UniDocument(documentId, content);
 

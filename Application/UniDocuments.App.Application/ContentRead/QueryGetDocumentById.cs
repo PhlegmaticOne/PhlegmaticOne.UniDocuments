@@ -2,7 +2,6 @@
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
-using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
 namespace UniDocuments.App.Application.ContentRead;
@@ -30,8 +29,7 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
     {
         try
         {
-            var loadRequest = new DocumentLoadRequest(request.Id);
-            var response = await _documentsStorage.LoadAsync(loadRequest, cancellationToken);
+            var response = await _documentsStorage.LoadAsync(request.Id, cancellationToken);
             return OperationResult.Successful(response);
         }
         catch(Exception e)

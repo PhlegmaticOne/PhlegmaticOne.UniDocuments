@@ -4,41 +4,36 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Application.Plagiarism.Reports.Base;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Reports;
-using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.App.Application.Plagiarism.Reports;
 
-public class QueryBuildPlagiarismDocumentReport : QueryBuildPlagiarismReport
+public class QueryBuildPlagiarismTextReport : QueryBuildPlagiarismReport
 {
-    public Stream FileStream { get; set; } = null!;
+    public string Text { get; set; } = null!;
 }
 
-public class QueryBuildPlagiarismDocumentReportHandler : 
-    IOperationResultQueryHandler<QueryBuildPlagiarismDocumentReport, PlagiarismReport>
+public class QueryBuildPlagiarismTextReportHandler : 
+    IOperationResultQueryHandler<QueryBuildPlagiarismTextReport, PlagiarismReport>
 {
-    private const string ErrorMessage = "BuildPlagiarismDocumentReport.InternalError";
-    
-    private readonly IPlagiarismReportProvider _reportProvider;
-    private readonly IStreamContentReader _contentReader;
-    private readonly ILogger<QueryBuildPlagiarismDocumentReportHandler> _logger;
+    private const string ErrorMessage = "BuildPlagiarismTextReport.InternalError";
 
-    public QueryBuildPlagiarismDocumentReportHandler(
+    private readonly IPlagiarismReportProvider _reportProvider;
+    private readonly ILogger<QueryBuildPlagiarismTextReportHandler> _logger;
+
+    public QueryBuildPlagiarismTextReportHandler(
         IPlagiarismReportProvider reportProvider,
-        IStreamContentReader contentReader,
-        ILogger<QueryBuildPlagiarismDocumentReportHandler> logger)
+        ILogger<QueryBuildPlagiarismTextReportHandler> logger)
     {
         _reportProvider = reportProvider;
-        _contentReader = contentReader;
         _logger = logger;
     }
     
     public async Task<OperationResult<PlagiarismReport>> Handle(
-        QueryBuildPlagiarismDocumentReport request, CancellationToken cancellationToken)
+        QueryBuildPlagiarismTextReport request, CancellationToken cancellationToken)
     {
         try
         {
-            var content = await _contentReader.ReadAsync(request.FileStream, cancellationToken);
-            var document = UniDocument.FromContent(content);
+            var document = UniDocument.FromString(request.Text);
             var plagiarismRequest = request.ToReportRequest(document);
             var report = await _reportProvider.BuildReportAsync(plagiarismRequest, cancellationToken);
             return OperationResult.Successful(report);

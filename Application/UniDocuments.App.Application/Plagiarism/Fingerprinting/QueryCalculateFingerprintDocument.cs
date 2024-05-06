@@ -1,14 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
+using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
 
 public class QueryCalculateFingerprintDocument : IOperationResultQuery<TextFingerprint>
 {
-    public Guid Id { get; set; }
+    public Stream DocumentStream { get; set; } = null!;
 }
 
 public class QueryCalculateFingerprintDocumentHandler : 
@@ -17,13 +19,16 @@ public class QueryCalculateFingerprintDocumentHandler :
     private const string? CalculateFingerprintDocumentInternalError = "CalculateFingerprintDocument.InternalError";
     
     private readonly IFingerprintsProvider _fingerprintsProvider;
+    private readonly IStreamContentReader _streamContentReader;
     private readonly ILogger<QueryCalculateFingerprintDocumentHandler> _logger;
 
     public QueryCalculateFingerprintDocumentHandler(
         IFingerprintsProvider fingerprintsProvider,
+        IStreamContentReader streamContentReader,
         ILogger<QueryCalculateFingerprintDocumentHandler> logger)
     {
         _fingerprintsProvider = fingerprintsProvider;
+        _streamContentReader = streamContentReader;
         _logger = logger;
     }
     
@@ -31,7 +36,9 @@ public class QueryCalculateFingerprintDocumentHandler :
     {
         try
         {
-            var fingerprint = await _fingerprintsProvider.GetForDocumentAsync(request.Id, cancellationToken);
+            var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
+            var document = UniDocument.FromContent(content);
+            var fingerprint = await _fingerprintsProvider.GetForDocumentAsync(document, cancellationToken);
             return OperationResult.Successful(fingerprint);
         }
         catch (Exception e)

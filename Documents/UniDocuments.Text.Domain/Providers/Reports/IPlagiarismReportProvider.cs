@@ -1,8 +1,6 @@
-﻿using UniDocuments.Text.Domain.Providers.Reports.Data.Models;
-
-namespace UniDocuments.Text.Domain.Providers.Reports;
+﻿namespace UniDocuments.Text.Domain.Providers.Reports;
 
 public interface IPlagiarismReportProvider
 {
-    Task<PlagiarismReport> BuildReportAsync(PlagiarismReportData response, CancellationToken cancellationToken);
+    Task<PlagiarismReport> BuildReportAsync(PlagiarismReportRequest request, CancellationToken cancellationToken);
 }

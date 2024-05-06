@@ -45,7 +45,6 @@ public class QueryGetAuthorizedProfileAnonymousHandler :
         _logger = logger;
     }
 
-
     public async Task<OperationResult<AuthorizedProfileObject>> Handle(
         QueryGetAuthorizedProfileAnonymous request, CancellationToken cancellationToken)
     {
