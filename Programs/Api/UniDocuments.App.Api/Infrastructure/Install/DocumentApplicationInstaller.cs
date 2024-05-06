@@ -15,7 +15,6 @@ using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.DocumentMapping.Initializers;
 using UniDocuments.Text.Services.FileStorage.EntityFramework;
 using UniDocuments.Text.Services.FileStorage.InMemory;
-using UniDocuments.Text.Services.FileStorage.Sql;
 using UniDocuments.Text.Services.Fingerprinting;
 using UniDocuments.Text.Services.Fingerprinting.Hashing;
 using UniDocuments.Text.Services.Fingerprinting.Options;

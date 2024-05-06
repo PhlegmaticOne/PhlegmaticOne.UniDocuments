@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.Neural;
 
@@ -11,11 +12,17 @@ public class QueryPreprocessText : IOperationResultQuery<string>
 
 public class QueryPreprocessTextHandler : IOperationResultQueryHandler<QueryPreprocessText, string>
 {
+    private const string TextPreprocessInternalError = "TextPreprocess.InternalError";
+    
     private readonly IDocumentTextPreprocessor _textPreprocessor;
+    private readonly ILogger<QueryPreprocessTextHandler> _logger;
 
-    public QueryPreprocessTextHandler(IDocumentTextPreprocessor textPreprocessor)
+    public QueryPreprocessTextHandler(
+        IDocumentTextPreprocessor textPreprocessor,
+        ILogger<QueryPreprocessTextHandler> logger)
     {
         _textPreprocessor = textPreprocessor;
+        _logger = logger;
     }
     
     public async Task<OperationResult<string>> Handle(QueryPreprocessText request, CancellationToken cancellationToken)
@@ -27,7 +34,8 @@ public class QueryPreprocessTextHandler : IOperationResultQueryHandler<QueryPrep
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<string>("TextPreprocess.InternalError", e.Message);
+            _logger.LogCritical(e, TextPreprocessInternalError);
+            return OperationResult.Failed<string>(TextPreprocessInternalError, e.Message);
         }
     }
 }

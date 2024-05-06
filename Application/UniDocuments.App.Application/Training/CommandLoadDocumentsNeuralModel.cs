@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Neural;
 
@@ -11,11 +12,18 @@ public class CommandLoadDocumentsNeuralModel : IOperationResultCommand
 
 public class CommandLoadDocumentsNeuralModelHandler : IOperationResultCommandHandler<CommandLoadDocumentsNeuralModel>
 {
-    private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
+    private const string LoadModelModelNotFound = "LoadModel.ModelNotFound";
+    private const string LoadModelInternalError = "LoadModel.InternalError";
 
-    public CommandLoadDocumentsNeuralModelHandler(IDocumentNeuralModelsProvider neuralModelsProvider)
+    private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
+    private readonly ILogger<CommandLoadDocumentsNeuralModelHandler> _logger;
+
+    public CommandLoadDocumentsNeuralModelHandler(
+        IDocumentNeuralModelsProvider neuralModelsProvider,
+        ILogger<CommandLoadDocumentsNeuralModelHandler> logger)
     {
         _neuralModelsProvider = neuralModelsProvider;
+        _logger = logger;
     }
     
     public async Task<OperationResult> Handle(CommandLoadDocumentsNeuralModel request, CancellationToken cancellationToken)
@@ -23,11 +31,12 @@ public class CommandLoadDocumentsNeuralModelHandler : IOperationResultCommandHan
         try
         {
             var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, true, cancellationToken);
-            return model is null ? OperationResult.Failed("LoadModel.ModelNotFound") : OperationResult.Success;
+            return model is null ? OperationResult.Failed(LoadModelModelNotFound) : OperationResult.Success;
         }
         catch(Exception e)
         {
-            return OperationResult.Failed("LoadModel.InternalError", e.Message);
+            _logger.LogCritical(e, LoadModelInternalError);
+            return OperationResult.Failed(LoadModelInternalError, e.Message);
         }
     }
 }

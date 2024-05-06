@@ -1,8 +1,8 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
@@ -15,34 +15,31 @@ public class QueryCalculateFingerprintText : IOperationResultQuery<TextFingerpri
 public class QueryCalculateFingerprintTextHandler :
     IOperationResultQueryHandler<QueryCalculateFingerprintText, TextFingerprint>
 {
-    private readonly IFingerprintAlgorithm _fingerprintAlgorithm;
-    private readonly IFingerprintOptionsProvider _optionsProvider;
+    private const string CalculateFingerprintTextInternalError = "CalculateFingerprintText.InternalError";
+    
+    private readonly IFingerprintsProvider _fingerprintsProvider;
+    private readonly ILogger<QueryCalculateFingerprintTextHandler> _logger;
 
     public QueryCalculateFingerprintTextHandler(
-        IFingerprintAlgorithm fingerprintAlgorithm, 
-        IFingerprintOptionsProvider optionsProvider)
+        IFingerprintsProvider fingerprintsProvider,
+        ILogger<QueryCalculateFingerprintTextHandler> logger)
     {
-        _fingerprintAlgorithm = fingerprintAlgorithm;
-        _optionsProvider = optionsProvider;
+        _fingerprintsProvider = fingerprintsProvider;
+        _logger = logger;
     }
     
     public async Task<OperationResult<TextFingerprint>> Handle(QueryCalculateFingerprintText request, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await Task.Run(() => Fingerprint(request.Text), cancellationToken);
+            var document = UniDocument.FromString(request.Text);
+            var result = await _fingerprintsProvider.GetForDocumentAsync(document, cancellationToken);
             return OperationResult.Successful(result);
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<TextFingerprint>("CalculateFingerprint.InternalError", e.Message);
+            _logger.LogCritical(e, CalculateFingerprintTextInternalError);
+            return OperationResult.Failed<TextFingerprint>(CalculateFingerprintTextInternalError, e.Message);
         }
-    }
-
-    private TextFingerprint Fingerprint(string text)
-    {
-        var options = _optionsProvider.GetOptions();
-        var content = UniDocument.FromString(text);
-        return _fingerprintAlgorithm.Fingerprint(content, options);
     }
 }

@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Matching.Requests;
@@ -18,11 +19,17 @@ public class QueryMatchTexts : IOperationResultQuery<MatchTextsResponse>
 
 public class QueryMatchTextsRequestHandler : IOperationResultQueryHandler<QueryMatchTexts, MatchTextsResponse>
 {
+    private const string MatchTextInternalError = "MatchText.InternalError";
+    
     private readonly ITextMatchProvider _textMatchProvider;
+    private readonly ILogger<QueryMatchTextsRequestHandler> _logger;
 
-    public QueryMatchTextsRequestHandler(ITextMatchProvider textMatchProvider)
+    public QueryMatchTextsRequestHandler(
+        ITextMatchProvider textMatchProvider,
+        ILogger<QueryMatchTextsRequestHandler> logger)
     {
         _textMatchProvider = textMatchProvider;
+        _logger = logger;
     }
     
     public async Task<OperationResult<MatchTextsResponse>> Handle(
@@ -35,7 +42,8 @@ public class QueryMatchTextsRequestHandler : IOperationResultQueryHandler<QueryM
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<MatchTextsResponse>("MatchText.InternalError", e.Message);
+            _logger.LogCritical(e, MatchTextInternalError);
+            return OperationResult.Failed<MatchTextsResponse>(MatchTextInternalError, e.Message);
         }
     }
 }

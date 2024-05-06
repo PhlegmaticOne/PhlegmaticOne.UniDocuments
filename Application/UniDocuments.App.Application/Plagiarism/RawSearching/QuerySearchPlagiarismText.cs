@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
@@ -17,11 +18,17 @@ public class QuerySearchPlagiarismText : IOperationResultQuery<PlagiarismSearchR
 public class QuerySearchPlagiarismTextHandler : 
     IOperationResultQueryHandler<QuerySearchPlagiarismText, PlagiarismSearchResponseText>
 {
+    private const string SearchPlagiarismTextInternalError = "SearchPlagiarismText.InternalError";
+    
     private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
+    private readonly ILogger<QuerySearchPlagiarismTextHandler> _logger;
 
-    public QuerySearchPlagiarismTextHandler(IPlagiarismSearchProvider plagiarismSearchProvider)
+    public QuerySearchPlagiarismTextHandler(
+        IPlagiarismSearchProvider plagiarismSearchProvider,
+        ILogger<QuerySearchPlagiarismTextHandler> logger)
     {
         _plagiarismSearchProvider = plagiarismSearchProvider;
+        _logger = logger;
     }
     
     public async Task<OperationResult<PlagiarismSearchResponseText>> Handle(
@@ -37,8 +44,8 @@ public class QuerySearchPlagiarismTextHandler :
         }
         catch (Exception e)
         {
-            return OperationResult
-                .Failed<PlagiarismSearchResponseText>("SearchPlagiarismText.InternalError", e.Message);
+            _logger.LogCritical(e, SearchPlagiarismTextInternalError);
+            return OperationResult.Failed<PlagiarismSearchResponseText>(SearchPlagiarismTextInternalError, e.Message);
         }
     }
 }

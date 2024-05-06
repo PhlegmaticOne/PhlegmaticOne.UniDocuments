@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using PhlegmaticOne.PasswordHasher;
 using UniDocuments.App.Data.EntityFramework.Context;
@@ -7,9 +8,9 @@ using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Application.Login.Commands;
 
-public class RegisterProfileCommand : IOperationResultCommand
+public class CommandRegisterProfile : IOperationResultCommand
 {
-    public RegisterProfileCommand(RegisterProfileObject registerProfileObject)
+    public CommandRegisterProfile(RegisterProfileObject registerProfileObject)
     {
         RegisterProfileObject = registerProfileObject;
     }
@@ -17,30 +18,38 @@ public class RegisterProfileCommand : IOperationResultCommand
     public RegisterProfileObject RegisterProfileObject { get; }
 }
 
-public class RegisterProfileCommandHandler : IOperationResultCommandHandler<RegisterProfileCommand>
+public class CommandRegisterProfileHandler : IOperationResultCommandHandler<CommandRegisterProfile>
 {
+    private const string RegisterProfileInternalError = "RegisterProfile.InternalError";
+    
     private readonly ApplicationDbContext _dbContext;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ILogger<CommandRegisterProfileHandler> _logger;
 
-    public RegisterProfileCommandHandler(ApplicationDbContext dbContext, IPasswordHasher passwordHasher)
+    public CommandRegisterProfileHandler(
+        ApplicationDbContext dbContext,
+        IPasswordHasher passwordHasher,
+        ILogger<CommandRegisterProfileHandler> logger)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;
+        _logger = logger;
     }
     
-    public async Task<OperationResult> Handle(RegisterProfileCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CommandRegisterProfile request, CancellationToken cancellationToken)
     {
         try
         {
             var prepared = PrepareProfile(request.RegisterProfileObject);
             var repository = _dbContext.Set<Student>();
-            await repository.AddAsync(prepared, cancellationToken);
+            var entry = await repository.AddAsync(prepared, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return OperationResult.Success;
+            return OperationResult.Successful(entry.Entity.Id);
         }
         catch (Exception e)
         {
-            return OperationResult.Failed("RegisterProfile.InternalError", e.Message);
+            _logger.LogCritical(e, RegisterProfileInternalError);
+            return OperationResult.Failed(RegisterProfileInternalError, e.Message);
         }
     }
     

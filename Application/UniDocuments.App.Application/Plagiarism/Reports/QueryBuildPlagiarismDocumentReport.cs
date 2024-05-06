@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
@@ -25,34 +26,47 @@ public class QueryBuildPlagiarismDocumentReport : IOperationResultQuery<Plagiari
 public class QueryBuildPlagiarismDocumentReportHandler : 
     IOperationResultQueryHandler<QueryBuildPlagiarismDocumentReport, PlagiarismReport>
 {
+    private const string ErrorMessage = "BuildPlagiarismDocumentReport.InternalError";
+    
     private readonly IPlagiarismSearchProvider _plagiarismSearchProvider;
     private readonly IPlagiarismReportDataBuilder _reportDataBuilder;
     private readonly IPlagiarismReportProvider _reportProvider;
     private readonly IStreamContentReader _contentReader;
+    private readonly ILogger<QueryBuildPlagiarismDocumentReportHandler> _logger;
 
     public QueryBuildPlagiarismDocumentReportHandler(
         IPlagiarismSearchProvider plagiarismSearchProvider,
         IPlagiarismReportDataBuilder reportDataBuilder,
         IPlagiarismReportProvider reportProvider,
-        IStreamContentReader contentReader)
+        IStreamContentReader contentReader,
+        ILogger<QueryBuildPlagiarismDocumentReportHandler> logger)
     {
         _plagiarismSearchProvider = plagiarismSearchProvider;
         _reportDataBuilder = reportDataBuilder;
         _reportProvider = reportProvider;
         _contentReader = contentReader;
+        _logger = logger;
     }
     
     public async Task<OperationResult<PlagiarismReport>> Handle(
         QueryBuildPlagiarismDocumentReport request, CancellationToken cancellationToken)
     {
-        var content = await _contentReader.ReadAsync(request.FileStream, cancellationToken);
-        var document = UniDocument.FromContent(content);
+        try
+        {
+            var content = await _contentReader.ReadAsync(request.FileStream, cancellationToken);
+            var document = UniDocument.FromContent(content);
         
-        var plagiarismRequest = request.ToPlagiarismSearchRequest(document);
-        var plagiarismResponse = await _plagiarismSearchProvider.SearchAsync(plagiarismRequest, cancellationToken);
-        var reportDataRequest = new PlagiarismReportDataRequest(document, plagiarismResponse, request.BaseMetric);
-        var reportData = await _reportDataBuilder.BuildReportDataAsync(reportDataRequest, cancellationToken);
-        var report = await _reportProvider.BuildReportAsync(reportData, cancellationToken);
-        return OperationResult.Successful(report);
+            var plagiarismRequest = request.ToPlagiarismSearchRequest(document);
+            var plagiarismResponse = await _plagiarismSearchProvider.SearchAsync(plagiarismRequest, cancellationToken);
+            var reportDataRequest = new PlagiarismReportDataRequest(document, plagiarismResponse, request.BaseMetric);
+            var reportData = await _reportDataBuilder.BuildReportDataAsync(reportDataRequest, cancellationToken);
+            var report = await _reportProvider.BuildReportAsync(reportData, cancellationToken);
+            return OperationResult.Successful(report);
+        }
+        catch (Exception e)
+        {
+            _logger.LogCritical(e, ErrorMessage);
+            return OperationResult.Failed<PlagiarismReport>(ErrorMessage, e.Message);
+        }
     }
 }

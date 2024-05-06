@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
@@ -13,27 +14,30 @@ public class QueryCalculateFingerprintDocument : IOperationResultQuery<TextFinge
 public class QueryCalculateFingerprintDocumentHandler : 
     IOperationResultQueryHandler<QueryCalculateFingerprintDocument, TextFingerprint>
 {
-    private readonly IFingerprintContainer _fingerprintContainer;
+    private const string? CalculateFingerprintDocumentInternalError = "CalculateFingerprintDocument.InternalError";
+    
+    private readonly IFingerprintsProvider _fingerprintsProvider;
+    private readonly ILogger<QueryCalculateFingerprintDocumentHandler> _logger;
 
-    public QueryCalculateFingerprintDocumentHandler(IFingerprintContainer fingerprintContainer)
+    public QueryCalculateFingerprintDocumentHandler(
+        IFingerprintsProvider fingerprintsProvider,
+        ILogger<QueryCalculateFingerprintDocumentHandler> logger)
     {
-        _fingerprintContainer = fingerprintContainer;
+        _fingerprintsProvider = fingerprintsProvider;
+        _logger = logger;
     }
     
-    public Task<OperationResult<TextFingerprint>> Handle(QueryCalculateFingerprintDocument request, CancellationToken cancellationToken)
+    public async Task<OperationResult<TextFingerprint>> Handle(QueryCalculateFingerprintDocument request, CancellationToken cancellationToken)
     {
         try
         {
-            var fingerprint = _fingerprintContainer.Get(request.Id);
-            var result = fingerprint is null
-                ? OperationResult.Failed<TextFingerprint>("CalculateFingerprint.NotFound")
-                : OperationResult.Successful(fingerprint);
-            return Task.FromResult(result);
+            var fingerprint = await _fingerprintsProvider.GetForDocumentAsync(request.Id, cancellationToken);
+            return OperationResult.Successful(fingerprint);
         }
         catch (Exception e)
         {
-            var result = OperationResult.Failed<TextFingerprint>("CalculateFingerprint.InternalError", e.Message);
-            return Task.FromResult(result);
+            _logger.LogCritical(e, CalculateFingerprintDocumentInternalError);
+            return OperationResult.Failed<TextFingerprint>(CalculateFingerprintDocumentInternalError, e.Message);
         }
     }
 }

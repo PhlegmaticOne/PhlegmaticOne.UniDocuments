@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
@@ -13,11 +14,15 @@ public class QueryGetDocumentById : IOperationResultQuery<DocumentLoadResponse>
 
 public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGetDocumentById, DocumentLoadResponse>
 {
+    private const string ErrorMessage = "GetDocumentById.InternalError";
+    
     private readonly IDocumentsStorage _documentsStorage;
+    private readonly ILogger<QueryGetDocumentByIdHandler> _logger;
 
-    public QueryGetDocumentByIdHandler(IDocumentsStorage documentsStorage)
+    public QueryGetDocumentByIdHandler(IDocumentsStorage documentsStorage, ILogger<QueryGetDocumentByIdHandler> logger)
     {
         _documentsStorage = documentsStorage;
+        _logger = logger;
     }
     
     public async Task<OperationResult<DocumentLoadResponse>> Handle(
@@ -31,7 +36,8 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
         }
         catch(Exception e)
         {
-            return OperationResult.Failed<DocumentLoadResponse>("GetDocumentById.InternalError", e.Message);
+            _logger.LogCritical(e, ErrorMessage);
+            return OperationResult.Failed<DocumentLoadResponse>(ErrorMessage, e.Message);
         }
     }
 }

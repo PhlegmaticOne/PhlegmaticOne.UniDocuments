@@ -1,5 +1,4 @@
 ﻿using UniDocuments.Text.Domain.Providers.Comparing.Responses;
-using UniDocuments.Text.Domain.Services.Matching.Models;
 
 namespace UniDocuments.Text.Domain.Providers.Reports.Data.Models;
 

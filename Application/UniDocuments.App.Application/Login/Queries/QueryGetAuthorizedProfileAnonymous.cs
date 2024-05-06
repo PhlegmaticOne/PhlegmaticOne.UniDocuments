@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using PhlegmaticOne.PasswordHasher;
@@ -9,9 +10,9 @@ using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Application.Login.Queries;
 
-public class GetAuthorizedProfileAnonymousQuery : IOperationResultQuery<AuthorizedProfileObject>
+public class QueryGetAuthorizedProfileAnonymous : IOperationResultQuery<AuthorizedProfileObject>
 {
-    public GetAuthorizedProfileAnonymousQuery(string userName, string password)
+    public QueryGetAuthorizedProfileAnonymous(string userName, string password)
     {
         UserName = userName;
         Password = password;
@@ -21,40 +22,54 @@ public class GetAuthorizedProfileAnonymousQuery : IOperationResultQuery<Authoriz
     public string Password { get; }
 }
 
-public class GetAuthorizedProfileAnonymousQueryHandler :
-    IOperationResultQueryHandler<GetAuthorizedProfileAnonymousQuery, AuthorizedProfileObject>
+public class QueryGetAuthorizedProfileAnonymousHandler :
+    IOperationResultQueryHandler<QueryGetAuthorizedProfileAnonymous, AuthorizedProfileObject>
 {
+    private const string AuthorizeProfileNotExist = "AuthorizeProfile.NotExist";
+    private const string ErrorMessage = "GetAuthorizedProfile.InternalError";
+    
     private readonly ApplicationDbContext _dbContext;
     private readonly IJwtTokenGenerationService _jwtTokenGenerationService;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ILogger<QueryGetAuthorizedProfileAnonymousHandler> _logger;
 
-    public GetAuthorizedProfileAnonymousQueryHandler(
+    public QueryGetAuthorizedProfileAnonymousHandler(
         ApplicationDbContext dbContext,
         IJwtTokenGenerationService jwtTokenGenerationService,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        ILogger<QueryGetAuthorizedProfileAnonymousHandler> logger)
     {
         _dbContext = dbContext;
         _jwtTokenGenerationService = jwtTokenGenerationService;
         _passwordHasher = passwordHasher;
+        _logger = logger;
     }
 
 
     public async Task<OperationResult<AuthorizedProfileObject>> Handle(
-        GetAuthorizedProfileAnonymousQuery request, CancellationToken cancellationToken)
+        QueryGetAuthorizedProfileAnonymous request, CancellationToken cancellationToken)
     {
-        var authorizedProfile = await GetAuthorizedProfileAsync(request, cancellationToken);
-
-        if (authorizedProfile is null)
+        try
         {
-            return OperationResult.Failed<AuthorizedProfileObject>("AuthorizeProfile.NotExist");
+            var authorizedProfile = await GetAuthorizedProfileAsync(request, cancellationToken);
+
+            if (authorizedProfile is null)
+            {
+                return OperationResult.Failed<AuthorizedProfileObject>(AuthorizeProfileNotExist);
+            }
+
+            authorizedProfile.JwtToken = _jwtTokenGenerationService.GenerateJwtToken(authorizedProfile);
+
+            return OperationResult.Successful(authorizedProfile);
         }
-
-        authorizedProfile.JwtToken = _jwtTokenGenerationService.GenerateJwtToken(authorizedProfile);
-
-        return OperationResult.Successful(authorizedProfile);
+        catch (Exception e)
+        {
+            _logger.LogCritical(e, ErrorMessage);
+            return OperationResult.Failed<AuthorizedProfileObject>(ErrorMessage, e.Message);
+        }
     }
 
-    private async Task<AuthorizedProfileObject?> GetAuthorizedProfileAsync(GetAuthorizedProfileAnonymousQuery request,
+    private async Task<AuthorizedProfileObject?> GetAuthorizedProfileAsync(QueryGetAuthorizedProfileAnonymous request,
         CancellationToken cancellationToken)
     {
         var repository = _dbContext.Set<Student>();

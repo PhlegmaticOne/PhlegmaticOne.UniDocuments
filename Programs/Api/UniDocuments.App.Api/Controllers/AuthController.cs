@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterProfileObject registerProfileObject, CancellationToken cancellationToken)
     {
-        var registerCommand = new RegisterProfileCommand(registerProfileObject);
+        var registerCommand = new CommandRegisterProfile(registerProfileObject);
         var registerResult = await _mediator.Send(registerCommand, cancellationToken);
 
         if (registerResult.IsSuccess == false)
@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
 
     private async Task<IActionResult> AuthorizeAsync(string email, string password, CancellationToken cancellationToken)
     {
-        var query = new GetAuthorizedProfileAnonymousQuery(email, password);
+        var query = new QueryGetAuthorizedProfileAnonymous(email, password);
         var profile = await _mediator.Send(query, cancellationToken);
 
         if (profile.IsSuccess == false)

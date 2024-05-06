@@ -25,19 +25,19 @@ public class TextCompareProvider : ITextCompareProvider
         {
             foreach (var suspiciousText in request.SuspiciousTexts)
             {
-                ExecuteSimilarityCheck(request.SourceText, suspiciousText, baseMetric, response);
+                var result = Compare(request.SourceText, suspiciousText, baseMetric);
+                response.AddResult(result);
             }
         }, cancellationToken);
 
         return response;
     }
 
-    private static void ExecuteSimilarityCheck(
-        string sourceText, string suspiciousText, 
-        ITextSimilarityBaseMetric baseMetric, CompareTextsResponse response)
+    private static CompareTextResult Compare(
+        string sourceText, string suspiciousText, ITextSimilarityBaseMetric baseMetric)
     {
         var metricValue = baseMetric.Calculate(sourceText, suspiciousText);
-        var result = new CompareTextResult(suspiciousText, metricValue, baseMetric.IsSuspicious(metricValue));
-        response.AddResult(result);
+        var isSuspicious = baseMetric.IsSuspicious(metricValue);
+        return new CompareTextResult(suspiciousText, metricValue, isSuspicious);
     }
 }

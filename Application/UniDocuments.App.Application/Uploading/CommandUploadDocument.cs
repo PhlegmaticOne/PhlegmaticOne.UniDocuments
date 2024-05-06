@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
@@ -30,12 +31,15 @@ public class CommandUploadDocument : IdentityOperationResultCommand
 
 public class CommandUploadDocumentHandler : IOperationResultCommandHandler<CommandUploadDocument>
 {
+    private const string UploadDocumentInternalError = "UploadDocument.InternalError";
+    
     private readonly IDocumentsStorage _documentsStorage;
     private readonly IStreamContentReader _streamContentReader;
     private readonly IFingerprintsProvider _fingerprintsProvider;
     private readonly IUniDocumentsCache _documentsCache;
     private readonly IDocumentMapper _documentMapper;
     private readonly ApplicationDbContext _dbContext;
+    private readonly ILogger<CommandUploadDocumentHandler> _logger;
 
     public CommandUploadDocumentHandler(
         IDocumentsStorage documentsStorage, 
@@ -43,7 +47,8 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         IFingerprintsProvider fingerprintsProvider,
         IUniDocumentsCache documentsCache,
         IDocumentMapper documentMapper,
-        ApplicationDbContext dbContext)
+        ApplicationDbContext dbContext,
+        ILogger<CommandUploadDocumentHandler> logger)
     {
         _documentsStorage = documentsStorage;
         _streamContentReader = streamContentReader;
@@ -51,6 +56,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         _documentsCache = documentsCache;
         _documentMapper = documentMapper;
         _dbContext = dbContext;
+        _logger = logger;
     }
     
     public async Task<OperationResult> Handle(CommandUploadDocument request, CancellationToken cancellationToken)
@@ -62,7 +68,8 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         }
         catch (Exception e)
         {
-            return OperationResult.Failed("UploadDocument.InternalError", e.Message);
+            _logger.LogCritical(e, UploadDocumentInternalError);
+            return OperationResult.Failed(UploadDocumentInternalError, e.Message);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using PhlegmaticOne.OperationResults;
+﻿using Microsoft.Extensions.Logging;
+using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
@@ -18,11 +19,17 @@ public class QueryCompareTexts : IOperationResultQuery<CompareTextsResponse>
 
 public class QueryCompareTextsRequestHandler : IOperationResultQueryHandler<QueryCompareTexts, CompareTextsResponse>
 {
+    private const string CompareTextsInternalError = "CompareTexts.InternalError";
+    
     private readonly ITextCompareProvider _similarityProvider;
+    private readonly ILogger<QueryCompareTextsRequestHandler> _logger;
 
-    public QueryCompareTextsRequestHandler(ITextCompareProvider similarityProvider)
+    public QueryCompareTextsRequestHandler(
+        ITextCompareProvider similarityProvider,
+        ILogger<QueryCompareTextsRequestHandler> logger)
     {
         _similarityProvider = similarityProvider;
+        _logger = logger;
     }
     
     public async Task<OperationResult<CompareTextsResponse>> Handle(
@@ -35,7 +42,8 @@ public class QueryCompareTextsRequestHandler : IOperationResultQueryHandler<Quer
         }
         catch (Exception e)
         {
-            return OperationResult.Failed<CompareTextsResponse>("CompareTexts.InternalError", e.Message);
+            _logger.LogCritical(e, CompareTextsInternalError);
+            return OperationResult.Failed<CompareTextsResponse>(CompareTextsInternalError, e.Message);
         }
     }
 }
