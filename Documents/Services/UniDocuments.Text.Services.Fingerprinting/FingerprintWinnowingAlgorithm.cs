@@ -20,18 +20,18 @@ public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
         _fingerprintHash = fingerprintHash;
     }
     
-    public TextFingerprint Fingerprint(UniDocumentContent content, FingerprintOptions options)
+    public TextFingerprint Fingerprint(UniDocument document, FingerprintOptions options)
     {
         var processed = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = content.ToRawText()
+            Text = document.Content!.ToRawText()
         });
 
         var concat = string.Concat(processed.Words);
         var levelOptions = options.GetMatchingOptions(processed.Words.Length);
         var fingerprints = FingerprintText(concat, levelOptions.GramSize);
         var winnowedFingerprints = WinnowFingerprints(fingerprints, levelOptions.WindowSize);
-        return new TextFingerprint(winnowedFingerprints);
+        return new TextFingerprint(document.Id, winnowedFingerprints);
     }
 
     private List<uint> FingerprintText(string text, int gramSize)

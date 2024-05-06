@@ -42,7 +42,7 @@ public class QueryCalculateFingerprintTextHandler :
     private TextFingerprint Fingerprint(string text)
     {
         var options = _optionsProvider.GetOptions();
-        var content = UniDocumentContent.FromString(text);
+        var content = UniDocument.FromString(text);
         return _fingerprintAlgorithm.Fingerprint(content, options);
     }
 }

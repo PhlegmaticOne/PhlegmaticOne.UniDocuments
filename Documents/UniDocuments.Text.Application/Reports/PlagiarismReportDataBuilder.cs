@@ -6,6 +6,8 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Providers.Reports.Data;
 using UniDocuments.Text.Domain.Providers.Reports.Data.Models;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.Fingerprinting;
+using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Application.Reports;
 
@@ -14,21 +16,24 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
     private readonly IDocumentMapper _documentMapper;
     private readonly ITextCompareProvider _textCompareProvider;
     private readonly IParagraphGlobalReader _paragraphGlobalReader;
+    private readonly IFingerprintsProvider _fingerprintsProvider;
 
     public PlagiarismReportDataBuilder(
         IDocumentMapper documentMapper,
         ITextCompareProvider textCompareProvider,
-        IParagraphGlobalReader paragraphGlobalReader)
+        IParagraphGlobalReader paragraphGlobalReader,
+        IFingerprintsProvider fingerprintsProvider)
     {
         _documentMapper = documentMapper;
         _textCompareProvider = textCompareProvider;
         _paragraphGlobalReader = paragraphGlobalReader;
+        _fingerprintsProvider = fingerprintsProvider;
     }
     
     public async Task<PlagiarismReportData> BuildReportDataAsync(PlagiarismReportDataRequest reportDataRequest, CancellationToken cancellationToken)
     {
         var response = reportDataRequest.PlagiarismSearchResponse;
-        var documentsData = BuildDocumentData(reportDataRequest);
+        var documentsData = await BuildDocumentData(reportDataRequest, cancellationToken);
         var paragraphsData = await BuildParagraphsData(reportDataRequest, cancellationToken);
         return new PlagiarismReportData(response.DocumentId, response.DocumentName, documentsData, paragraphsData);
     }
@@ -53,13 +58,22 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
         return result;
     }
 
-    private List<ReportDocumentData> BuildDocumentData(PlagiarismReportDataRequest request)
+    private async Task<List<ReportDocumentData>> BuildDocumentData(
+        PlagiarismReportDataRequest request, CancellationToken cancellationToken)
     {
-        return request.PlagiarismSearchResponse.SuspiciousDocuments.Select(x =>
+        var result = new List<ReportDocumentData>();
+        var sourceFingerprint = await _fingerprintsProvider.GetForDocumentAsync(request.Document, cancellationToken);
+        var fingerprints = await LoadSuspiciousDocumentFingerprint(request, cancellationToken);
+
+        foreach (var fingerprint in fingerprints)
         {
-            var name = _documentMapper.GetDocumentData(x.Id)!.Name;
-            return new ReportDocumentData(x.Id, name, x.Similarity);
-        }).ToList();
+            var id = fingerprint.DocumentId;
+            var similarity = fingerprint.CalculateJaccard(sourceFingerprint);
+            var documentName = _documentMapper.GetDocumentData(id)!.Name;
+            result.Add(new ReportDocumentData(id, documentName, similarity));
+        }
+
+        return result;
     }
 
     private ReportParagraphsData MapToReportParagraphData(
@@ -73,7 +87,7 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
             var documentId = suspiciousParagraph.DocumentId;
             var compareResult = compareTextsResponse.SimilarityResults[i];
 
-            if (compareResult.IsNoSimilar())
+            if (compareResult.IsSuspicious == false)
             {
                 continue;
             }
@@ -83,6 +97,22 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
         }
 
         return data;
+    }
+
+    private Task<List<TextFingerprint>> LoadSuspiciousDocumentFingerprint(
+        PlagiarismReportDataRequest request, CancellationToken cancellationToken)
+    {
+        var loadFingerprints = new HashSet<Guid>();
+
+        foreach (var suspiciousParagraph in request.PlagiarismSearchResponse.SuspiciousParagraphs)
+        {
+            foreach (var paragraph in suspiciousParagraph.SuspiciousParagraphs)
+            {
+                loadFingerprints.Add(paragraph.DocumentId);
+            }
+        }
+
+        return _fingerprintsProvider.GetForDocumentsAsync(loadFingerprints, cancellationToken);
     }
     
     private Task<string[]> LoadSuspiciousParagraphs(ParagraphPlagiarismData data, CancellationToken token)

@@ -4,5 +4,5 @@ namespace UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 public interface IFingerprintAlgorithm
 {
-    TextFingerprint Fingerprint(UniDocumentContent content, FingerprintOptions options);
+    TextFingerprint Fingerprint(UniDocument document, FingerprintOptions options);
 }

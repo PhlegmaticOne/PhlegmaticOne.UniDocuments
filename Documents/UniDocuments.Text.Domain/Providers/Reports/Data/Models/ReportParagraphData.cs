@@ -10,7 +10,6 @@ public class ReportParagraphData
     public int LocalId { get; }
     public string Content { get; set; } = null!;
     public double Similarity { get; private set; }
-    public List<MatchTextEntry> MatchEntry { get; set; } = null!;
 
     private ReportParagraphData(Guid documentId, string documentName, int localId)
     {
@@ -28,7 +27,6 @@ public class ReportParagraphData
     {
         Similarity = compareTextResult.SimilarityValue;
         Content = compareTextResult.Text;
-        MatchEntry = compareTextResult.MatchEntry!;
         return this;
     }
 }

@@ -6,17 +6,16 @@ namespace UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 public class PlagiarismSearchResponseDocument
 {
     public PlagiarismSearchResponseDocument(Guid documentId, string documentName) :
-        this(documentId, documentName, new List<ParagraphPlagiarismData>(), Array.Empty<DocumentSearchData>())
+        this(documentId, documentName, new List<ParagraphPlagiarismData>())
     {
     }
 
     [JsonConstructor]
-    public PlagiarismSearchResponseDocument(Guid documentId, string documentName, List<ParagraphPlagiarismData> suspiciousParagraphs, DocumentSearchData[] suspiciousDocuments)
+    public PlagiarismSearchResponseDocument(Guid documentId, string documentName, List<ParagraphPlagiarismData> suspiciousParagraphs)
     {
         DocumentId = documentId;
         DocumentName = documentName;
         SuspiciousParagraphs = suspiciousParagraphs;
-        SuspiciousDocuments = suspiciousDocuments;
     }
 
     [JsonProperty]
@@ -27,7 +26,4 @@ public class PlagiarismSearchResponseDocument
 
     [JsonProperty]
     public List<ParagraphPlagiarismData> SuspiciousParagraphs { get; set; }
-
-    [JsonProperty]
-    public DocumentSearchData[] SuspiciousDocuments { get; set; }
 }

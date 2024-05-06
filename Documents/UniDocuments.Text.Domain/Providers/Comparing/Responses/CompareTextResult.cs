@@ -10,24 +10,14 @@ public class CompareTextResult
 
     [JsonProperty("sv")]
     public double SimilarityValue { get; set; }
-    
-    [JsonProperty("me")]
-    public List<MatchTextEntry>? MatchEntry { get; set; }
 
-    public bool IsNoSimilar()
-    {
-        return MatchEntry is null;
-    }
+    [JsonProperty("is")]
+    public bool IsSuspicious { get; set; }
 
-    public CompareTextResult(string text, double similarityValue, List<MatchTextEntry>? matchEntry)
+    public CompareTextResult(string text, double similarityValue, bool isSuspicious)
     {
         Text = text;
         SimilarityValue = similarityValue;
-        MatchEntry = matchEntry;
-    }
-
-    public static CompareTextResult NoSimilar(string text, double similarityValue)
-    {
-        return new CompareTextResult(text, similarityValue, null);
+        IsSuspicious = isSuspicious;
     }
 }

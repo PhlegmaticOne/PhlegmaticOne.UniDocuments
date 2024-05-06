@@ -1,29 +1,20 @@
-﻿using UniDocuments.Text.Domain.Services.Fingerprinting;
+﻿using FastCache;
+using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
 
 public class FingerprintContainer : IFingerprintContainer
 {
-    private readonly Dictionary<Guid, TextFingerprint> _fingerprints;
-
-    public FingerprintContainer()
-    {
-        _fingerprints = new Dictionary<Guid, TextFingerprint>();
-    }
-
-    public IReadOnlyDictionary<Guid, TextFingerprint> GetAll()
-    {
-        return _fingerprints;
-    }
+    private static readonly TimeSpan CacheTime = TimeSpan.FromMinutes(10);
 
     public TextFingerprint? Get(Guid documentId)
     {
-        return _fingerprints.GetValueOrDefault(documentId, null);
+        return Cached<TextFingerprint>.TryGet(documentId, out var cached) ? cached : null;
     }
 
     public void AddOrReplace(Guid documentId, TextFingerprint fingerprint)
     {
-        _fingerprints[documentId] = fingerprint;
+        Cached<TextFingerprint>.Save(documentId, fingerprint, CacheTime);
     }
 }

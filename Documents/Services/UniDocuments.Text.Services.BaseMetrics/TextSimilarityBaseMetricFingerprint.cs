@@ -24,11 +24,9 @@ public class TextSimilarityBaseMetricFingerprint : ITextSimilarityBaseMetric
     {
         var options = _optionsProvider.GetOptions();
         
-        var sourceFingerprint = _fingerprintAlgorithm.Fingerprint(
-            UniDocumentContent.FromString(sourceText), options);
+        var sourceFingerprint = _fingerprintAlgorithm.Fingerprint(UniDocument.FromString(sourceText), options);
         
-        var suspiciousFingerprint = _fingerprintAlgorithm.Fingerprint(
-            UniDocumentContent.FromString(suspiciousText), options);
+        var suspiciousFingerprint = _fingerprintAlgorithm.Fingerprint(UniDocument.FromString(suspiciousText), options);
 
         return sourceFingerprint.CalculateJaccard(suspiciousFingerprint);
     }

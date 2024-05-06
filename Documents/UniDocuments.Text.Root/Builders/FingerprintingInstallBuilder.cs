@@ -13,25 +13,20 @@ public class FingerprintingInstallBuilder
     {
         _serviceCollection = serviceCollection;
     }
-        
+       
+    public void UseFingerprintsProvider<T>() where T : class, IFingerprintsProvider
+    {
+        _serviceCollection.AddScoped<IFingerprintsProvider, T>();
+    }
+    
     public void UseFingerprintContainer<T>() where T : class, IFingerprintContainer
     {
         _serviceCollection.AddSingleton<IFingerprintContainer, T>();
     }
     
-    public void UseFingerprintComputer<T>() where T : class, IFingerprintComputer
-    {
-        _serviceCollection.AddSingleton<IFingerprintComputer, T>();
-    }
-    
     public void UseFingerprintHash<T>() where T : class, IFingerprintHash
     {
         _serviceCollection.AddSingleton<IFingerprintHash, T>();
-    }
-    
-    public void UseFingerprintSearcher<T>() where T : class, IFingerprintPlagiarismSearcher
-    {
-        _serviceCollection.AddSingleton<IFingerprintPlagiarismSearcher, T>();
     }
     
     public void UseFingerprintAlgorithm<T>() where T : class, IFingerprintAlgorithm

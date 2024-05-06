@@ -6,18 +6,13 @@ namespace UniDocuments.Text.Domain.Services.Fingerprinting;
 [Serializable]
 public class TextFingerprint
 {
-    public TextFingerprint(HashSet<uint> entries)
+    public TextFingerprint(Guid documentId, HashSet<uint> entries)
     {
+        DocumentId = documentId;
         Entries = entries;
     }
 
-    public static TextFingerprint FromBytes(byte[] bytes)
-    {
-        var decoded = new uint[bytes.Length / 4];
-        Buffer.BlockCopy(bytes, 0, decoded, 0, bytes.Length);
-        return new TextFingerprint(decoded.ToHashSet());
-    }
-
+    public Guid DocumentId { get; }
     public HashSet<uint> Entries { get; set; }
 
     public int GetSharedPrintsCount(TextFingerprint other)

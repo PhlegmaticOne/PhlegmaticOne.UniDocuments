@@ -32,7 +32,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
 {
     private readonly IDocumentsStorage _documentsStorage;
     private readonly IStreamContentReader _streamContentReader;
-    private readonly IFingerprintComputer _fingerprintComputer;
+    private readonly IFingerprintsProvider _fingerprintsProvider;
     private readonly IUniDocumentsCache _documentsCache;
     private readonly IDocumentMapper _documentMapper;
     private readonly ApplicationDbContext _dbContext;
@@ -40,14 +40,14 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
     public CommandUploadDocumentHandler(
         IDocumentsStorage documentsStorage, 
         IStreamContentReader streamContentReader,
-        IFingerprintComputer fingerprintComputer,
+        IFingerprintsProvider fingerprintsProvider,
         IUniDocumentsCache documentsCache,
         IDocumentMapper documentMapper,
         ApplicationDbContext dbContext)
     {
         _documentsStorage = documentsStorage;
         _streamContentReader = streamContentReader;
-        _fingerprintComputer = fingerprintComputer;
+        _fingerprintsProvider = fingerprintsProvider;
         _documentsCache = documentsCache;
         _documentMapper = documentMapper;
         _dbContext = dbContext;
@@ -113,9 +113,9 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         EntityEntry<StudyDocument> newDocument, UniDocumentContent content, CancellationToken cancellationToken)
     {
         var documentId = newDocument.Entity.Id;
-        var fingerprint = await _fingerprintComputer.ComputeAsync(documentId, content, cancellationToken);
-        newDocument.Property(x => x.Fingerprint).CurrentValue =
-            await Task.Run(() => JsonConvert.SerializeObject(fingerprint.Entries), cancellationToken);
+        var uniDocument = new UniDocument(documentId, content);
+        var fingerprint = await _fingerprintsProvider.ComputeAsync(uniDocument, cancellationToken).ConfigureAwait(false);
+        newDocument.Property(x => x.Fingerprint).CurrentValue = JsonConvert.SerializeObject(fingerprint.Entries);
     }
 
     private Task<Guid> SaveDocumentFileAsync(Guid id, CommandUploadDocument request, CancellationToken cancellationToken)

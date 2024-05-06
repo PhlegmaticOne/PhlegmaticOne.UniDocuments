@@ -57,32 +57,50 @@ public class PlagiarismReportProviderWord : IPlagiarismReportProvider
         var fileName = GetFileName(reportData.DocumentName);
 
         using var stream = new MemoryStream();
+        
         using (var document = WordprocessingDocument.Create(fileName, WordprocessingDocumentType.Document, false))
         {
             var body = CreateDocumentBody(document);
-
-            AddTitle("Сравнение параграфов", body);
-            
-            for (var i = 0; i < reportData.ParagraphsData.Count; i++)
-            {
-                var paragraphsData = reportData.ParagraphsData[i];
-
-                if (paragraphsData.ParagraphsData.Count == 0)
-                {
-                    continue;
-                }
-                
-                AddSourceParagraph(paragraphsData, i, body);
-                AddSuspiciousParagraphs(paragraphsData, body);
-                AddEmptyLine(body);
-            }
-
+            AddParagraphsComparing(reportData, body);
+            AddDocumentsComparing(reportData, body);
             document.Clone(stream);
         }
 
         File.Delete(fileName);
         stream.SeekToZero();
         return new PlagiarismReport(stream.ToArray(), ContentType, fileName);
+    }
+
+    private static void AddParagraphsComparing(PlagiarismReportData reportData, Body body)
+    {
+        AddTitle("Сравнение параграфов", body);
+            
+        for (var i = 0; i < reportData.ParagraphsData.Count; i++)
+        {
+            var paragraphsData = reportData.ParagraphsData[i];
+
+            if (paragraphsData.ParagraphsData.Count == 0)
+            {
+                continue;
+            }
+                
+            AddSourceParagraph(paragraphsData, i, body);
+            AddSuspiciousParagraphs(paragraphsData, body);
+            AddEmptyLine(body);
+        }
+        
+        AddEmptyLine(body);
+    }
+
+    private static void AddDocumentsComparing(PlagiarismReportData reportData, Body body)
+    {
+        AddTitle("Сравнение документов", body);
+
+        for (var i = 0; i < reportData.DocumentData.Count; i++)
+        {
+            var documentData = reportData.DocumentData[i];
+            AddDocumentData(i, documentData, body);
+        }
     }
 
     private static void AddTitle(string title, Body body)
@@ -94,6 +112,12 @@ public class PlagiarismReportProviderWord : IPlagiarismReportProvider
     private static void AddEmptyLine(Body body)
     {
         body.AppendChild(CreateParagraph(string.Empty, SourceHeader));
+    }
+
+    private static void AddDocumentData(int id, ReportDocumentData reportData, Body body)
+    {
+        body.AppendChild(CreateParagraph(GetSuspiciousDocumentHeader(id), SourceHeader));
+        body.AppendChild(CreateParagraph(GetSuspiciousDocumentData(reportData), SuspiciousHeader));
     }
 
     private static void AddSourceParagraph(ReportParagraphsData paragraphsData, int id, Body body)
@@ -118,6 +142,16 @@ public class PlagiarismReportProviderWord : IPlagiarismReportProvider
         }
     }
 
+    private static string GetSuspiciousDocumentHeader(int id)
+    {
+        return $"Подозрительный документ №{id}";
+    }
+    
+    private static string GetSuspiciousDocumentData(ReportDocumentData reportData)
+    {
+        return $"Имя: {reportData.Name} [{reportData.Id}]. Сходство: {reportData.Similarity:F}";
+    }
+    
     private static string GetSuspiciousParagraphHeader(int id, int globalId)
     {
         return $"Подозрительный параграф №{id} [{globalId}]";
