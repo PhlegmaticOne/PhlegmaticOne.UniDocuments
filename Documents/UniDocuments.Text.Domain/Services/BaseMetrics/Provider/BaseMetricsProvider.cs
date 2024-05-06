@@ -10,13 +10,13 @@ public class TextSimilarityBaseMetricsProvider : ITextSimilarityBaseMetricsProvi
     public TextSimilarityBaseMetricsProvider(IEnumerable<ITextSimilarityBaseMetric> baseMetrics)
     {
         var metrics = baseMetrics.ToArray();
-        _baseMetrics = metrics.ToDictionary(x => x.Name, x => x);
+        _baseMetrics = metrics.ToDictionary(x => x.Name.ToLower(), x => x);
         _defaultMetric = GetDefaultMetric(metrics);
     }
     
     public ITextSimilarityBaseMetric GetBaseMetric(string name)
     {
-        return _baseMetrics.GetValueOrDefault(name, _defaultMetric);
+        return _baseMetrics.GetValueOrDefault(name.ToLower(), _defaultMetric);
     }
 
     private static ITextSimilarityBaseMetric GetDefaultMetric(IEnumerable<ITextSimilarityBaseMetric> baseMetrics)

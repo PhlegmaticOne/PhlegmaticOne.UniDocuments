@@ -9,6 +9,7 @@ using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
+using UniDocuments.Text.Services.BaseMetrics.Options;
 using UniDocuments.Text.Services.Cache;
 using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.DocumentMapping.Initializers;
@@ -45,6 +46,8 @@ public static class DocumentApplicationInstaller
         {
             appBuilder.UseBaseMetrics<TextSimilarityBaseMetricsProvider>(b =>
             {
+                b.UseOptionsProvider<MetricBaselinesOptionsProvider>(configuration);
+                
                 b.UseBaseMetric<TextSimilarityBaseMetricCosine>();
                 b.UseBaseMetric<TextSimilarityBaseMetricTsSs>();
                 b.UseBaseMetric<TextSimilarityBaseMetricFingerprint>();
@@ -70,6 +73,7 @@ public static class DocumentApplicationInstaller
                 b.UseFingerprintContainer<FingerprintContainer>();
                 b.UseFingerprintsProvider<FingerprintsProvider>();
                 b.UseFingerprintHash<FingerprintHashCrc32C>();
+                b.UseFingerprintsComparer<FingerprintsComparer>();
             });
 
             appBuilder.UseMatchingService<TextMatchProvider>(b =>

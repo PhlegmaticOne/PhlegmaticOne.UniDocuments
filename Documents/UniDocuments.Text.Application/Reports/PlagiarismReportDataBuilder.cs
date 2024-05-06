@@ -17,17 +17,20 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
     private readonly ITextCompareProvider _textCompareProvider;
     private readonly IParagraphGlobalReader _paragraphGlobalReader;
     private readonly IFingerprintsProvider _fingerprintsProvider;
+    private readonly IFingerprintsComparer _fingerprintsComparer;
 
     public PlagiarismReportDataBuilder(
         IDocumentMapper documentMapper,
         ITextCompareProvider textCompareProvider,
         IParagraphGlobalReader paragraphGlobalReader,
-        IFingerprintsProvider fingerprintsProvider)
+        IFingerprintsProvider fingerprintsProvider,
+        IFingerprintsComparer fingerprintsComparer)
     {
         _documentMapper = documentMapper;
         _textCompareProvider = textCompareProvider;
         _paragraphGlobalReader = paragraphGlobalReader;
         _fingerprintsProvider = fingerprintsProvider;
+        _fingerprintsComparer = fingerprintsComparer;
     }
     
     public async Task<PlagiarismReportData> BuildReportDataAsync(PlagiarismReportDataRequest reportDataRequest, CancellationToken cancellationToken)
@@ -61,19 +64,9 @@ public class PlagiarismReportDataBuilder : IPlagiarismReportDataBuilder
     private async Task<List<ReportDocumentData>> BuildDocumentData(
         PlagiarismReportDataRequest request, CancellationToken cancellationToken)
     {
-        var result = new List<ReportDocumentData>();
         var sourceFingerprint = await _fingerprintsProvider.GetForDocumentAsync(request.Document, cancellationToken);
         var fingerprints = await LoadSuspiciousDocumentFingerprint(request, cancellationToken);
-
-        foreach (var fingerprint in fingerprints)
-        {
-            var id = fingerprint.DocumentId;
-            var similarity = fingerprint.CalculateJaccard(sourceFingerprint);
-            var documentName = _documentMapper.GetDocumentData(id)!.Name;
-            result.Add(new ReportDocumentData(id, documentName, similarity));
-        }
-
-        return result;
+        return _fingerprintsComparer.Compare(sourceFingerprint, fingerprints);
     }
 
     private ReportParagraphsData MapToReportParagraphData(

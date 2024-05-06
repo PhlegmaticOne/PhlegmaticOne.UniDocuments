@@ -1,4 +1,5 @@
 ﻿using UniDocuments.Text.Domain.Services.BaseMetrics;
+using UniDocuments.Text.Domain.Services.BaseMetrics.Options;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Services.BaseMetrics.Infrastructure;
 using UniDocuments.Text.Services.BaseMetrics.Models;
@@ -8,10 +9,12 @@ namespace UniDocuments.Text.Services.BaseMetrics;
 public class TextSimilarityBaseMetricTsSs : ITextSimilarityBaseMetric
 {
     private readonly ITextPreprocessor _textPreprocessor;
+    private readonly double _baseLine;
 
-    public TextSimilarityBaseMetricTsSs(ITextPreprocessor textPreprocessor)
+    public TextSimilarityBaseMetricTsSs(ITextPreprocessor textPreprocessor, IMetricBaselinesOptionsProvider optionsProvider)
     {
         _textPreprocessor = textPreprocessor;
+        _baseLine = optionsProvider.GetOptions()[Name];
     }
 
     public string Name => "ts-ss";
@@ -30,7 +33,7 @@ public class TextSimilarityBaseMetricTsSs : ITextSimilarityBaseMetric
 
     public bool IsSuspicious(double metricValue)
     {
-        return metricValue < 0.5;
+        return metricValue < _baseLine;
     }
     
     private static double CalculateTsSs(UniVector<int> source, UniVector<int> suspicious)

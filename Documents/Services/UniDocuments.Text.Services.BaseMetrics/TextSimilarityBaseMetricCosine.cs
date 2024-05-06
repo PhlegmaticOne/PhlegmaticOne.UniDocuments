@@ -1,4 +1,5 @@
 ﻿using UniDocuments.Text.Domain.Services.BaseMetrics;
+using UniDocuments.Text.Domain.Services.BaseMetrics.Options;
 using UniDocuments.Text.Domain.Services.Preprocessing;
 using UniDocuments.Text.Services.BaseMetrics.Infrastructure;
 using UniDocuments.Text.Services.BaseMetrics.Models;
@@ -8,11 +9,13 @@ namespace UniDocuments.Text.Services.BaseMetrics;
 [BaseMetricDefault]
 public class TextSimilarityBaseMetricCosine : ITextSimilarityBaseMetric
 {
+    private readonly double _baseLine;
     private readonly ITextPreprocessor _textPreprocessor;
 
-    public TextSimilarityBaseMetricCosine(ITextPreprocessor textPreprocessor)
+    public TextSimilarityBaseMetricCosine(ITextPreprocessor textPreprocessor, IMetricBaselinesOptionsProvider optionsProvider)
     {
         _textPreprocessor = textPreprocessor;
+        _baseLine = optionsProvider.GetOptions()[Name];
     }
 
     public string Name => "cosine";
@@ -31,7 +34,7 @@ public class TextSimilarityBaseMetricCosine : ITextSimilarityBaseMetric
 
     public bool IsSuspicious(double metricValue)
     {
-        return metricValue > 0.5;
+        return metricValue > _baseLine;
     }
 
     private DocumentWordsDictionary CreateWordsDictionary(string text)

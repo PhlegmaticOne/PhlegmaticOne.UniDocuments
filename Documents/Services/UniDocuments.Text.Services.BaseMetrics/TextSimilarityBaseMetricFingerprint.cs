@@ -1,5 +1,6 @@
 ﻿using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.BaseMetrics;
+using UniDocuments.Text.Domain.Services.BaseMetrics.Options;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
@@ -7,15 +8,19 @@ namespace UniDocuments.Text.Services.BaseMetrics;
 
 public class TextSimilarityBaseMetricFingerprint : ITextSimilarityBaseMetric
 {
+    private readonly double _baseLine;
+    
     private readonly IFingerprintAlgorithm _fingerprintAlgorithm;
     private readonly IFingerprintOptionsProvider _optionsProvider;
 
     public TextSimilarityBaseMetricFingerprint(
         IFingerprintAlgorithm fingerprintAlgorithm, 
-        IFingerprintOptionsProvider optionsProvider)
+        IFingerprintOptionsProvider optionsProvider,
+        IMetricBaselinesOptionsProvider metricBaselinesOptionsProvider)
     {
         _fingerprintAlgorithm = fingerprintAlgorithm;
         _optionsProvider = optionsProvider;
+        _baseLine = metricBaselinesOptionsProvider.GetOptions()[Name];
     }
 
     public string Name => "fingerprint";
@@ -33,6 +38,6 @@ public class TextSimilarityBaseMetricFingerprint : ITextSimilarityBaseMetric
 
     public bool IsSuspicious(double metricValue)
     {
-        return metricValue > 0.5;
+        return metricValue > _baseLine;
     }
 }

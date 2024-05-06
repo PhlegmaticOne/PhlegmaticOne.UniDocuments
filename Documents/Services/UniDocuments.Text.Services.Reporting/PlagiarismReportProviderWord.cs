@@ -74,6 +74,13 @@ public class PlagiarismReportProviderWord : IPlagiarismReportProvider
     private static void AddParagraphsComparing(PlagiarismReportData reportData, Body body)
     {
         AddTitle("Сравнение параграфов", body);
+
+        if (reportData.ParagraphsData.Count == 0)
+        {
+            AddTitle("Не найдено слишком подозрительных параграфов", body);
+            AddEmptyLine(body);
+            return;
+        }
             
         for (var i = 0; i < reportData.ParagraphsData.Count; i++)
         {
@@ -95,6 +102,13 @@ public class PlagiarismReportProviderWord : IPlagiarismReportProvider
     private static void AddDocumentsComparing(PlagiarismReportData reportData, Body body)
     {
         AddTitle("Сравнение документов", body);
+        
+        if (reportData.DocumentData.Count == 0)
+        {
+            AddTitle("Не найдено слишком подозрительных документов", body);
+            AddEmptyLine(body);
+            return;
+        }
 
         for (var i = 0; i < reportData.DocumentData.Count; i++)
         {
