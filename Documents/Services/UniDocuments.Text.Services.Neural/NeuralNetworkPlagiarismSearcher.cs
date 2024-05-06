@@ -29,7 +29,7 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
             return new List<ParagraphPlagiarismData>();
         }
         
-        var ingerOutputs = await model.FindSimilarAsync(request.Document, request.NDocuments, cancellationToken);
+        var ingerOutputs = await model.FindSimilarAsync(request, cancellationToken);
         return MapResults(ingerOutputs, request.Document.Id);
     }
     

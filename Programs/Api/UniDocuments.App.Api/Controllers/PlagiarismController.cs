@@ -40,7 +40,8 @@ public class PlagiarismController : ControllerBase
         {
             FileStream = request.File.OpenReadStream(),
             TopCount = request.TopCount,
-            ModelName = request.ModelName
+            ModelName = request.ModelName,
+            InferEpochs = request.InferEpochs
         };
         
         var result = await _mediator.Send(query, cancellationToken);

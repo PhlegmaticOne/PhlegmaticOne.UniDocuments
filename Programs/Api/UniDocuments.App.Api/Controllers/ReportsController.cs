@@ -41,7 +41,8 @@ public class ReportsController : ControllerBase
             FileStream = request.File.OpenReadStream(),
             ModelName = request.ModelName,
             TopCount = request.TopCount,
-            BaseMetric = request.BaseMetric
+            BaseMetric = request.BaseMetric,
+            InferEpochs = request.InferEpochs
         };
         
         var result = await _mediator.Send(query, cancellationToken);

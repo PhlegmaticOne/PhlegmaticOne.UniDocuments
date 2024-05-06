@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Domain.Services.Neural.Models;
+﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
+using UniDocuments.Text.Domain.Services.Neural.Models;
 
 namespace UniDocuments.Text.Domain.Services.Neural;
 
@@ -9,5 +10,5 @@ public interface IDocumentsNeuralModel
     Task LoadAsync(CancellationToken cancellationToken);
     Task SaveAsync(CancellationToken cancellationToken);
     Task<NeuralModelTrainResult> TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken);
-    Task<InferVectorOutput[]> FindSimilarAsync(UniDocument document, int topN, CancellationToken cancellationToken);
+    Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken);
 }

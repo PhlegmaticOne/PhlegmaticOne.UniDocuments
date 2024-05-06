@@ -11,10 +11,16 @@ public class Doc2VecOptions : INeuralOptions, IInferOptions
     public string TokenizeRegex { get; set; } = null!;
     public int EmbeddingSize { get; set; }
     public int Epochs { get; set; }
-    public int InferEpochs { get; set; }
+    public int MaxInferEpochs { get; set; }
+    public int DefaultInferEpochs { get; set; }
     public float Alpha { get; set; }
     public float MinAlpha { get; set; }
     public int Dm { get; set; }
     public int WorkersCount { get; set; }
     public int MinWordsCount { get; set; }
+
+    public int GetInferEpochs(int epochs)
+    {
+        return epochs <= 0 ? DefaultInferEpochs : Math.Min(epochs, MaxInferEpochs);
+    }
 }

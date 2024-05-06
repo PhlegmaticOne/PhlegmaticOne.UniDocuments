@@ -41,7 +41,7 @@ public class QuerySearchPlagiarismDocumentHandler :
         {
             var content = await _streamContentReader.ReadAsync(request.FileStream, cancellationToken);
             var document = UniDocument.FromContent(content);
-            var searchRequest = new PlagiarismSearchRequest(document, request.TopCount, request.ModelName); 
+            var searchRequest = new PlagiarismSearchRequest(document, request.TopCount, request.InferEpochs, request.ModelName); 
             var result = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
             return OperationResult.Successful(result);
         }

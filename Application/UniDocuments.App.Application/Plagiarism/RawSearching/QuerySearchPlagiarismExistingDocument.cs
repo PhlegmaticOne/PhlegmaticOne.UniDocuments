@@ -38,7 +38,7 @@ public class QuerySearchPlagiarismDocumentExistingHandler : IOperationResultQuer
         try
         {
             var document = await _loadingProvider.LoadAsync(request.DocumentId, true, cancellationToken);
-            var searchRequest = new PlagiarismSearchRequest(document, request.TopCount, request.ModelName); 
+            var searchRequest = new PlagiarismSearchRequest(document, request.TopCount, request.InferEpochs, request.ModelName); 
             var result = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
             return OperationResult.Successful(result);
         }

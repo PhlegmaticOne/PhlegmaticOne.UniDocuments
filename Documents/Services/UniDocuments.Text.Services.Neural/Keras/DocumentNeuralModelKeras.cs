@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Models;
 using UniDocuments.Text.Domain.Services.Neural.Options;
@@ -66,11 +67,10 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
         };
     }
 
-    public Task<InferVectorOutput[]> FindSimilarAsync(
-        UniDocument document, int topN, CancellationToken cancellationToken)
+    public Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
         var options = _optionsProvider.GetOptions();
-        return _customManagedModel!.InferDocumentAsync(document.Content!, topN, options);
+        return _customManagedModel!.InferDocumentAsync(request, options);
     }
 
     private async Task<object> GetLoadedVocabAsync(CancellationToken cancellationToken)

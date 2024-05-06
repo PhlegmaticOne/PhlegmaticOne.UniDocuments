@@ -1,5 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Services.Neural.Models;
 using UniDocuments.Text.Services.Neural.Common;
 using UniDocuments.Text.Services.Neural.Keras.Options;
@@ -22,13 +23,16 @@ public class KerasManagedModel
         await new PythonTaskSaveKerasModel(input);
     }
     
-    public Task<InferVectorOutput[]> InferDocumentAsync(UniDocumentContent content, int topN, KerasModelOptions options)
+    public Task<InferVectorOutput[]> InferDocumentAsync(PlagiarismSearchRequest request, KerasModelOptions options)
     {
+        var content = request.Document.Content!;
+        var topN = request.NDocuments;
+        var inferCount = options.GetInferEpochs(request.InferEpochs);
         var tasks = new Task<InferVectorOutput>[content.ParagraphsCount];
 
         for (var i = 0; i < content.ParagraphsCount; i++)
         {
-            var input = new InferVectorInput(content.Paragraphs[i], options, topN, _model);
+            var input = new InferVectorInput(content.Paragraphs[i], options, topN, inferCount, _model);
             var inferTask = new PythonTaskInferKerasModel(input, i);
             tasks[i] = inferTask.Execute()!;
         }

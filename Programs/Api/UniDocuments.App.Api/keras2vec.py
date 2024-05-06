@@ -103,7 +103,7 @@ def infer(input_data):
     document = DocumentModel(0, preprocess)
     return model.infer_vector(document, top_n,
                               learning_rate=options.LearningRate,
-                              epochs=options.InferEpochs,
+                              epochs=input_data.InferEpochs,
                               verbose=options.Verbose)
 
 
