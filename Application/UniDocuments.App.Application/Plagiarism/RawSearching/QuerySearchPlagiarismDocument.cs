@@ -12,12 +12,7 @@ namespace UniDocuments.App.Application.Plagiarism.RawSearching;
 
 public class QuerySearchPlagiarismDocument : QuerySearchPlagiarism
 {
-    public QuerySearchPlagiarismDocument(Stream fileStream)
-    {
-        FileStream = fileStream;
-    }
-
-    public Stream FileStream { get; }
+    public Stream FileStream { get; set; } = null!;
 }
 
 public class QuerySearchPlagiarismDocumentHandler :
