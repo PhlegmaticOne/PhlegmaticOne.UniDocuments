@@ -13,6 +13,7 @@ namespace UniDocuments.App.Application.Plagiarism.RawSearching;
 public class QuerySearchPlagiarismDocument : QuerySearchPlagiarism
 {
     public Stream FileStream { get; set; } = null!;
+    public string Name { get; set; } = null!;
 }
 
 public class QuerySearchPlagiarismDocumentHandler :
@@ -40,7 +41,7 @@ public class QuerySearchPlagiarismDocumentHandler :
         try
         {
             var content = await _streamContentReader.ReadAsync(request.FileStream, cancellationToken);
-            var document = UniDocument.FromContent(content);
+            var document = UniDocument.FromContent(content, request.Name);
             var searchRequest = new PlagiarismSearchRequest(document, request.TopCount, request.InferEpochs, request.ModelName); 
             var result = await _plagiarismSearchProvider.SearchAsync(searchRequest, cancellationToken);
             return OperationResult.Successful(result);

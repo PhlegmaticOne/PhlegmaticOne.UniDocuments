@@ -39,6 +39,7 @@ public class PlagiarismController : ControllerBase
         var query = new QuerySearchPlagiarismDocument
         {
             FileStream = request.File.OpenReadStream(),
+            Name = request.File.FileName,
             TopCount = request.TopCount,
             ModelName = request.ModelName,
             InferEpochs = request.InferEpochs

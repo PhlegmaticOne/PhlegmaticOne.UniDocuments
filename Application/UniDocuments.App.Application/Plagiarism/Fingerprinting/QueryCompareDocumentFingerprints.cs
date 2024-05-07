@@ -13,7 +13,9 @@ namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
 public class QueryCompareDocumentFingerprints : IOperationResultQuery<double>
 {
     public Stream Original { get; set; } = null!;
+    public string OriginalName { get; set; } = null!;
     public Stream Suspicious { get; set; } = null!;
+    public string SuspiciousName { get; set; } = null!;
 }
 
 public class QueryCompareDocumentFingerprintsHandler : 
@@ -43,8 +45,8 @@ public class QueryCompareDocumentFingerprintsHandler :
     {
         try
         {
-            var source = await CreateFingerprint(request.Original, cancellationToken);
-            var suspicious = await CreateFingerprint(request.Suspicious, cancellationToken);
+            var source = await CreateFingerprint(request.Original, request.OriginalName, cancellationToken);
+            var suspicious = await CreateFingerprint(request.Suspicious, request.SuspiciousName, cancellationToken);
 
             var result = _fingerprintsComparer.Compare(source, suspicious.ToList());
             return OperationResult.Successful(result[0].Similarity);
@@ -56,10 +58,10 @@ public class QueryCompareDocumentFingerprintsHandler :
         }
     }
 
-    private async Task<TextFingerprint> CreateFingerprint(Stream stream, CancellationToken cancellationToken)
+    private async Task<TextFingerprint> CreateFingerprint(Stream stream, string name, CancellationToken cancellationToken)
     {
         var content = await _contentReader.ReadAsync(stream, cancellationToken);
-        var document = UniDocument.FromContent(content);
+        var document = UniDocument.FromContent(content, name);
         return await _fingerprintsProvider.ComputeAsync(document, cancellationToken);
     }
 }

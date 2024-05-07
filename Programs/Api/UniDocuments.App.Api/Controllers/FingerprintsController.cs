@@ -37,7 +37,8 @@ public class FingerprintsController : ControllerBase
     {
         var request = new QueryCalculateFingerprintDocument
         {
-            DocumentStream = document.OpenReadStream()
+            DocumentStream = document.OpenReadStream(),
+            DocumentName = document.FileName
         };
         
         var result = await _mediator.Send(request, cancellationToken);
@@ -71,7 +72,9 @@ public class FingerprintsController : ControllerBase
         var query = new QueryCompareDocumentFingerprints
         {
             Original = request.Source.OpenReadStream(),
-            Suspicious = request.Suspicious.OpenReadStream()
+            OriginalName = request.Source.FileName,
+            Suspicious = request.Suspicious.OpenReadStream(),
+            SuspiciousName = request.Suspicious.FileName
         };
         
         var result = await _mediator.Send(query, cancellationToken);

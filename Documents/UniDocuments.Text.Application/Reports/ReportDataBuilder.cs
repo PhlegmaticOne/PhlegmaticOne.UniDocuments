@@ -48,7 +48,7 @@ public class ReportDataBuilder : IReportDataBuilder
         ReportDataBuildRequest buildRequest, CancellationToken cancellationToken)
     {
         var result = new List<ReportParagraphsData>();
-        var paragraphs = buildRequest.Document.Content!.Paragraphs;
+        var paragraphs = buildRequest.Document.Content.Paragraphs;
 
         for (var i = 0; i < paragraphs.Count; i++)
         {

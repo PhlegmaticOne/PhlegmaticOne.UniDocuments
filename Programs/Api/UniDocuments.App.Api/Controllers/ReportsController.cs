@@ -43,7 +43,8 @@ public class ReportsController : ControllerBase
             ModelName = request.ModelName,
             TopCount = request.TopCount,
             BaseMetric = request.BaseMetric,
-            InferEpochs = request.InferEpochs
+            InferEpochs = request.InferEpochs,
+            FileName = request.File.FileName
         };
         
         var response = await _mediator.Send(query, cancellationToken);

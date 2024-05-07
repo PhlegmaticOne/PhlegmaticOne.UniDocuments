@@ -11,6 +11,7 @@ namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
 public class QueryCalculateFingerprintDocument : IOperationResultQuery<TextFingerprint>
 {
     public Stream DocumentStream { get; set; } = null!;
+    public string DocumentName { get; set; } = null!;
 }
 
 public class QueryCalculateFingerprintDocumentHandler : 
@@ -37,7 +38,7 @@ public class QueryCalculateFingerprintDocumentHandler :
         try
         {
             var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
-            var document = UniDocument.FromContent(content);
+            var document = UniDocument.FromContent(content, request.DocumentName);
             var fingerprint = await _fingerprintsProvider.GetForDocumentAsync(document, cancellationToken);
             return OperationResult.Successful(fingerprint);
         }

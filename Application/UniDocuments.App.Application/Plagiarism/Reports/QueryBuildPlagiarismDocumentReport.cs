@@ -12,6 +12,7 @@ namespace UniDocuments.App.Application.Plagiarism.Reports;
 public class QueryBuildPlagiarismDocumentReport : QueryBuildPlagiarismReport
 {
     public Stream FileStream { get; set; } = null!;
+    public string FileName { get; set; } = null!;
 }
 
 public class QueryBuildPlagiarismDocumentReportHandler : 
@@ -39,7 +40,7 @@ public class QueryBuildPlagiarismDocumentReportHandler :
         try
         {
             var content = await _contentReader.ReadAsync(request.FileStream, cancellationToken);
-            var document = UniDocument.FromContent(content);
+            var document = UniDocument.FromContent(content, request.FileName);
             var plagiarismRequest = request.ToReportRequest(document);
             var report = await _reportProvider.BuildReportAsync(plagiarismRequest, cancellationToken);
             return OperationResult.Successful(report);
