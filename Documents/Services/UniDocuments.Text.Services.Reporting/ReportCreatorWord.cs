@@ -7,7 +7,7 @@ using UniDocuments.Text.Domain.Services.Reports.Models;
 
 namespace UniDocuments.Text.Services.Reporting;
 
-public class PlagiarismReportCreatorWord : IPlagiarismReportCreator
+public class ReportCreatorWord : IReportCreator
 {
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private const string NamePattern = "report_{0}.docx";
@@ -46,13 +46,13 @@ public class PlagiarismReportCreatorWord : IPlagiarismReportCreator
         FontSize = new FontSize { Val = "20" },
     };
     
-    public Task<PlagiarismReport> BuildReportAsync(
-        PlagiarismReportData reportData, CancellationToken cancellationToken)
+    public Task<ReportResponse> BuildReportAsync(
+        ReportData reportData, CancellationToken cancellationToken)
     {
         return Task.Run(() => BuildReport(reportData), cancellationToken);
     }
 
-    private static PlagiarismReport BuildReport(PlagiarismReportData reportData)
+    private static ReportResponse BuildReport(ReportData reportData)
     {
         var fileName = GetFileName(reportData.DocumentName);
 
@@ -68,10 +68,10 @@ public class PlagiarismReportCreatorWord : IPlagiarismReportCreator
 
         File.Delete(fileName);
         stream.SeekToZero();
-        return new PlagiarismReport(stream.ToArray(), ContentType, fileName);
+        return new ReportResponse(stream.ToArray(), ContentType, fileName);
     }
 
-    private static void AddParagraphsComparing(PlagiarismReportData reportData, Body body)
+    private static void AddParagraphsComparing(ReportData reportData, Body body)
     {
         AddTitle("Сравнение параграфов", body);
 
@@ -99,7 +99,7 @@ public class PlagiarismReportCreatorWord : IPlagiarismReportCreator
         AddEmptyLine(body);
     }
 
-    private static void AddDocumentsComparing(PlagiarismReportData reportData, Body body)
+    private static void AddDocumentsComparing(ReportData reportData, Body body)
     {
         AddTitle("Сравнение документов", body);
         

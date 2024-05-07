@@ -4,5 +4,5 @@ namespace UniDocuments.Text.Domain.Providers.Reports.Builder;
 
 public interface IReportDataBuilder
 {
-    Task<PlagiarismReportData> BuildReportDataAsync(ReportDataBuildRequest buildRequest, CancellationToken cancellationToken);
+    Task<ReportData> BuildReportDataAsync(ReportDataBuildRequest buildRequest, CancellationToken cancellationToken);
 }

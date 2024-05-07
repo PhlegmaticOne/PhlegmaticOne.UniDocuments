@@ -17,27 +17,21 @@ public class TextMatchProvider : ITextMatchProvider
         _optionsProvider = optionsProvider;
     }
     
-    public async Task<MatchTextsResponse> MatchAsync(MatchTextsRequest request, CancellationToken cancellationToken)
+    public Task<MatchTextsResponse> MatchAsync(MatchTextsRequest request, CancellationToken cancellationToken)
     {
         var response = new MatchTextsResponse(request.SourceText);
         var options = _optionsProvider.GetOptions();
 
-        await Parallel.ForEachAsync(request.SuspiciousTexts, cancellationToken, (suspiciousText, token) =>
+        Parallel.ForEach(request.SuspiciousTexts, suspiciousText =>
         {
-            return ExecuteMatchTextAsync(request.SourceText, suspiciousText, response, options, token);
+            var matchResult = _matchingAlgorithm.Match(request.SourceText, suspiciousText, options);
+            
+            lock (response)
+            {
+                response.AddResult(matchResult);
+            }
         });
         
-        return response;
-    }
-
-    private async ValueTask ExecuteMatchTextAsync(string source, string suspicious,
-        MatchTextsResponse response, MatchingOptions options, CancellationToken token)
-    {
-        var matchResult = await Task.Run(() => _matchingAlgorithm.Match(source, suspicious, options), token);
-
-        lock (response)
-        {
-            response.AddResult(matchResult);
-        }
+        return Task.FromResult(response);
     }
 }

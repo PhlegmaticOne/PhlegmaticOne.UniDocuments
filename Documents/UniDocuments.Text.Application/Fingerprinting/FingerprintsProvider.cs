@@ -86,7 +86,7 @@ public class FingerprintsProvider : IFingerprintsProvider
             }
         }
 
-        var fingerprintsData = await _dbContext.Set<StudyDocument>()
+        var fingerprintsQuery = await _dbContext.Set<StudyDocument>()
             .Where(x => finding.Contains(x.Id))
             .Select(x => new
             {
@@ -96,7 +96,7 @@ public class FingerprintsProvider : IFingerprintsProvider
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
         
-        foreach (var fingerprintData in fingerprintsData)
+        foreach (var fingerprintData in fingerprintsQuery)
         {
             result.Add(CreateFingerprint(fingerprintData.Id, fingerprintData.Fingerprint));
         }

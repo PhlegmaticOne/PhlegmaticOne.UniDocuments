@@ -35,12 +35,13 @@ public class ReportDataBuilder : IReportDataBuilder
         _fingerprintsComparer = fingerprintsComparer;
     }
     
-    public async Task<PlagiarismReportData> BuildReportDataAsync(ReportDataBuildRequest reportDataBuildRequest, CancellationToken cancellationToken)
+    public async Task<ReportData> BuildReportDataAsync(
+        ReportDataBuildRequest reportDataBuildRequest, CancellationToken cancellationToken)
     {
         var response = reportDataBuildRequest.PlagiarismSearchResponse;
         var documentsData = await BuildDocumentData(reportDataBuildRequest, cancellationToken);
         var paragraphsData = await BuildParagraphsData(reportDataBuildRequest, cancellationToken);
-        return new PlagiarismReportData(response.DocumentId, response.DocumentName, documentsData, paragraphsData);
+        return new ReportData(response.DocumentId, response.DocumentName, documentsData, paragraphsData);
     }
 
     private async Task<List<ReportParagraphsData>> BuildParagraphsData(

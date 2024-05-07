@@ -3,7 +3,6 @@ using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Application.Plagiarism.Reports.Base;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Providers.Reports.Provider;
 using UniDocuments.Text.Domain.Services.Reports;
 using UniDocuments.Text.Domain.Services.StreamReading;
@@ -16,16 +15,16 @@ public class QueryBuildPlagiarismDocumentReport : QueryBuildPlagiarismReport
 }
 
 public class QueryBuildPlagiarismDocumentReportHandler : 
-    IOperationResultQueryHandler<QueryBuildPlagiarismDocumentReport, PlagiarismReport>
+    IOperationResultQueryHandler<QueryBuildPlagiarismDocumentReport, ReportResponse>
 {
     private const string ErrorMessage = "BuildPlagiarismDocumentReport.InternalError";
     
-    private readonly IPlagiarismReportProvider _reportProvider;
+    private readonly IReportProvider _reportProvider;
     private readonly IStreamContentReader _contentReader;
     private readonly ILogger<QueryBuildPlagiarismDocumentReportHandler> _logger;
 
     public QueryBuildPlagiarismDocumentReportHandler(
-        IPlagiarismReportProvider reportProvider,
+        IReportProvider reportProvider,
         IStreamContentReader contentReader,
         ILogger<QueryBuildPlagiarismDocumentReportHandler> logger)
     {
@@ -34,7 +33,7 @@ public class QueryBuildPlagiarismDocumentReportHandler :
         _logger = logger;
     }
     
-    public async Task<OperationResult<PlagiarismReport>> Handle(
+    public async Task<OperationResult<ReportResponse>> Handle(
         QueryBuildPlagiarismDocumentReport request, CancellationToken cancellationToken)
     {
         try
@@ -48,7 +47,7 @@ public class QueryBuildPlagiarismDocumentReportHandler :
         catch (Exception e)
         {
             _logger.LogCritical(e, ErrorMessage);
-            return OperationResult.Failed<PlagiarismReport>(ErrorMessage, e.Message);
+            return OperationResult.Failed<ReportResponse>(ErrorMessage, e.Message);
         }
     }
 }

@@ -6,7 +6,6 @@ using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
-using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Providers.Reports.Provider;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
@@ -129,9 +128,9 @@ public class DocumentApplicationBuilder
     }
 
     public void UseReportProvider<T>(Action<ReportInstallBuilder> builderAction)
-        where T : class, IPlagiarismReportProvider
+        where T : class, IReportProvider
     {
-        _serviceCollection.AddScoped<IPlagiarismReportProvider, T>();
+        _serviceCollection.AddScoped<IReportProvider, T>();
         var builder = new ReportInstallBuilder(_serviceCollection);
         builderAction(builder);
     }

@@ -3,7 +3,6 @@ using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Application.Plagiarism.Reports.Base;
 using UniDocuments.Text.Domain.Providers.Loading;
-using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Providers.Reports.Provider;
 using UniDocuments.Text.Domain.Services.Reports;
 
@@ -15,16 +14,16 @@ public class QueryBuildPlagiarismExistingDocumentReport : QueryBuildPlagiarismRe
 }
 
 public class QueryBuildPlagiarismExistingDocumentReportHandler : 
-    IOperationResultQueryHandler<QueryBuildPlagiarismExistingDocumentReport, PlagiarismReport>
+    IOperationResultQueryHandler<QueryBuildPlagiarismExistingDocumentReport, ReportResponse>
 {
     private const string ErrorMessage = "BuildPlagiarismExistingDocumentReport.InternalError";
 
-    private readonly IPlagiarismReportProvider _reportProvider;
+    private readonly IReportProvider _reportProvider;
     private readonly IDocumentLoadingProvider _loadingProvider;
     private readonly ILogger<QueryBuildPlagiarismExistingDocumentReportHandler> _logger;
 
     public QueryBuildPlagiarismExistingDocumentReportHandler(
-        IPlagiarismReportProvider reportProvider,
+        IReportProvider reportProvider,
         IDocumentLoadingProvider loadingProvider,
         ILogger<QueryBuildPlagiarismExistingDocumentReportHandler> logger)
     {
@@ -33,7 +32,7 @@ public class QueryBuildPlagiarismExistingDocumentReportHandler :
         _logger = logger;
     }
     
-    public async Task<OperationResult<PlagiarismReport>> Handle(
+    public async Task<OperationResult<ReportResponse>> Handle(
         QueryBuildPlagiarismExistingDocumentReport request, CancellationToken cancellationToken)
     {
         try
@@ -46,7 +45,7 @@ public class QueryBuildPlagiarismExistingDocumentReportHandler :
         catch (Exception e)
         {
             _logger.LogCritical(e, ErrorMessage);
-            return OperationResult.Failed<PlagiarismReport>(ErrorMessage, e.Message);
+            return OperationResult.Failed<ReportResponse>(ErrorMessage, e.Message);
         }
     }
 }

@@ -27,7 +27,7 @@ public class ParagraphGlobalReader : IParagraphGlobalReader
 
         var document = await _loadingProvider.LoadAsync(documentData.Id, true, cancellationToken);
         var localParagraphId = documentData.GetLocalParagraphId(globalParagraphId);
-        var paragraph = document.Content!.Paragraphs[localParagraphId];
+        var paragraph = document.Content.Paragraphs[localParagraphId];
         return paragraph;
     }
 }

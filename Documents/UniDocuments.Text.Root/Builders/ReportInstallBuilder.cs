@@ -18,8 +18,8 @@ public class ReportInstallBuilder
         _serviceCollection.AddScoped<IReportDataBuilder, T>();
     }
     
-    public void UseReportCreator<T>() where T : class, IPlagiarismReportCreator
+    public void UseReportCreator<T>() where T : class, IReportCreator
     {
-        _serviceCollection.AddScoped<IPlagiarismReportCreator, T>();
+        _serviceCollection.AddScoped<IReportCreator, T>();
     }
 }

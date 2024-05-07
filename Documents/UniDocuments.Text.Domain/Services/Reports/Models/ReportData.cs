@@ -1,8 +1,8 @@
 ﻿namespace UniDocuments.Text.Domain.Services.Reports.Models;
 
-public class PlagiarismReportData
+public class ReportData
 {
-    public PlagiarismReportData(
+    public ReportData(
         Guid documentId, string documentName,
         List<ReportDocumentData> documentData, 
         List<ReportParagraphsData> paragraphsData)

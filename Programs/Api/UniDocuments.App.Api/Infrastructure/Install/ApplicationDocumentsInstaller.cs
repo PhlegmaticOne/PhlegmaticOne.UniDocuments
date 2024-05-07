@@ -124,9 +124,9 @@ public static class ApplicationDocumentsInstaller
             
             appBuilder.UseParagraphGlobalReader<ParagraphGlobalReader>();
             
-            appBuilder.UseReportProvider<PlagiarismReportProvider>(b =>
+            appBuilder.UseReportProvider<ReportProvider>(b =>
             {
-                b.UseReportCreator<PlagiarismReportCreatorWord>();
+                b.UseReportCreator<ReportCreatorWord>();
                 b.UseReportDataBuilder<ReportDataBuilder>();
             });
         });

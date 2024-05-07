@@ -1,8 +1,6 @@
 ﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
-using UniDocuments.Text.Domain.Services.DocumentMapping;
-using UniDocuments.Text.Domain.Services.DocumentMapping.Extensions;
 using UniDocuments.Text.Domain.Services.Neural;
 
 namespace UniDocuments.Text.Application.PlagiarismSearching;
@@ -10,25 +8,17 @@ namespace UniDocuments.Text.Application.PlagiarismSearching;
 public class PlagiarismSearchProvider : IPlagiarismSearchProvider
 {
     private readonly INeuralNetworkPlagiarismSearcher _networkPlagiarismSearcher;
-    private readonly IDocumentMapper _documentMapper;
 
-    public PlagiarismSearchProvider(
-        INeuralNetworkPlagiarismSearcher networkPlagiarismSearcher,
-        IDocumentMapper documentMapper)
+    public PlagiarismSearchProvider(INeuralNetworkPlagiarismSearcher networkPlagiarismSearcher)
     {
         _networkPlagiarismSearcher = networkPlagiarismSearcher;
-        _documentMapper = documentMapper;
     }
     
     public async Task<PlagiarismSearchResponseDocument> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var id = request.Document.Id;
-        var documentData = _documentMapper.GetDocumentData(id);
-        var response = new PlagiarismSearchResponseDocument(id, documentData?.Name ?? string.Empty);
-
+        var response = new PlagiarismSearchResponseDocument(request.Document.Id, request.Document.Name);
         await FindNeuralPlagiarismAsync(request, response, cancellationToken);
-
         return response;
     }
 

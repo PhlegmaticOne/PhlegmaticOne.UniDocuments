@@ -3,7 +3,6 @@ using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Application.Plagiarism.Reports.Base;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Domain.Providers.Reports;
 using UniDocuments.Text.Domain.Providers.Reports.Provider;
 using UniDocuments.Text.Domain.Services.Reports;
 
@@ -15,22 +14,22 @@ public class QueryBuildPlagiarismTextReport : QueryBuildPlagiarismReport
 }
 
 public class QueryBuildPlagiarismTextReportHandler : 
-    IOperationResultQueryHandler<QueryBuildPlagiarismTextReport, PlagiarismReport>
+    IOperationResultQueryHandler<QueryBuildPlagiarismTextReport, ReportResponse>
 {
     private const string ErrorMessage = "BuildPlagiarismTextReport.InternalError";
 
-    private readonly IPlagiarismReportProvider _reportProvider;
+    private readonly IReportProvider _reportProvider;
     private readonly ILogger<QueryBuildPlagiarismTextReportHandler> _logger;
 
     public QueryBuildPlagiarismTextReportHandler(
-        IPlagiarismReportProvider reportProvider,
+        IReportProvider reportProvider,
         ILogger<QueryBuildPlagiarismTextReportHandler> logger)
     {
         _reportProvider = reportProvider;
         _logger = logger;
     }
     
-    public async Task<OperationResult<PlagiarismReport>> Handle(
+    public async Task<OperationResult<ReportResponse>> Handle(
         QueryBuildPlagiarismTextReport request, CancellationToken cancellationToken)
     {
         try
@@ -43,7 +42,7 @@ public class QueryBuildPlagiarismTextReportHandler :
         catch (Exception e)
         {
             _logger.LogCritical(e, ErrorMessage);
-            return OperationResult.Failed<PlagiarismReport>(ErrorMessage, e.Message);
+            return OperationResult.Failed<ReportResponse>(ErrorMessage, e.Message);
         }
     }
 }
