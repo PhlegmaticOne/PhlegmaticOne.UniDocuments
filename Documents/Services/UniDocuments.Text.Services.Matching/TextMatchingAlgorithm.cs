@@ -2,7 +2,7 @@
 using UniDocuments.Text.Domain.Services.Matching;
 using UniDocuments.Text.Domain.Services.Matching.Models;
 using UniDocuments.Text.Domain.Services.Matching.Options;
-using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.Preprocessing.Stopwords;
 using UniDocuments.Text.Services.Matching.Algorithms;
 using UniDocuments.Text.Services.Matching.Grams;
 

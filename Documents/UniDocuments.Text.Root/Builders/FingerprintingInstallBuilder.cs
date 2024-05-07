@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UniDocuments.Text.Domain.Providers.Fingerprinting;
+using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Root.Builders;
 

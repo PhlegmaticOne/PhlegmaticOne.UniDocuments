@@ -6,7 +6,7 @@ public class MatchTextResult
     public string SourceText { get; }
     public List<MatchTextEntry> MatchEntries { get; }
 
-    public static MatchTextResult Empty => new MatchTextResult(string.Empty, new List<MatchTextEntry>());
+    public static MatchTextResult Empty => new(string.Empty, new List<MatchTextEntry>());
 
     public MatchTextResult(string sourceText, List<MatchTextEntry> matchEntries)
     {

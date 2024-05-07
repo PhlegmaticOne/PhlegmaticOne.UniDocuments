@@ -2,8 +2,8 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using UniDocuments.Text.Domain.Extensions;
-using UniDocuments.Text.Domain.Providers.Reports;
-using UniDocuments.Text.Domain.Providers.Reports.Data.Models;
+using UniDocuments.Text.Domain.Services.Reports;
+using UniDocuments.Text.Domain.Services.Reports.Models;
 
 namespace UniDocuments.Text.Services.Reporting;
 

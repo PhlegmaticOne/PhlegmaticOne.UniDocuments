@@ -1,5 +1,6 @@
 ﻿using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Services.Neural.Models;
+using UniDocuments.Text.Domain.Services.Neural.Models.Inferring;
 
 namespace UniDocuments.Text.Domain.Services.Neural;
 

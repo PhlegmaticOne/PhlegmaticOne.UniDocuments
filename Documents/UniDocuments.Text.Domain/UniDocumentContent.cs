@@ -6,8 +6,7 @@ namespace UniDocuments.Text.Domain;
 public class UniDocumentContent
 {
     private const char Space = ' ';
-    
-    public List<string> Paragraphs { get; }
+    public List<string> Paragraphs { get; } = new();
 
     [JsonIgnore]
     public int ParagraphsCount => Paragraphs.Count;
@@ -17,11 +16,6 @@ public class UniDocumentContent
         var result = new UniDocumentContent();
         result.AddParagraph(value);
         return result;
-    }
-
-    public UniDocumentContent()
-    {
-        Paragraphs = new List<string>();
     }
 
     public void AddParagraph(string content)

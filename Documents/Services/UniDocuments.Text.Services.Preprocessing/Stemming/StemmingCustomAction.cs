@@ -1,5 +1,6 @@
 ﻿using Microsoft.ML.Transforms;
-using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.Preprocessing.Preprocessor;
+using UniDocuments.Text.Domain.Services.Preprocessing.Stemmer;
 
 namespace UniDocuments.Text.Services.Preprocessing.Stemming;
 

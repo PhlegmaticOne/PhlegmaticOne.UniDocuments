@@ -1,8 +1,8 @@
-﻿using UniDocuments.Text.Domain.Providers.Comparing;
+﻿using UniDocuments.Text.Domain.Providers.BaseMetrics;
+using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
 using UniDocuments.Text.Domain.Providers.Comparing.Responses;
 using UniDocuments.Text.Domain.Services.BaseMetrics;
-using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 
 namespace UniDocuments.Text.Application.Comparing;
 

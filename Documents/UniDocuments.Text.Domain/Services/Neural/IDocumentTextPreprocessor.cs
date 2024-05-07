@@ -2,5 +2,5 @@
 
 public interface IDocumentTextPreprocessor
 {
-    Task<string> Preprocess(string text);
+    Task<string> Preprocess(string text, CancellationToken cancellationToken);
 }

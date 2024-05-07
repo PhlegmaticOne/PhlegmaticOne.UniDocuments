@@ -1,8 +1,8 @@
 ﻿using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Services.BaseMetrics;
 using UniDocuments.Text.Domain.Services.BaseMetrics.Options;
+using UniDocuments.Text.Domain.Services.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 
 namespace UniDocuments.Text.Services.BaseMetrics;
 

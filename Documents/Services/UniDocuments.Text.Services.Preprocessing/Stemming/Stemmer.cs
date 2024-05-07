@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.Preprocessing.Stemmer;
 
 namespace UniDocuments.Text.Services.Preprocessing.Stemming;
 

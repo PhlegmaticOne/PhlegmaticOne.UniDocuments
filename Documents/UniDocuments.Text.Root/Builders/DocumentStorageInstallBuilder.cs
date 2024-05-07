@@ -15,9 +15,9 @@ public class DocumentStorageInstallBuilder
         
     public void UseSqlConnectionString(string connectionString)
     {
-        _serviceCollection.AddSingleton<ISqlConnectionProvider, SqlConnectionProvider>(_ =>
+        _serviceCollection.AddSingleton<ISqlConnection, SqlConnection>(_ =>
         {
-            return new SqlConnectionProvider(connectionString);
+            return new SqlConnection(connectionString);
         });
     }
 }

@@ -1,6 +1,6 @@
 ﻿using FastCache;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
+using UniDocuments.Text.Domain.Services.Fingerprinting.Models;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
 

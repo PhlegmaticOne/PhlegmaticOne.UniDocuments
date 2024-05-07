@@ -37,14 +37,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Content\Models\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="keras2vec.py">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="doc2vec.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Content\Models\stopwords.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

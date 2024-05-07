@@ -4,6 +4,7 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Loading;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping.Extensions;
 
 namespace UniDocuments.App.Application.ContentRead;
 

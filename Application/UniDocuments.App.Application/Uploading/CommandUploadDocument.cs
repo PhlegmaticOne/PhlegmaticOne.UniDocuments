@@ -6,11 +6,12 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.Text.Domain;
+using UniDocuments.Text.Domain.Providers.Fingerprinting;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping.Extensions;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.App.Application.Uploading;
@@ -80,14 +81,16 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         var newDocument = await CreateDocumentAsync(request, content, cancellationToken);
 
         var documentId = newDocument.Entity.Id;
+
+        var document = new UniDocument(documentId, content, request.FileName);
         
         var fileId = await SaveDocumentFileAsync(documentId, request, cancellationToken);
 
         newDocument.Property(x => x.StudyDocumentFileId).CurrentValue = fileId;
 
-        await CalculateFingerprintAsync(newDocument, content, cancellationToken);
+        await CalculateFingerprintAsync(newDocument, document, cancellationToken);
 
-        CacheDocument(newDocument, content);
+        CacheDocument(document);
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -107,21 +110,16 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         }, cancellationToken);
     }
 
-    private void CacheDocument(EntityEntry<StudyDocument> newDocument, UniDocumentContent content)
+    private void CacheDocument(UniDocument document)
     {
-        var documentId = newDocument.Entity.Id;
-        var name = newDocument.Entity.Name;
-        var document = new UniDocument(documentId, content);
         _documentsCache.Cache(document);
-        _documentMapper.AddDocument(document, name);
+        _documentMapper.AddDocument(document, document.Name);
     }
 
     private async Task CalculateFingerprintAsync(
-        EntityEntry<StudyDocument> newDocument, UniDocumentContent content, CancellationToken cancellationToken)
+        EntityEntry<StudyDocument> newDocument, UniDocument document, CancellationToken cancellationToken)
     {
-        var documentId = newDocument.Entity.Id;
-        var uniDocument = new UniDocument(documentId, content);
-        var fingerprint = await _fingerprintsProvider.ComputeAsync(uniDocument, cancellationToken).ConfigureAwait(false);
+        var fingerprint = await _fingerprintsProvider.ComputeAsync(document, cancellationToken).ConfigureAwait(false);
         newDocument.Property(x => x.Fingerprint).CurrentValue = JsonConvert.SerializeObject(fingerprint.Entries);
     }
 

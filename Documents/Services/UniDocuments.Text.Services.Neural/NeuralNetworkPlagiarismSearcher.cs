@@ -4,7 +4,7 @@ using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentMapping.Models;
 using UniDocuments.Text.Domain.Services.Neural;
-using UniDocuments.Text.Domain.Services.Neural.Models;
+using UniDocuments.Text.Domain.Services.Neural.Models.Inferring;
 
 namespace UniDocuments.Text.Services.Neural;
 

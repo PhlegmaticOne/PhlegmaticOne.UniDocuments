@@ -6,28 +6,27 @@ namespace UniDocuments.Text.Domain;
 public class UniDocument : IEquatable<UniDocument>
 {
     public Guid Id { get; }
-    public UniDocumentContent? Content { get; }
+    public string Name { get; }
+    public UniDocumentContent Content { get; }
 
-    public static UniDocument Empty => new(Guid.Empty);
-    
-    [JsonIgnore]
-    public bool HasData => Content is not null;
-
-    public static UniDocument FromString(string value)
+    public static UniDocument FromString(string value, string? name = null)
     {
-        return new UniDocument(Guid.Empty, UniDocumentContent.FromString(value));
+        var resultName = name ?? GenerateRandomName();
+        return new UniDocument(Guid.Empty, UniDocumentContent.FromString(value), resultName);
     }
     
-    public static UniDocument FromContent(UniDocumentContent value)
+    public static UniDocument FromContent(UniDocumentContent value, string? name = null)
     {
-        return new UniDocument(Guid.Empty, value);
+        var resultName = name ?? GenerateRandomName();
+        return new UniDocument(Guid.Empty, value, resultName);
     }
     
     [JsonConstructor]
-    public UniDocument(Guid id, UniDocumentContent? content = null)
+    public UniDocument(Guid id, UniDocumentContent content, string name)
     {
         Id = id;
         Content = content;
+        Name = name;
     }
 
     public bool Equals(UniDocument? other)
@@ -52,5 +51,10 @@ public class UniDocument : IEquatable<UniDocument>
     public override string ToString()
     {
         return Id.ToString();
+    }
+
+    private static string GenerateRandomName()
+    {
+        return $"unknown_{Guid.NewGuid()}";
     }
 }

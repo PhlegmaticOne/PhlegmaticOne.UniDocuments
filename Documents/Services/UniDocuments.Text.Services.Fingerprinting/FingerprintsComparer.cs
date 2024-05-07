@@ -1,8 +1,9 @@
-﻿using UniDocuments.Text.Domain.Providers.Reports.Data.Models;
-using UniDocuments.Text.Domain.Services.DocumentMapping;
+﻿using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping.Extensions;
 using UniDocuments.Text.Domain.Services.Fingerprinting;
+using UniDocuments.Text.Domain.Services.Fingerprinting.Models;
 using UniDocuments.Text.Domain.Services.Fingerprinting.Options;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
+using UniDocuments.Text.Domain.Services.Reports.Models;
 
 namespace UniDocuments.Text.Services.Fingerprinting;
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
-using UniDocuments.Text.Domain.Services.Fingerprinting;
-using UniDocuments.Text.Domain.Services.Fingerprinting.Services;
+using UniDocuments.Text.Domain.Providers.Fingerprinting;
+using UniDocuments.Text.Domain.Services.Fingerprinting.Models;
 
 namespace UniDocuments.App.Application.Plagiarism.Fingerprinting;
 

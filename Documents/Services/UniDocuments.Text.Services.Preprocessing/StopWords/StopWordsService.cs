@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Domain.Services.Preprocessing;
+﻿using UniDocuments.Text.Domain.Services.Preprocessing.Stopwords;
+using UniDocuments.Text.Domain.Services.Preprocessing.Utilities;
 
 namespace UniDocuments.Text.Services.Preprocessing.StopWords;
 

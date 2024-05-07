@@ -2,6 +2,8 @@
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Providers.Reports;
+using UniDocuments.Text.Domain.Providers.Reports.Provider;
+using UniDocuments.Text.Domain.Services.Reports;
 
 namespace UniDocuments.App.Application.Plagiarism.Reports.Base;
 

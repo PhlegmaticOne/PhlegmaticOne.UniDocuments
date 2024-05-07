@@ -1,13 +1,14 @@
 ﻿using UniDocuments.App.Api.Infrastructure.Configurations;
 using UniDocuments.App.Api.Infrastructure.Services;
+using UniDocuments.Text.Application.BaseMetrics;
 using UniDocuments.Text.Application.Comparing;
 using UniDocuments.Text.Application.ContentReading;
+using UniDocuments.Text.Application.Fingerprinting;
 using UniDocuments.Text.Application.Loading;
 using UniDocuments.Text.Application.Matching;
 using UniDocuments.Text.Application.PlagiarismSearching;
 using UniDocuments.Text.Application.Reports;
 using UniDocuments.Text.Domain.Providers.Neural;
-using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
 using UniDocuments.Text.Services.BaseMetrics.Options;
@@ -126,7 +127,7 @@ public static class ApplicationDocumentsInstaller
             appBuilder.UseReportProvider<PlagiarismReportProvider>(b =>
             {
                 b.UseReportCreator<PlagiarismReportCreatorWord>();
-                b.UseReportDataBuilder<PlagiarismReportDataBuilder>();
+                b.UseReportDataBuilder<ReportDataBuilder>();
             });
         });
 

@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using UniDocuments.App.Api.Infrastructure;
 using UniDocuments.App.Api.Infrastructure.Configurations;
 using UniDocuments.App.Application.ContentRead;
 using UniDocuments.App.Application.Uploading;

@@ -14,7 +14,7 @@ public class DocumentTextPreprocessor : IDocumentTextPreprocessor
         _textProcessOptionsProvider = textProcessOptionsProvider;
     }
     
-    public async Task<string> Preprocess(string text)
+    public async Task<string> Preprocess(string text, CancellationToken cancellationToken)
     {
         var options = _textProcessOptionsProvider.GetOptions();
         var input = new PreprocessTextInput(text, options.TokenizeRegex);

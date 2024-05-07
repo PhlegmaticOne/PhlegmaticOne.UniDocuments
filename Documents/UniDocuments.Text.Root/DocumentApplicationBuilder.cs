@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using UniDocuments.Text.Domain.Providers.BaseMetrics;
 using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Providers.Loading;
@@ -6,11 +7,11 @@ using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.Reports;
-using UniDocuments.Text.Domain.Services.BaseMetrics.Provider;
+using UniDocuments.Text.Domain.Providers.Reports.Provider;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
-using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.Preprocessing.Preprocessor;
 using UniDocuments.Text.Domain.Services.SavePath;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Root.Builders;
@@ -34,7 +35,8 @@ public class DocumentApplicationBuilder
         builderAction(builder);
     }
 
-    public void UseDocumentMapper<T>(Action<DocumentMapperInstallBuilder> builderAction) where T : class, IDocumentMapper
+    public void UseDocumentMapper<T>(Action<DocumentMapperInstallBuilder> builderAction) 
+        where T : class, IDocumentMapper
     {
         var builder = new DocumentMapperInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<IDocumentMapper, T>();
@@ -74,14 +76,16 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<ISavePathProvider, T>();
     }
         
-    public void UseStreamContentReader<T>(Action<StreamContentReaderInstallBuilder> builderAction) where T : class, IStreamContentReader
+    public void UseStreamContentReader<T>(Action<StreamContentReaderInstallBuilder> builderAction) 
+        where T : class, IStreamContentReader
     {
         var builder = new StreamContentReaderInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<IStreamContentReader, T>();
         builderAction(builder);
     }
         
-    public void UseTextPreprocessor<T>(Action<TextPreprocessorInstallBuilder> builderAction) where T : class, ITextPreprocessor
+    public void UseTextPreprocessor<T>(Action<TextPreprocessorInstallBuilder> builderAction) 
+        where T : class, ITextPreprocessor
     {
         var builder = new TextPreprocessorInstallBuilder(_serviceCollection);
         _serviceCollection.AddSingleton<ITextPreprocessor, T>();
@@ -96,7 +100,8 @@ public class DocumentApplicationBuilder
         action(builder);
     }
 
-    public void UseMatchingService<T>(Action<MatchingInstallBuilder> builderAction) where T : class, ITextMatchProvider
+    public void UseMatchingService<T>(Action<MatchingInstallBuilder> builderAction) 
+        where T : class, ITextMatchProvider
     {
         var builder = new MatchingInstallBuilder(_serviceCollection);
         _serviceCollection.AddScoped<ITextMatchProvider, T>();

@@ -29,7 +29,7 @@ public class QueryPreprocessTextHandler : IOperationResultQueryHandler<QueryPrep
     {
         try
         {
-            var result = await _textPreprocessor.Preprocess(request.Text);
+            var result = await _textPreprocessor.Preprocess(request.Text, cancellationToken);
             return OperationResult.Successful(result);
         }
         catch (Exception e)

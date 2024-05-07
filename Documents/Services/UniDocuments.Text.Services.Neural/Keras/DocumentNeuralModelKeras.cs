@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using PhlegmaticOne.PythonTasks;
-using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Models;
+using UniDocuments.Text.Domain.Services.Neural.Models.Inferring;
 using UniDocuments.Text.Domain.Services.Neural.Options;
 using UniDocuments.Text.Domain.Services.Neural.Vocab;
 using UniDocuments.Text.Domain.Services.SavePath;

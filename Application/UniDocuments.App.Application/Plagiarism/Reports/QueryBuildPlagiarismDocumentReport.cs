@@ -4,6 +4,8 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Application.Plagiarism.Reports.Base;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Reports;
+using UniDocuments.Text.Domain.Providers.Reports.Provider;
+using UniDocuments.Text.Domain.Services.Reports;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.App.Application.Plagiarism.Reports;

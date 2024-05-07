@@ -8,11 +8,11 @@ namespace UniDocuments.Text.Services.FileStorage.Sql;
 
 public class DocumentsStorageSql : IDocumentsStorage
 {
-    private readonly ISqlConnectionProvider _sqlConnectionProvider;
+    private readonly ISqlConnection _sqlConnection;
 
-    public DocumentsStorageSql(ISqlConnectionProvider sqlConnectionProvider)
+    public DocumentsStorageSql(ISqlConnection sqlConnection)
     {
-        _sqlConnectionProvider = sqlConnectionProvider;
+        _sqlConnection = sqlConnection;
     }
 
     public async Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ public class DocumentsStorageSql : IDocumentsStorage
         var transactionContext = Array.Empty<byte>();
         var savedFileName = string.Empty;
         var path = string.Empty;
-        var sqlConnection = _sqlConnectionProvider.Connection;
+        var sqlConnection = _sqlConnection.Connection;
 
         await using var command = FileSqlCommands.CreateSelectFileCommand(sqlConnection, id);
         await using var transaction = sqlConnection.BeginTransaction();
@@ -62,7 +62,7 @@ public class DocumentsStorageSql : IDocumentsStorage
         var fileName = saveRequest.Name;
         var transactionContext = Array.Empty<byte>();
         var path = string.Empty;
-        var sqlConnection = _sqlConnectionProvider.Connection;
+        var sqlConnection = _sqlConnection.Connection;
 
         await using var command = FileSqlCommands.CreateInsertFileCommand(sqlConnection, fileName, saveRequest.Id);
         await using var transaction = sqlConnection.BeginTransaction();

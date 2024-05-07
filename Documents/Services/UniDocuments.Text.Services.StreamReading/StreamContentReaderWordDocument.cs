@@ -2,7 +2,7 @@
 using DocumentFormat.OpenXml.Packaging;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Extensions;
-using UniDocuments.Text.Domain.Services.Preprocessing;
+using UniDocuments.Text.Domain.Services.Preprocessing.Utilities;
 using UniDocuments.Text.Domain.Services.StreamReading;
 using UniDocuments.Text.Domain.Services.StreamReading.Options;
 

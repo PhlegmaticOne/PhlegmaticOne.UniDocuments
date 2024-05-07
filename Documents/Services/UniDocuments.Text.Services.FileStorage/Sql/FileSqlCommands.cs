@@ -20,7 +20,7 @@ internal static class FileSqlCommands
                     FROM [uni_documents_db].[dbo].[StudyDocumentsContent]
                     WHERE Id = @fileId";
 
-    internal static SqlCommand CreateInsertFileCommand(SqlConnection sqlConnection, string fileName, Guid id)
+    internal static SqlCommand CreateInsertFileCommand(Microsoft.Data.SqlClient.SqlConnection sqlConnection, string fileName, Guid id)
     {
         return new SqlCommand(InsertFileCommandText, sqlConnection)
         {
@@ -42,7 +42,7 @@ internal static class FileSqlCommands
         };
     }
 
-    internal static SqlCommand CreateSelectFileCommand(SqlConnection sqlConnection, Guid fileId)
+    internal static SqlCommand CreateSelectFileCommand(Microsoft.Data.SqlClient.SqlConnection sqlConnection, Guid fileId)
     {
         return new SqlCommand(SelectFileCommandText, sqlConnection)
         {

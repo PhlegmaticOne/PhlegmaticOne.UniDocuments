@@ -1,7 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
-using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
-using UniDocuments.Text.Domain.Services.Neural.Models;
+using UniDocuments.Text.Domain.Services.Neural.Models.Inferring;
 using UniDocuments.Text.Services.Neural.Common;
 using UniDocuments.Text.Services.Neural.Keras.Options;
 using UniDocuments.Text.Services.Neural.Keras.Tasks;
