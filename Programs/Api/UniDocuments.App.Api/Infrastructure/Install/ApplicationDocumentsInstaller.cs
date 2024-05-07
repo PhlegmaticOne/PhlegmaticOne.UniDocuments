@@ -1,4 +1,5 @@
-﻿using UniDocuments.App.Api.Infrastructure.Services;
+﻿using UniDocuments.App.Api.Infrastructure.Configurations;
+using UniDocuments.App.Api.Infrastructure.Services;
 using UniDocuments.Text.Application.Comparing;
 using UniDocuments.Text.Application.ContentReading;
 using UniDocuments.Text.Application.Loading;
@@ -36,7 +37,7 @@ using UniDocuments.Text.Services.StreamReading.Options;
 
 namespace UniDocuments.App.Api.Infrastructure.Install;
 
-public static class DocumentApplicationInstaller
+public static class ApplicationDocumentsInstaller
 {
     public static IServiceCollection AddDocumentApplication(this IServiceCollection serviceCollection,
         IConfiguration configuration, string connectionString, ApplicationConfiguration applicationConfiguration)

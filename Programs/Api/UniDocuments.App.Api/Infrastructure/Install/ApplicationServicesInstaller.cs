@@ -7,9 +7,9 @@ using UniDocuments.App.Services.Jwt;
 
 namespace UniDocuments.App.Api.Infrastructure.Install;
 
-public static class ApplicationInstaller
+public static class ApplicationServicesInstaller
 {
-    public static IServiceCollection AddApplication(this IServiceCollection serviceCollection, IJwtOptions jwtOptions)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection, IJwtOptions jwtOptions)
     {
         serviceCollection.AddSingleton<IPasswordHasher, SecurePasswordHasher>();
         serviceCollection.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();

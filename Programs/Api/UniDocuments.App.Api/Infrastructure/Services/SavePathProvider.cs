@@ -1,12 +1,15 @@
-﻿using UniDocuments.Text.Domain.Services.SavePath;
+﻿using Microsoft.Extensions.Options;
+using UniDocuments.App.Api.Infrastructure.Configurations;
+using UniDocuments.Text.Domain.Services.SavePath;
 
 namespace UniDocuments.App.Api.Infrastructure.Services;
 
 public class SavePathProvider : ISavePathProvider
 {
-    public SavePathProvider()
+    public SavePathProvider(IOptions<ApplicationConfiguration> options)
     {
-        SavePath = Path.Combine(Directory.GetCurrentDirectory(), "Content", "Models");
+        var path = options.Value.SavePath;
+        SavePath = Path.Combine(Directory.GetCurrentDirectory(), path);
     }
     
     public string SavePath { get; }

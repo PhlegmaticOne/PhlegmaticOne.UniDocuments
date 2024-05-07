@@ -9,4 +9,16 @@ public class StudyActivity : EntityBase
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public IList<StudyDocument> Documents { get; set; } = null!;
+
+    public StudyActivity ToAnyActivity()
+    {
+        return new StudyActivity
+        {
+            Description = Description,
+            Name = Name,
+            StartDate = DateTime.MinValue,
+            EndDate = DateTime.MaxValue,
+            Id = Id
+        };
+    }
 }

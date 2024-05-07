@@ -9,4 +9,16 @@ public class Student : EntityBase
     public string UserName { get; set; } = null!;
     public string Password { get; set; } = null!;
     public IList<StudyDocument> Documents { get; set; } = null!;
+
+    public Student WithPassword(string password)
+    {
+        return new Student
+        {
+            Password = password,
+            FirstName = FirstName,
+            LastName = LastName,
+            UserName = UserName,
+            Id = Id
+        };
+    }
 }
