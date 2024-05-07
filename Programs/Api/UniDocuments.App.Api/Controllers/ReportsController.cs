@@ -22,14 +22,15 @@ public class ReportsController : ControllerBase
     public async Task<IActionResult> BuildText(
         [FromBody] QueryBuildPlagiarismTextReport request, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(request, cancellationToken);
+        var response = await _mediator.Send(request, cancellationToken);
         
-        if (!result.IsSuccess)
+        if (!response.IsSuccess)
         {
-            return BadRequest(result);
+            return BadRequest(response);
         }
 
-        return File(result.Result!.ResponseStream, result.Result.ContentType, result.Result.Name);
+        var result = response.Result!;
+        return File(result.ResponseStream, result.ContentType, result.Name);
     }
 
     [HttpPost("BuildDocument")]
@@ -45,27 +46,29 @@ public class ReportsController : ControllerBase
             InferEpochs = request.InferEpochs
         };
         
-        var result = await _mediator.Send(query, cancellationToken);
+        var response = await _mediator.Send(query, cancellationToken);
         
-        if (!result.IsSuccess)
+        if (!response.IsSuccess)
         {
-            return BadRequest(result);
+            return BadRequest(response);
         }
 
-        return File(result.Result!.ResponseStream, result.Result.ContentType, result.Result.Name);
+        var result = response.Result!;
+        return File(result.ResponseStream, result.ContentType, result.Name);
     }
 
     [HttpGet("BuildExistingDocument")]
     public async Task<IActionResult> BuildExistingDocument(
         [FromQuery] QueryBuildPlagiarismExistingDocumentReport request, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(request, cancellationToken);
+        var response = await _mediator.Send(request, cancellationToken);
         
-        if (!result.IsSuccess)
+        if (!response.IsSuccess)
         {
-            return BadRequest(result);
+            return BadRequest(response);
         }
 
-        return File(result.Result!.ResponseStream, result.Result.ContentType, result.Result.Name);
+        var result = response.Result!;
+        return File(result.ResponseStream, result.ContentType, result.Name);
     }
 }

@@ -87,13 +87,14 @@ public class DocumentsController : ControllerBase
     public async Task<IActionResult> GetDocumentFileById(
         [FromQuery] QueryGetDocumentById query, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(query, cancellationToken);
+        var response = await _mediator.Send(query, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (!response.IsSuccess)
         {
-            return BadRequest(result);
+            return BadRequest(response);
         }
 
-        return File(result.Result!.Stream!, ContentType, result.Result.Name);
+        var result = response.Result!;
+        return File(result.Stream!, ContentType, result.Name);
     }
 }
