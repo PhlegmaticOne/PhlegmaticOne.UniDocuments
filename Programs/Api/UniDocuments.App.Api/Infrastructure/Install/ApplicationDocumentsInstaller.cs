@@ -30,6 +30,7 @@ using UniDocuments.Text.Services.Neural.Preprocessors;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Neural.Vocab;
 using UniDocuments.Text.Services.Preprocessing;
+using UniDocuments.Text.Services.Preprocessing.Preprocessor;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.Preprocessing.StopWords;
 using UniDocuments.Text.Services.Reporting;

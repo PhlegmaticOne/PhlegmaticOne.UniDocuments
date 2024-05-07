@@ -1,10 +1,10 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Transforms.Text;
 using UniDocuments.Text.Domain.Services.Preprocessing.Preprocessor;
-using UniDocuments.Text.Domain.Services.Preprocessing.Stemmer;
+using UniDocuments.Text.Domain.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Services.Preprocessing.Stemming;
 
-namespace UniDocuments.Text.Services.Preprocessing;
+namespace UniDocuments.Text.Services.Preprocessing.Preprocessor;
 
 public static class TextPreprocessorEngineFactory
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using UniDocuments.Text.Domain.Services.Preprocessing.Stemmer;
+using UniDocuments.Text.Domain.Services.Preprocessing.Stemming;
 using UniDocuments.Text.Domain.Services.Preprocessing.Stopwords;
 
 namespace UniDocuments.Text.Root.Builders;

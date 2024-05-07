@@ -3,6 +3,7 @@ using Python.Runtime;
 
 namespace UniDocuments.Text.Services.Neural.Preprocessors.Tasks;
 
+[UseInPython]
 public class PreprocessTextInput
 {
     public PreprocessTextInput(string text, string tokenizeRegex)

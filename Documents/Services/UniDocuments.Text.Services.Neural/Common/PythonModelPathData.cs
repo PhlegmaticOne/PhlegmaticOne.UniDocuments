@@ -1,5 +1,8 @@
-﻿namespace UniDocuments.Text.Services.Neural.Common;
+﻿using PhlegmaticOne.PythonTasks;
 
+namespace UniDocuments.Text.Services.Neural.Common;
+
+[UseInPython]
 public class PythonModelPathData
 {
     public PythonModelPathData(string basePath, string name)
