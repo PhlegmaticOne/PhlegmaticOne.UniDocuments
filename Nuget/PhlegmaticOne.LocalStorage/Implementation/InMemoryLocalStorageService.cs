@@ -1,27 +1,16 @@
-﻿namespace PhlegmaticOne.LocalStorage.Implementation;
+﻿using FastCache;
+
+namespace PhlegmaticOne.LocalStorage.Implementation;
 
 public class InMemoryLocalStorageService : ILocalStorageService
 {
-    private readonly Dictionary<string, object> _storage = new();
-
-    public void SetValue<T>(string key, T value)
+    public void SetValue<T>(string key, T value, TimeSpan time)
     {
-        if (_storage.ContainsKey(key))
-        {
-            _storage[key] = value!;
-            return;
-        }
-
-        _storage.Add(key, value!);
+        Cached<T>.Save(key, value, time);
     }
 
-    public bool ContainsKey(string key)
+    public T GetValue<T>(string key)
     {
-        return _storage.ContainsKey(key);
-    }
-
-    public T? GetValue<T>(string key)
-    {
-        return _storage.TryGetValue(key, out var result) ? (T)result : default;
+        return Cached<T>.TryGet(key, out var cached) ? cached : default;
     }
 }

@@ -3,5 +3,6 @@
 public enum StudyRole
 {
     Student = 0,
-    Teacher = 1
+    Teacher = 1,
+    Admin = 2
 }

@@ -92,16 +92,15 @@ public class ClientRequestsController : Controller
         await SignInAsync(claimsPrincipal, profileObject.JwtToken);
     }
 
-    protected async Task SignOutAsync()
+    protected Task SignOutAsync()
     {
-        SetJwtToken(new JwtTokenObject(string.Empty));
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 
-    protected async Task SignInAsync(ClaimsPrincipal claimsPrincipal, JwtTokenObject jwtToken)
+    protected Task SignInAsync(ClaimsPrincipal claimsPrincipal, JwtTokenObject jwtToken)
     {
         SetJwtToken(jwtToken);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+        return HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
     }
 
     protected string? JwtToken()
@@ -111,7 +110,7 @@ public class ClientRequestsController : Controller
 
     protected void SetJwtToken(JwtTokenObject jwtToken)
     {
-        LocalStorageService.SetValue(User.Username(), jwtToken);
+        LocalStorageService.SetValue(User.Username(), jwtToken, TimeSpan.FromMinutes(jwtToken.ExpirationInMinutes));
     }
 
     private async Task<IActionResult> HandleResponse<TResponse>(

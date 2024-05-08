@@ -4,5 +4,5 @@ namespace PhlegmaticOne.JwtTokensGeneration;
 
 public interface IJwtTokenGenerator
 {
-    string GenerateToken(UserRegisteringModel userRegisteringModel);
+    JwtOptionsResult GenerateToken(UserRegisteringModel userRegisteringModel);
 }

@@ -59,9 +59,14 @@ public static class AppInitializer
 
         if (await students.AnyAsync(cancellationToken) == false)
         {
-            var admin = settings.Admin;
-            var adminUser = admin.WithPassword(passwordHasher.Hash(admin.Password));
-            await students.AddAsync(adminUser, cancellationToken);
+            var users = new List<Student>
+            {
+                settings.Admin.WithPassword(passwordHasher.Hash(settings.Admin.Password)),
+                settings.Teacher.WithPassword(passwordHasher.Hash(settings.Teacher.Password)),
+                settings.Student.WithPassword(passwordHasher.Hash(settings.Student.Password)),
+            };
+            
+            await students.AddRangeAsync(users, cancellationToken);
         }
 
         if (await activities.AnyAsync(cancellationToken) == false)

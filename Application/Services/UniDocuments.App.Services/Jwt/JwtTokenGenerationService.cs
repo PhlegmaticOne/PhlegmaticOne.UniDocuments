@@ -18,8 +18,13 @@ public class JwtTokenGenerationService : IJwtTokenGenerationService
     {
         var userInfo = new UserRegisteringModel(
             profile.Id, (int)profile.Role, profile.FirstName, profile.LastName, profile.UserName);
+
+        var tokenResult = _jwtTokenGenerator.GenerateToken(userInfo);
         
-        var tokenValue = _jwtTokenGenerator.GenerateToken(userInfo);
-        return new JwtTokenObject(tokenValue);
+        return new JwtTokenObject
+        {
+            Token = tokenResult.Token,
+            ExpirationInMinutes = tokenResult.TimeInMinutes
+        };
     }
 }

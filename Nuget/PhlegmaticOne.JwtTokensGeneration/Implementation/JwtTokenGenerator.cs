@@ -16,7 +16,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _jwtOptions = jwtOptions;
     }
 
-    public string GenerateToken(UserRegisteringModel userRegisteringModel)
+    public JwtOptionsResult GenerateToken(UserRegisteringModel userRegisteringModel)
     {
         var claims = new List<Claim>
         {
@@ -38,6 +38,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             DateTime.UtcNow.AddMinutes(_jwtOptions.ExpirationDurationInMinutes),
             signingCredentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        return new JwtOptionsResult(tokenString, _jwtOptions.ExpirationDurationInMinutes);
     }
 }

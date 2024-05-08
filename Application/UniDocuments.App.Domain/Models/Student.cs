@@ -15,6 +15,7 @@ public class Student : EntityBase
     {
         return new Student
         {
+            Role = Role,
             Password = password,
             FirstName = FirstName,
             LastName = LastName,

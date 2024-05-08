@@ -2,10 +2,12 @@
 
 public class JwtTokenObject
 {
-    public JwtTokenObject(string token)
+    public static JwtTokenObject Empty => new()
     {
-        Token = token;
-    }
-
+        Token = string.Empty,
+        ExpirationInMinutes = 0
+    };
+    
     public string? Token { get; init; }
+    public int ExpirationInMinutes { get; init; }
 }
