@@ -1,0 +1,59 @@
+.account-settings .user-profile {
+    margin: 0 0 1rem 0;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+.account-settings .user-profile .user-avatar { margin: 0 0 1rem 0; }
+
+.account-settings .user-profile .user-avatar img {
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    height: 90px;
+    width: 90px;
+}
+
+.account-settings .user-profile h5.user-name {
+    color: #fffff0;
+    margin: 0 0 0.5rem 0;
+}
+
+.account-settings .user-profile h6.user-email {
+    color: #fffff0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.account-settings .about {
+    font-size: 0.8rem;
+    margin: 1rem 0 0 0;
+    text-align: center;
+}
+
+.card {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border: 0;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    background: rgb(101, 67, 25);
+    border: 1px solid rgb(180, 88, 59);
+    border-radius: 2px;
+    color: #ffffff;
+    font-size: .825rem;
+}
+
+input::-webkit-input-placeholder { color: rgb(150, 150, 150) !important; }
+
+input:-moz-placeholder { color: rgb(150, 150, 150) !important; }
+
+input::-moz-placeholder { color: rgb(150, 150, 150) !important; }
+
+input:-ms-input-placeholder { color: rgb(150, 150, 150) !important; }

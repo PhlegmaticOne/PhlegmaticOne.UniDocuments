@@ -65,7 +65,7 @@ public class ClientRequestsController : Controller
 
     protected IActionResult LoginView()
     {
-        return Redirect("/Account/Login");
+        return Redirect("/Auth/Login");
     }
 
     protected IActionResult ErrorView(string errorMessage)
@@ -95,7 +95,7 @@ public class ClientRequestsController : Controller
     protected Task AuthenticateAsync(ProfileObject profileObject)
     {
         var claimsPrincipal = ClaimsPrincipalGenerator.GenerateClaimsPrincipal(profileObject);
-        return SignInAsync(claimsPrincipal, profileObject.JwtToken);
+        return SignInAsync(profileObject.Id, claimsPrincipal, profileObject.JwtToken);
     }
 
     protected Task SignOutAsync()
@@ -103,21 +103,28 @@ public class ClientRequestsController : Controller
         return HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 
-    protected Task SignInAsync(ClaimsPrincipal claimsPrincipal, JwtTokenObject jwtToken)
+    protected Task SignInAsync(Guid id, ClaimsPrincipal claimsPrincipal, JwtTokenObject jwtToken)
     {
-        SetJwtToken(jwtToken);
+        SetJwtToken(id, jwtToken);
         return HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
     }
 
     protected string? JwtToken()
     {
-        var token = LocalStorageService.GetValue<JwtTokenObject>(User.Username());
+        var id = User.IdString();
+
+        if (id is null)
+        {
+            return null;
+        }
+        
+        var token = LocalStorageService.GetValue<JwtTokenObject>(id);
         return token?.Token;
     }
 
-    protected void SetJwtToken(JwtTokenObject jwtToken)
+    protected void SetJwtToken(Guid id, JwtTokenObject jwtToken)
     {
-        LocalStorageService.SetValue(User.Username(), jwtToken, TimeSpan.FromMinutes(jwtToken.ExpirationInMinutes));
+        LocalStorageService.SetValue(id.ToString(), jwtToken, TimeSpan.FromMinutes(jwtToken.ExpirationInMinutes));
     }
 
     private async Task<IActionResult> HandleResponse<TResponse>(

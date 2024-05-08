@@ -8,6 +8,7 @@ public static class ProfileClaimsConstants
     internal const string FirstNameClaimName = "FirstName";
     internal const string LastNameClaimName = "LastName";
     internal const string RoleClaimName = "Role";
+    internal const string IdClaimName = "Id";
 }
 
 public static class ClaimPrincipalExtensions
@@ -23,6 +24,22 @@ public static class ClaimPrincipalExtensions
         }
         
         return (StudyRole)int.Parse(claimValue.Value);
+    }
+    
+    public static Guid Id(this ClaimsPrincipal claimsPrincipal)
+    {
+        var claim = claimsPrincipal.Claims
+            .FirstOrDefault(x => x.Type == ProfileClaimsConstants.IdClaimName);
+
+        return claim is null ? Guid.Empty : Guid.Parse(claim.Value);
+    }
+    
+    public static string? IdString(this ClaimsPrincipal claimsPrincipal)
+    {
+        var claim = claimsPrincipal.Claims
+            .FirstOrDefault(x => x.Type == ProfileClaimsConstants.IdClaimName);
+
+        return claim?.Value;
     }
     
     public static string Username(this ClaimsPrincipal claimsPrincipal)

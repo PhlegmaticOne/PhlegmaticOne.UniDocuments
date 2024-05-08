@@ -60,7 +60,8 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
             FirstName = registerObject.FirstName,
             LastName = registerObject.LastName,
             UserName = registerObject.UserName,
-            Password = _passwordHasher.Hash(registerObject.Password)
+            Password = _passwordHasher.Hash(registerObject.Password),
+            Role = StudyRole.Student
         };
     }
 }

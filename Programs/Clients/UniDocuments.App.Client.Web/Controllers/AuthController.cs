@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PhlegmaticOne.ApiRequesting.Services;
 using PhlegmaticOne.LocalStorage;
 using UniDocuments.App.Client.Web.Controllers.Base;
-using UniDocuments.App.Client.Web.Requests.Profile;
+using UniDocuments.App.Client.Web.Requests.Account;
 using UniDocuments.App.Client.Web.ViewModels.Account;
 using UniDocuments.App.Shared.Users;
 
@@ -27,10 +27,16 @@ public class AuthController : ClientRequestsController
     }
 
     [HttpGet]
-    public IActionResult Login(string returnUrl) => View();
+    public IActionResult Login(string returnUrl)
+    {
+        return View();
+    }
 
     [HttpGet]
-    public IActionResult Register() => View();
+    public IActionResult Register()
+    {
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
@@ -47,24 +53,21 @@ public class AuthController : ClientRequestsController
         return await FromAuthorizedPost(new RegisterProfileRequest(registerObject), async profile =>
         {
             await AuthenticateAsync(profile);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Details", "Profile");
         }, result => ViewWithErrorsFromOperationResult(result, nameof(Register), registerViewModel));
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+    public Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
-        var dto = new LoginObject
-        {
-            Password = loginViewModel.Password,
-            UserName = loginViewModel.UserName
-        };
+        var loginObject = Mapper.Map<LoginObject>(loginViewModel);
         
-        return await FromAuthorizedPost(new LoginProfileRequest(dto), async profile =>
+        return FromAuthorizedPost(new LoginProfileRequest(loginObject), async profile =>
         {
             await AuthenticateAsync(profile);
+            
             return loginViewModel.ReturnUrl is null
-                ? RedirectToAction("Index", "Home")
+                ? RedirectToAction("Details", "Profile")
                 : LocalRedirect(loginViewModel.ReturnUrl);
         }, result => ViewWithErrorsFromOperationResult(result, nameof(Login), loginViewModel));
     }

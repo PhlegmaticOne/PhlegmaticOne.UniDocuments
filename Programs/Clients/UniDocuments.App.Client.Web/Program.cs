@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using PhlegmaticOne.ApiRequesting.Extensions;
 using PhlegmaticOne.LocalStorage.Extensions;
-using UniDocuments.App.Client.Web.Requests.Profile;
+using UniDocuments.App.Client.Web.Requests.Account;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +18,8 @@ builder.Services.AddClientRequestsService("http://localhost:5109/api/", a =>
 {
     a.ConfigureRequest<RegisterProfileRequest>("Auth/Register");
     a.ConfigureRequest<LoginProfileRequest>("Auth/Login");
+    a.ConfigureRequest<GetDetailedProfileRequest>("Profiles/GetAuthorized");
+    a.ConfigureRequest<UpdateProfileRequest>("Profiles/Update");
 });
 
 builder.Services.AddStorage();

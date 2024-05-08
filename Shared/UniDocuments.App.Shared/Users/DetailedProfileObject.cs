@@ -1,8 +1,8 @@
 ﻿using UniDocuments.App.Shared.Users.Enums;
 
-namespace UniDocuments.App.Client.Web.ViewModels.Account;
+namespace UniDocuments.App.Shared.Users;
 
-public class ProfileViewModel
+public class DetailedProfileObject
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; } = null!;

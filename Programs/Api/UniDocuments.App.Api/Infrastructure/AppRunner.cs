@@ -6,11 +6,11 @@ public static class AppRunner
 {
     public static void Run(WebApplicationBuilder builder, WebApplication app, ApplicationConfiguration applicationConfiguration)
     {
-        if (builder.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        // if (builder.Environment.IsDevelopment())
+        // {
+        //     app.UseSwagger();
+        //     app.UseSwaggerUI();
+        // }
 
         app.UseHttpsRedirection();
 

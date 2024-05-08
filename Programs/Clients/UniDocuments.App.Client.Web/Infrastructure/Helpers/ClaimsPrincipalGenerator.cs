@@ -13,7 +13,8 @@ public class ClaimsPrincipalGenerator
             new(ClaimsIdentity.DefaultNameClaimType, profileObject.UserName),
             new(ProfileClaimsConstants.FirstNameClaimName, profileObject.FirstName),
             new(ProfileClaimsConstants.LastNameClaimName, profileObject.LastName),
-            new(ProfileClaimsConstants.RoleClaimName, ((int)profileObject.Role).ToString())
+            new(ProfileClaimsConstants.RoleClaimName, ((int)profileObject.Role).ToString()),
+            new(ProfileClaimsConstants.IdClaimName, profileObject.Id.ToString())
         };
 
         var claimsIdentity = new ClaimsIdentity(claims,

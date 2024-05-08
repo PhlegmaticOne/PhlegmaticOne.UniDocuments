@@ -7,6 +7,7 @@ using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Shared.Users;
+using StudyRole = UniDocuments.App.Shared.Users.Enums.StudyRole;
 
 namespace UniDocuments.App.Application.Login.Queries;
 
@@ -88,7 +89,8 @@ public class QueryGetAuthorizedProfileAnonymousHandler :
             UserName = student.UserName,
             FirstName = student.FirstName,
             LastName = student.LastName,
-            Id = student.Id
+            Id = student.Id,
+            Role = (StudyRole)student.Role
         };
     }
 }
