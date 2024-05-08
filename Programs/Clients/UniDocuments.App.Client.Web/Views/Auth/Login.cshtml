@@ -14,8 +14,8 @@
 
                         <div class="mb-md-2 mt-md-2">
 
-                            <h2 class="fw-bold text-uppercase">Login</h2>
-                            <p class="text-white-50 mb-5">Please enter your login and password!</p>
+                            <h2 class="fw-bold text-uppercase">Войти</h2>
+                            <p class="text-white-50 mb-5">Введите имя и пароль!</p>
 
                             <form asp-action="Login" asp-controller="Auth" method="post">
                                 <div>
@@ -23,28 +23,28 @@
                                 </div>
 
                                 <div class="form-outline form-white mb-2">
-                                    <label asp-for="Email" class="mb-2">Enter Email</label><br/>
-                                    <input type="text" asp-for="Email" class="form-control form-control-lg"/>
-                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                    <label asp-for="UserName" class="mb-2">Введите ник</label><br/>
+                                    <input type="text" asp-for="UserName" class="form-control form-control-lg"/>
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-outline form-white mb-2">
-                                    <label asp-for="Password" class="mb-2">Enter Password</label><br/>
+                                    <label asp-for="Password" class="mb-2">Введите пароль</label><br/>
                                     <input type="password" asp-for="Password" class="form-control form-control-lg"/>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
 
                                 <h5 class="h5 text-danger">@Model?.ErrorMessage</h5>
-                                <button class="btn btn-outline-light btn-lg my-4" type="submit">Login</button>
+                                <button class="btn btn-outline-light btn-lg my-4" type="submit">Войти</button>
                             </form>
                         </div>
 
                         <div>
                             <p>
-                                Don't have an account?
+                                Нет аккаунта?
                                 <button class="btn btn-outline-light btn-lg px-5 m-1"
                                         onclick="location.href = '@Url.Action("Register", "Auth")'">
-                                    Register
+                                    Зарегистрироваться
                                 </button>
                             </p>
                         </div>

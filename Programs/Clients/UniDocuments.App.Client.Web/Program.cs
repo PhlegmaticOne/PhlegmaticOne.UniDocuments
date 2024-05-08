@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using PhlegmaticOne.ApiRequesting.Extensions;
 using PhlegmaticOne.LocalStorage.Extensions;
@@ -10,13 +11,16 @@ builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(x => x.LoginPath = new PathString("/Auth/Login"));
 
-builder.Services.AddClientRequestsService("https://localhost:7142/api/", a =>
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddAutoMapper(_ => { }, typeof(Program).Assembly);
+
+builder.Services.AddClientRequestsService("http://localhost:5109/api/", a =>
 {
     a.ConfigureRequest<RegisterProfileRequest>("Auth/Register");
     a.ConfigureRequest<LoginProfileRequest>("Auth/Login");
 });
 
-builder.Services.AddLocalStorage();
+builder.Services.AddStorage();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authentication;
@@ -18,11 +19,16 @@ namespace UniDocuments.App.Client.Web.Controllers.Base;
 
 public class ClientRequestsController : Controller
 {
+    protected readonly IMapper Mapper;
     protected readonly IClientRequestsService ClientRequestsService;
     protected readonly ILocalStorageService LocalStorageService;
 
-    public ClientRequestsController(IClientRequestsService clientRequestsService, ILocalStorageService localStorageService)
+    public ClientRequestsController(
+        IClientRequestsService clientRequestsService, 
+        ILocalStorageService localStorageService,
+        IMapper mapper)
     {
+        Mapper = mapper;
         LocalStorageService = localStorageService;
         ClientRequestsService = clientRequestsService;
     }
@@ -86,10 +92,10 @@ public class ClientRequestsController : Controller
         return View(viewName, viewModel);
     }
 
-    protected async Task AuthenticateAsync(ProfileObject profileObject)
+    protected Task AuthenticateAsync(ProfileObject profileObject)
     {
         var claimsPrincipal = ClaimsPrincipalGenerator.GenerateClaimsPrincipal(profileObject);
-        await SignInAsync(claimsPrincipal, profileObject.JwtToken);
+        return SignInAsync(claimsPrincipal, profileObject.JwtToken);
     }
 
     protected Task SignOutAsync()
@@ -105,7 +111,8 @@ public class ClientRequestsController : Controller
 
     protected string? JwtToken()
     {
-        return LocalStorageService.GetValue<JwtTokenObject>(User.Username())!.Token;
+        var token = LocalStorageService.GetValue<JwtTokenObject>(User.Username());
+        return token?.Token;
     }
 
     protected void SetJwtToken(JwtTokenObject jwtToken)

@@ -7,7 +7,6 @@
 {
     @await Html.PartialAsync("~/Views/_Partial_Views/Shared/PageTitle.cshtml", 
         $"Welcome {User.Firstname()} {User.Lastname()}")
-
 }
 else
 {
@@ -20,11 +19,11 @@ else
             <div class="mt-3">
                 <button class="btn btn-outline-light btn-lg px-5 m-1 text-center"
                         onclick="location.href = '@Url.Action("Register", "Auth")'">
-                    Register
+                    Зарегистрироваться
                 </button>
                 <button class="btn btn-outline-light btn-lg px-5 m-1 text-center"
                         onclick="location.href = '@Url.Action("Login", "Auth")'">
-                    Login
+                    Войти
                 </button>
             </div>
         </div>

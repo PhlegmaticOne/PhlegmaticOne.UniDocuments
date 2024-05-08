@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhlegmaticOne.ApiRequesting.Services;
 using PhlegmaticOne.LocalStorage;
@@ -12,11 +14,16 @@ namespace UniDocuments.App.Client.Web.Controllers;
 [AllowAnonymous]
 public class AuthController : ClientRequestsController
 {
+    private readonly IValidator<RegisterViewModel> _registerValidator;
+
     public AuthController(
         IClientRequestsService clientRequestsService, 
-        ILocalStorageService localStorageService) :
-        base(clientRequestsService, localStorageService)
+        ILocalStorageService localStorageService,
+        IMapper mapper,
+        IValidator<RegisterViewModel> registerValidator) :
+        base(clientRequestsService, localStorageService, mapper)
     {
+        _registerValidator = registerValidator;
     }
 
     [HttpGet]
@@ -28,15 +35,16 @@ public class AuthController : ClientRequestsController
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
-        var dto = new RegisterObject
+        var validationResult = await _registerValidator.ValidateAsync(registerViewModel);
+
+        if (validationResult.IsValid == false)
         {
-            Password = registerViewModel.Password,
-            FirstName = registerViewModel.FirstName,
-            LastName = registerViewModel.LastName,
-            UserName = registerViewModel.Email
-        };
-        
-        return await FromAuthorizedPost(new RegisterProfileRequest(dto), async profile =>
+            return ViewWithErrorsFromValidationResult(validationResult, nameof(Register), registerViewModel);
+        }
+
+        var registerObject = Mapper.Map<RegisterObject>(registerViewModel);
+
+        return await FromAuthorizedPost(new RegisterProfileRequest(registerObject), async profile =>
         {
             await AuthenticateAsync(profile);
             return RedirectToAction("Index", "Home");
@@ -49,7 +57,7 @@ public class AuthController : ClientRequestsController
         var dto = new LoginObject
         {
             Password = loginViewModel.Password,
-            UserName = loginViewModel.Email
+            UserName = loginViewModel.UserName
         };
         
         return await FromAuthorizedPost(new LoginProfileRequest(dto), async profile =>

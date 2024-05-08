@@ -29,17 +29,15 @@ public class ClientRequestsService : IClientRequestsService
         var requestUrl = GetRequestUrl(postRequest);
         var httpClient = CreateHttpClientWithToken(jwtToken);
 
-        HttpResponseMessage httpResponseMessage;
         try
         {
-            httpResponseMessage = await httpClient.PostAsJsonAsync(requestUrl, postRequest.RequestData);
+            var httpResponseMessage = await httpClient.PostAsJsonAsync(requestUrl, postRequest.RequestData);
+            return await GetServerResponse<TResponse>(httpResponseMessage);
         }
         catch (HttpRequestException httpRequestException)
         {
             return ServerResponse.FromError<TResponse>(httpRequestException.StatusCode, httpRequestException.Message);
         }
-
-        return await GetServerResponse<TResponse>(httpResponseMessage);
     }
 
     public async Task<ServerResponse<TResponse>> DeleteAsync<TRequest, TResponse>(

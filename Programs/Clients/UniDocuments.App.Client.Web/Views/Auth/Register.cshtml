@@ -13,39 +13,39 @@
 
                         <div class="mb-md-2 mt-md-2">
 
-                            <h2 class="fw-bold text-uppercase">Register</h2>
+                            <h2 class="fw-bold text-uppercase">Зарегистрироваться</h2>
 
                             <form asp-action="Register" asp-controller="Auth" asp-anti-forgery="true" enctype="multipart/form-data">
                                 <div class="validation" asp-validation-summary="ModelOnly"></div>
                                 <div>
                                     <div class="form-outline form-white mb-2">
-                                        <label asp-for="Email" class="mb-2">Enter Email</label><br/>
-                                        <input type="text" asp-for="Email" class="form-control form-control-sm"/>
-                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                        <label asp-for="UserName" class="mb-2">Введите ник</label><br/>
+                                        <input type="text" asp-for="UserName" class="form-control form-control-sm"/>
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
                                     </div>
                                     <div class="form-outline form-white mb-2">
-                                        <label asp-for="FirstName" class="mb-2">Enter first name</label><br/>
+                                        <label asp-for="FirstName" class="mb-2">Введите имя</label><br/>
                                         <input type="text" asp-for="FirstName" class="form-control form-control-sm"/>
                                         <span asp-validation-for="FirstName" class="text-danger"></span>
                                     </div>
                                     <div class="form-outline form-white mb-2">
-                                        <label asp-for="LastName" class="mb-2">Enter second name</label><br/>
+                                        <label asp-for="LastName" class="mb-2">Введите фамилию</label><br/>
                                         <input type="text" asp-for="LastName" class="form-control form-control-sm"/>
                                         <span asp-validation-for="LastName" class="text-danger"></span>
                                     </div>
                                     <div class="form-outline form-white mb-2">
-                                        <label asp-for="Password" class="mb-2">Enter password</label><br/>
+                                        <label asp-for="Password" class="mb-2">Введите пароль</label><br/>
                                         <input asp-for="Password" class="form-control form-control-sm"/>
-                                        <span asp-validation-for="Password" class="text-danger"/>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
                                     <div class="form-outline form-white mb-2">
-                                        <label asp-for="ConfirmPassword" class="mb-2">Confirm password</label><br/>
+                                        <label asp-for="ConfirmPassword" class="mb-2">Подтвердите пароль</label><br/>
                                         <input asp-for="ConfirmPassword" class="form-control form-control-sm"/>
                                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                     </div>
                                     <div>
                                         <h5 class="h5 text-danger">@Model?.ErrorMessage</h5>
-                                        <button class="btn btn-outline-light btn-lg my-4" type="submit">Register</button>
+                                        <button class="btn btn-outline-light btn-lg my-4" type="submit">Зарегистрироваться</button>
                                     </div>
                                 </div>
                             </form>
@@ -53,10 +53,10 @@
 
                         <div>
                             <p>
-                                Already have an account?
+                                Уже есть аккаунт?
                                 <button class="btn btn-outline-light btn-lg px-5 m-1"
                                         onclick="location.href = '@Url.Action("Login", "Auth")'">
-                                    Login
+                                    Войти
                                 </button>
                             </p>
                         </div>
