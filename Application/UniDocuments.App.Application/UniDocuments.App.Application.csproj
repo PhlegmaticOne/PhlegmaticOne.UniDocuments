@@ -16,7 +16,7 @@
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults.Mediatr\PhlegmaticOne.OperationResults.Mediatr.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.OperationResults\PhlegmaticOne.OperationResults.csproj" />
       <ProjectReference Include="..\..\Nuget\PhlegmaticOne.PasswordHasher\PhlegmaticOne.PasswordHasher.csproj" />
-      <ProjectReference Include="..\..\Shared\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
+      <ProjectReference Include="..\..\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
       <ProjectReference Include="..\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj" />
     </ItemGroup>

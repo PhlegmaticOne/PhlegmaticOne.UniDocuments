@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
+    <ProjectReference Include="..\..\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
   </ItemGroup>
 
 </Project>
