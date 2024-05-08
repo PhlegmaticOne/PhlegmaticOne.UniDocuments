@@ -3,9 +3,9 @@ using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Client.Web.Requests.Profile;
 
-public class RegisterProfileRequest : ClientPostRequest<RegisterProfileObject, AuthorizedProfileObject>
+public class RegisterProfileRequest : ClientPostRequest<RegisterObject, ProfileObject>
 {
-    public RegisterProfileRequest(RegisterProfileObject requestData) : base(requestData)
+    public RegisterProfileRequest(RegisterObject requestData) : base(requestData)
     {
     }
 }

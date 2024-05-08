@@ -21,9 +21,9 @@ public class AuthController : ControllerBase
 
     [HttpPost("Register")]
     public async Task<IActionResult> Register(
-        [FromBody] RegisterProfileObject registerProfileObject, CancellationToken cancellationToken)
+        [FromBody] RegisterObject registerObject, CancellationToken cancellationToken)
     {
-        var registerCommand = new CommandRegisterProfile(registerProfileObject);
+        var registerCommand = new CommandRegisterProfile(registerObject);
         var registerResult = await _mediator.Send(registerCommand, cancellationToken);
 
         if (registerResult.IsSuccess == false)
@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
             return BadRequest(registerResult);
         }
 
-        return await AuthorizeAsync(registerProfileObject.UserName, registerProfileObject.Password, cancellationToken);
+        return await AuthorizeAsync(registerObject.UserName, registerObject.Password, cancellationToken);
     }
 
     [HttpPost("Login")]

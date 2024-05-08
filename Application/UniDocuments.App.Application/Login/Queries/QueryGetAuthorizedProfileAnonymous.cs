@@ -10,7 +10,7 @@ using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Application.Login.Queries;
 
-public class QueryGetAuthorizedProfileAnonymous : IOperationResultQuery<AuthorizedProfileObject>
+public class QueryGetAuthorizedProfileAnonymous : IOperationResultQuery<ProfileObject>
 {
     public QueryGetAuthorizedProfileAnonymous(string userName, string password)
     {
@@ -23,7 +23,7 @@ public class QueryGetAuthorizedProfileAnonymous : IOperationResultQuery<Authoriz
 }
 
 public class QueryGetAuthorizedProfileAnonymousHandler :
-    IOperationResultQueryHandler<QueryGetAuthorizedProfileAnonymous, AuthorizedProfileObject>
+    IOperationResultQueryHandler<QueryGetAuthorizedProfileAnonymous, ProfileObject>
 {
     private const string AuthorizeProfileNotExist = "AuthorizeProfile.NotExist";
     private const string ErrorMessage = "GetAuthorizedProfile.InternalError";
@@ -45,7 +45,7 @@ public class QueryGetAuthorizedProfileAnonymousHandler :
         _logger = logger;
     }
 
-    public async Task<OperationResult<AuthorizedProfileObject>> Handle(
+    public async Task<OperationResult<ProfileObject>> Handle(
         QueryGetAuthorizedProfileAnonymous request, CancellationToken cancellationToken)
     {
         try
@@ -54,7 +54,7 @@ public class QueryGetAuthorizedProfileAnonymousHandler :
 
             if (authorizedProfile is null)
             {
-                return OperationResult.Failed<AuthorizedProfileObject>(AuthorizeProfileNotExist);
+                return OperationResult.Failed<ProfileObject>(AuthorizeProfileNotExist);
             }
 
             authorizedProfile.JwtToken = _jwtTokenGenerationService.GenerateJwtToken(authorizedProfile);
@@ -64,11 +64,11 @@ public class QueryGetAuthorizedProfileAnonymousHandler :
         catch (Exception e)
         {
             _logger.LogCritical(e, ErrorMessage);
-            return OperationResult.Failed<AuthorizedProfileObject>(ErrorMessage, e.Message);
+            return OperationResult.Failed<ProfileObject>(ErrorMessage, e.Message);
         }
     }
 
-    private async Task<AuthorizedProfileObject?> GetAuthorizedProfileAsync(QueryGetAuthorizedProfileAnonymous request,
+    private async Task<ProfileObject?> GetAuthorizedProfileAsync(QueryGetAuthorizedProfileAnonymous request,
         CancellationToken cancellationToken)
     {
         var repository = _dbContext.Set<Student>();
@@ -83,7 +83,7 @@ public class QueryGetAuthorizedProfileAnonymousHandler :
             return null;
         }
 
-        return new AuthorizedProfileObject
+        return new ProfileObject
         {
             UserName = student.UserName,
             FirstName = student.FirstName,

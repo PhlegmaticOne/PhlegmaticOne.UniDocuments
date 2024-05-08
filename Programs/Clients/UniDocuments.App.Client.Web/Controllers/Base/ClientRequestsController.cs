@@ -86,7 +86,7 @@ public class ClientRequestsController : Controller
         return View(viewName, viewModel);
     }
 
-    protected async Task AuthenticateAsync(AuthorizedProfileObject profileObject)
+    protected async Task AuthenticateAsync(ProfileObject profileObject)
     {
         var claimsPrincipal = ClaimsPrincipalGenerator.GenerateClaimsPrincipal(profileObject);
         await SignInAsync(claimsPrincipal, profileObject.JwtToken);

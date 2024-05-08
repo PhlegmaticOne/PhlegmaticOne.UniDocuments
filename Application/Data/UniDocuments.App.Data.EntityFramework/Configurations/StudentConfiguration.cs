@@ -12,6 +12,10 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Role)
+            .HasDefaultValue(StudyRole.Student)
+            .HasConversion<int>();
+
         builder.Property(x => x.FirstName)
             .IsRequired()
             .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);

@@ -24,6 +24,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(JwtRegisteredClaimNames.GivenName, userRegisteringModel.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, userRegisteringModel.LastName),
             new(CustomJwtClaimNames.UserId, userRegisteringModel.Id.ToString()),
+            new(CustomJwtClaimNames.Role, userRegisteringModel.Role.ToString()),
         };
 
         var securityKey = _jwtOptions.GetSecretKey();

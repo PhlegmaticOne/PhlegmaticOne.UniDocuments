@@ -6,13 +6,13 @@ namespace UniDocuments.App.Client.Web.Infrastructure.Helpers;
 
 public class ClaimsPrincipalGenerator
 {
-    public static ClaimsPrincipal GenerateClaimsPrincipal(AuthorizedProfileObject authorizedProfileObject)
+    public static ClaimsPrincipal GenerateClaimsPrincipal(ProfileObject profileObject)
     {
         var claims = new List<Claim>
         {
-            new(ClaimsIdentity.DefaultNameClaimType, authorizedProfileObject.UserName),
-            new(ProfileClaimsConstants.FirstNameClaimName, authorizedProfileObject.FirstName),
-            new(ProfileClaimsConstants.LastNameClaimName, authorizedProfileObject.LastName)
+            new(ClaimsIdentity.DefaultNameClaimType, profileObject.UserName),
+            new(ProfileClaimsConstants.FirstNameClaimName, profileObject.FirstName),
+            new(ProfileClaimsConstants.LastNameClaimName, profileObject.LastName)
         };
 
         var claimsIdentity = new ClaimsIdentity(claims,

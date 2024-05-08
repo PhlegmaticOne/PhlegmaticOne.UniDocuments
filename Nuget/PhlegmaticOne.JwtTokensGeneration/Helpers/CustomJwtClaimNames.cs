@@ -3,5 +3,5 @@
 public static class CustomJwtClaimNames
 {
     public const string UserId = "UserId";
-    public const string Email = "EmailAddress";
+    public const string Role = "Role";
 }

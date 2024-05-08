@@ -8,6 +8,7 @@ public class Student : EntityBase
     public string LastName { get; set; } = null!;
     public string UserName { get; set; } = null!;
     public string Password { get; set; } = null!;
+    public StudyRole Role { get; set; }
     public IList<StudyDocument> Documents { get; set; } = null!;
 
     public Student WithPassword(string password)

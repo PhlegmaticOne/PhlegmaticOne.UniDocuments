@@ -10,12 +10,12 @@ namespace UniDocuments.App.Application.Login.Commands;
 
 public class CommandRegisterProfile : IOperationResultCommand
 {
-    public CommandRegisterProfile(RegisterProfileObject registerProfileObject)
+    public CommandRegisterProfile(RegisterObject registerObject)
     {
-        RegisterProfileObject = registerProfileObject;
+        RegisterObject = registerObject;
     }
 
-    public RegisterProfileObject RegisterProfileObject { get; }
+    public RegisterObject RegisterObject { get; }
 }
 
 public class CommandRegisterProfileHandler : IOperationResultCommandHandler<CommandRegisterProfile>
@@ -40,7 +40,7 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
     {
         try
         {
-            var prepared = PrepareProfile(request.RegisterProfileObject);
+            var prepared = PrepareProfile(request.RegisterObject);
             var repository = _dbContext.Set<Student>();
             var entry = await repository.AddAsync(prepared, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -53,14 +53,14 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
         }
     }
     
-    private Student PrepareProfile(RegisterProfileObject registerProfileObject)
+    private Student PrepareProfile(RegisterObject registerObject)
     {
         return new Student
         {
-            FirstName = registerProfileObject.FirstName,
-            LastName = registerProfileObject.LastName,
-            UserName = registerProfileObject.UserName,
-            Password = _passwordHasher.Hash(registerProfileObject.Password)
+            FirstName = registerObject.FirstName,
+            LastName = registerObject.LastName,
+            UserName = registerObject.UserName,
+            Password = _passwordHasher.Hash(registerObject.Password)
         };
     }
 }
