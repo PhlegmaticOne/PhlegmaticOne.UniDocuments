@@ -4,11 +4,11 @@ using UniDocuments.App.Domain.Models;
 
 namespace UniDocuments.App.Data.EntityFramework.Configurations;
 
-public class StudentConfiguration : IEntityTypeConfiguration<Student>
+public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
 {
-    public void Configure(EntityTypeBuilder<Student> builder)
+    public void Configure(EntityTypeBuilder<Teacher> builder)
     {
-        builder.ToTable(ConfigurationConstants.StudentsTableName);
+        builder.ToTable(ConfigurationConstants.TeachersTableName);
 
         builder.HasKey(x => x.Id);
 
@@ -25,11 +25,8 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
             .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);
 
         builder.HasMany(x => x.Activities)
-            .WithMany(x => x.Students);
-
-        builder.HasMany(x => x.Documents)
-            .WithOne(x => x.Student)
-            .HasForeignKey(x => x.StudentId);
+            .WithOne(x => x.Creator)
+            .HasForeignKey(x => x.CreatorId);
 
         builder.Property(x => x.Password).IsRequired();
 

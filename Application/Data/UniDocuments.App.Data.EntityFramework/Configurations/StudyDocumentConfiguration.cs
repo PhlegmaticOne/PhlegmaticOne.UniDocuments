@@ -22,14 +22,6 @@ public class StudyDocumentConfiguration : IEntityTypeConfiguration<StudyDocument
             .IsRequired()
             .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);
 
-        builder.HasOne(x => x.Activity)
-            .WithMany(x => x.Documents)
-            .HasForeignKey(x => x.ActivityId);
-
-        builder.HasOne(x => x.Student)
-            .WithMany(x => x.Documents)
-            .HasForeignKey(x => x.StudentId);
-
         builder.HasOne(x => x.StudyDocumentFile)
             .WithOne(x => x.StudyDocument)
             .HasForeignKey<StudyDocumentFile>(x => x.StudyDocumentId);

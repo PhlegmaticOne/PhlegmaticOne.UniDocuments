@@ -8,6 +8,9 @@ public class StudyActivity : EntityBase
     public string Description { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public Guid CreatorId { get; set; }
+    public Teacher Creator { get; set; } = null!;
+    public IList<Student> Students { get; set; } = null!;
     public IList<StudyDocument> Documents { get; set; } = null!;
 
     public StudyActivity ToAnyActivity()

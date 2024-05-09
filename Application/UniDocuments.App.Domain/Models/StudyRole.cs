@@ -2,7 +2,6 @@
 
 public enum StudyRole
 {
-    Student = 0,
-    Teacher = 1,
-    Admin = 2
+    Default = 0,
+    Admin = 1
 }
