@@ -4,6 +4,8 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using PhlegmaticOne.PasswordHasher;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
+using UniDocuments.App.Domain.Models.Base;
+using UniDocuments.App.Domain.Models.Enums;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Shared.Users;
 using StudyRole = UniDocuments.App.Shared.Users.Enums.StudyRole;
@@ -12,10 +14,12 @@ namespace UniDocuments.App.Application.App.Profile;
 
 public class CommandUpdateProfile : IdentityOperationResultCommand
 {
+    public StudyRole StudyRole { get; }
     public UpdateProfileObject UpdateProfileObject { get; }
     
-    public CommandUpdateProfile(Guid profileId, UpdateProfileObject updateProfileObject) : base(profileId)
+    public CommandUpdateProfile(Guid profileId, StudyRole studyRole, UpdateProfileObject updateProfileObject) : base(profileId)
     {
+        StudyRole = studyRole;
         UpdateProfileObject = updateProfileObject;
     }
 }
@@ -23,25 +27,38 @@ public class CommandUpdateProfile : IdentityOperationResultCommand
 public class CommandUpdateProfileHandler : IOperationResultCommandHandler<CommandUpdateProfile>
 {
     private const string ErrorCode = "UpdateProfile.ProfileNotFound";
+    private const string WrongPassword = "Wrong password!";
     
     private readonly ApplicationDbContext _dbContext;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtTokenGenerationService _jwtTokenGenerationService;
+    private readonly IProfileSetuper _profileSetuper;
 
     public CommandUpdateProfileHandler(
         ApplicationDbContext dbContext,
         IPasswordHasher passwordHasher,
-        IJwtTokenGenerationService jwtTokenGenerationService)
+        IProfileSetuper profileSetuper)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;
-        _jwtTokenGenerationService = jwtTokenGenerationService;
+        _profileSetuper = profileSetuper;
     }
 
     public async Task<OperationResult> Handle(CommandUpdateProfile request, CancellationToken cancellationToken)
     {
+        return request.StudyRole switch
+        {
+            StudyRole.Student => await UpdateProfile<Student>(request, cancellationToken),
+            StudyRole.Teacher => await UpdateProfile<Teacher>(request, cancellationToken),
+            _ => throw new ArgumentOutOfRangeException(nameof(request.StudyRole))
+        };
+    }
+
+    private async Task<OperationResult<ProfileObject>> UpdateProfile<T>(
+        CommandUpdateProfile request, CancellationToken cancellationToken) where T : Person, new()
+    {
         var updateProfileObject = request.UpdateProfileObject;
-        var repository = _dbContext.Set<Student>();
+        
+        var repository = _dbContext.Set<T>();
         var profile = await repository.FirstOrDefaultAsync(x => x.Id == request.ProfileId, cancellationToken);
 
         if (profile is null)
@@ -53,29 +70,24 @@ public class CommandUpdateProfileHandler : IOperationResultCommandHandler<Comman
 
         if (profile.Password != oldPassword)
         {
-            return OperationResult.Failed<ProfileObject>("Wrong password!");
+            return OperationResult.Failed<ProfileObject>(WrongPassword);
         }
 
+        UpdateProfileProperties(profile, updateProfileObject);
+        repository.Update(profile);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        var result = _profileSetuper.SetupFrom(profile);
+        return OperationResult.Successful(result);
+    }
+
+    private void UpdateProfileProperties(Person profile, UpdateProfileObject updateProfileObject)
+    {
         profile.FirstName = GetNewValueOrExisting(updateProfileObject.FirstName, profile.FirstName);
         profile.LastName = GetNewValueOrExisting(updateProfileObject.LastName, profile.LastName);
         profile.UserName = GetNewValueOrExisting(updateProfileObject.UserName, profile.UserName);
         profile.Password = ProcessPassword(profile.Password, updateProfileObject.NewPassword);
-        
-        repository.Update(profile);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        var result = new ProfileObject
-        {
-            FirstName = profile.FirstName,
-            LastName = profile.LastName,
-            UserName = profile.UserName,
-            Id = request.ProfileId,
-            Role = (StudyRole)profile.Role,
-        };
-
-        result.JwtToken = _jwtTokenGenerationService.GenerateJwtToken(result);
-        
-        return OperationResult.Successful(result);
+        profile.Role = (ApplicationRole)updateProfileObject.AppRole;
     }
     
     private string ProcessPassword(string oldPassword, string newPassword)

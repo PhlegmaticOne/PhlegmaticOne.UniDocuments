@@ -1,4 +1,6 @@
-﻿namespace UniDocuments.App.Domain.Models.Base;
+﻿using UniDocuments.App.Domain.Models.Enums;
+
+namespace UniDocuments.App.Domain.Models.Base;
 
 public class Person : EntityBase
 {
@@ -6,5 +8,5 @@ public class Person : EntityBase
     public string LastName { get; set; } = null!;
     public string UserName { get; set; } = null!;
     public string Password { get; set; } = null!;
-    public StudyRole Role { get; set; }
+    public ApplicationRole Role { get; set; }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Application.App.Login.Commands;
 using UniDocuments.App.Application.App.Login.Queries;
 using UniDocuments.App.Shared.Users;
+using UniDocuments.App.Shared.Users.Enums;
 
 namespace UniDocuments.App.Api.Controllers;
 
@@ -31,19 +32,14 @@ public class AuthController : ControllerBase
             return BadRequest(registerResult);
         }
 
-        return await AuthorizeAsync(registerObject.UserName, registerObject.Password, cancellationToken);
+        return Ok(registerResult);
     }
 
     [HttpPost("Login")]
-    public Task<IActionResult> Login(
+    public async Task<IActionResult> Login(
         [FromBody] LoginObject loginObject, CancellationToken cancellationToken)
     {
-        return AuthorizeAsync(loginObject.UserName, loginObject.Password, cancellationToken);
-    }
-
-    private async Task<IActionResult> AuthorizeAsync(string email, string password, CancellationToken cancellationToken)
-    {
-        var query = new QueryGetAuthorizedProfileAnonymous(email, password);
+        var query = new QueryLogin(loginObject);
         var profile = await _mediator.Send(query, cancellationToken);
 
         if (profile.IsSuccess == false)

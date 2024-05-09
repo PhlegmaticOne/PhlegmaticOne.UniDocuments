@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UniDocuments.App.Domain.Models;
+using UniDocuments.App.Domain.Models.Enums;
 
 namespace UniDocuments.App.Data.EntityFramework.Configurations;
 
@@ -13,7 +14,7 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Role)
-            .HasDefaultValue(StudyRole.Default)
+            .HasDefaultValue(ApplicationRole.Default)
             .HasConversion<int>();
 
         builder.Property(x => x.FirstName)

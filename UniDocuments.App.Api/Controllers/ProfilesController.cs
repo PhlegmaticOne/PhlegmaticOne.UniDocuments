@@ -22,7 +22,7 @@ public class ProfilesController : IdentityController
     [HttpPost("Update")]
     public async Task<IActionResult> Update([FromBody] UpdateProfileObject updateProfileObject)
     {
-        var command = new CommandUpdateProfile(ProfileId(), updateProfileObject);
+        var command = new CommandUpdateProfile(ProfileId(), StudyRole(), updateProfileObject);
         var result = await _mediator.Send(command);
 
         if (!result.IsSuccess)

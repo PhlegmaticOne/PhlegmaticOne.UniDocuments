@@ -8,6 +8,7 @@ public class ProfileObject
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string UserName { get; set; } = null!;
-    public StudyRole Role { get; set; }
+    public StudyRole StudyRole { get; set; }
+    public AppRole AppRole { get; set; }
     public JwtTokenObject JwtToken { get; set; } = null!;
 }

@@ -17,7 +17,8 @@ public class JwtTokenGenerationService : IJwtTokenGenerationService
     public JwtTokenObject GenerateJwtToken(ProfileObject profile)
     {
         var userInfo = new UserRegisteringModel(
-            profile.Id, (int)profile.Role, profile.FirstName, profile.LastName, profile.UserName);
+            profile.Id, (int)profile.StudyRole, (int)profile.AppRole,
+            profile.FirstName, profile.LastName, profile.UserName);
 
         var tokenResult = _jwtTokenGenerator.GenerateToken(userInfo);
         
