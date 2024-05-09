@@ -12,6 +12,7 @@ public static class AppRunner
         //     app.UseSwaggerUI();
         // }
 
+        app.UseDeveloperExceptionPage();
         app.UseHttpsRedirection();
 
         if (applicationConfiguration.UseAuthentication)

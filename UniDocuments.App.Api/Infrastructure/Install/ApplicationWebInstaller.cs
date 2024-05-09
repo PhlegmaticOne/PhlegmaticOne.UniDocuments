@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using PhlegmaticOne.JwtTokensGeneration.Options;
+using Serilog;
 using UniDocuments.App.Api.Infrastructure.Configurations;
 
 namespace UniDocuments.App.Api.Infrastructure.Install;
@@ -18,6 +19,7 @@ public static class ApplicationWebInstaller
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(o =>
             {
+                o.RequireHttpsMetadata = false;
                 o.SaveToken = true;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -36,6 +38,14 @@ public static class ApplicationWebInstaller
         serviceCollection.AddControllers().AddNewtonsoftJson();
         serviceCollection.AddEndpointsApiExplorer();
         serviceCollection.AddSwaggerGen();
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .MinimumLevel.Debug()
+            .CreateLogger();
+
+        serviceCollection.AddSerilog();
+        
         return serviceCollection;
     }
 }

@@ -56,9 +56,9 @@ public class CommandUpdateProfileHandler : IOperationResultCommandHandler<Comman
             return OperationResult.Failed<ProfileObject>("Wrong password!");
         }
 
-        profile.FirstName = GetNewValueOrExisting(updateProfileObject.FirstName, profile!.FirstName);
+        profile.FirstName = GetNewValueOrExisting(updateProfileObject.FirstName, profile.FirstName);
         profile.LastName = GetNewValueOrExisting(updateProfileObject.LastName, profile.LastName);
-        profile.UserName = GetNewValueOrExisting(updateProfileObject.LastName, profile.LastName);
+        profile.UserName = GetNewValueOrExisting(updateProfileObject.UserName, profile.UserName);
         profile.Password = ProcessPassword(profile.Password, updateProfileObject.NewPassword);
         
         repository.Update(profile);

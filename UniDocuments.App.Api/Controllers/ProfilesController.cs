@@ -19,16 +19,15 @@ public class ProfilesController : IdentityController
         _mediator = mediator;
     }
 
-    [HttpPut("Update")]
-    public async Task<IActionResult> Update(
-        [FromBody] UpdateProfileObject updateProfileObject, CancellationToken cancellationToken)
+    [HttpPost("Update")]
+    public async Task<IActionResult> Update([FromBody] UpdateProfileObject updateProfileObject)
     {
         var command = new CommandUpdateProfile(ProfileId(), updateProfileObject);
-        var result = await _mediator.Send(command, cancellationToken);
+        var result = await _mediator.Send(command);
 
         if (!result.IsSuccess)
         {
-            return BadRequest(result);
+            return Ok(result);
         }
 
         return Ok(result);
