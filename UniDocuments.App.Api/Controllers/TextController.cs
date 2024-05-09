@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UniDocuments.App.Application.Plagiarism.Text;
+using UniDocuments.App.Application.Documents.Plagiarism.Text;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
 using UniDocuments.Text.Domain.Providers.Matching.Requests;
 

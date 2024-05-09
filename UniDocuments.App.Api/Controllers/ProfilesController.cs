@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Base;
-using UniDocuments.App.Application.Profile;
+using UniDocuments.App.Application.App.Profile;
 using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Api.Controllers;

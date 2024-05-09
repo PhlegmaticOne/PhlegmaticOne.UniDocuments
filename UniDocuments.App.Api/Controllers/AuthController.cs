@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UniDocuments.App.Application.Login.Commands;
-using UniDocuments.App.Application.Login.Queries;
+using UniDocuments.App.Application.App.Login.Commands;
+using UniDocuments.App.Application.App.Login.Queries;
 using UniDocuments.App.Shared.Users;
 
 namespace UniDocuments.App.Api.Controllers;

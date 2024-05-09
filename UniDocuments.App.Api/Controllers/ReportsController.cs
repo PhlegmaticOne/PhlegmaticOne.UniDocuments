@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Requests;
-using UniDocuments.App.Application.Plagiarism.Reports;
+using UniDocuments.App.Application.Documents.Plagiarism.Reports;
 
 namespace UniDocuments.App.Api.Controllers;
 

@@ -1,0 +1,11 @@
+﻿using PhlegmaticOne.OperationResults.Mediatr;
+using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Responses;
+
+namespace UniDocuments.App.Application.Documents.Plagiarism.RawSearching.Base;
+
+public class QuerySearchPlagiarism : IOperationResultQuery<PlagiarismSearchResponseDocument>
+{
+    public int TopCount { get; set; }
+    public int InferEpochs { get; set; }
+    public string ModelName { get; set; } = null!;
+}

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using UniDocuments.App.Api.Infrastructure.Configurations;
-using UniDocuments.App.Application.ContentRead;
-using UniDocuments.App.Application.Uploading;
+using UniDocuments.App.Application.Documents.ContentRead;
+using UniDocuments.App.Application.Documents.Uploading;
 
 namespace UniDocuments.App.Api.Controllers;
 
