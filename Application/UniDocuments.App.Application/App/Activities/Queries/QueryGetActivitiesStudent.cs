@@ -4,6 +4,7 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Shared.Activities;
+using UniDocuments.App.Shared.Activities.Display;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 
@@ -29,7 +30,6 @@ public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<Que
             .Select(x => new ActivityDisplayObject
             {
                 Id = x.Id,
-                Description = x.Description,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 DocumentsCount = x.Documents.Count,

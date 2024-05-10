@@ -1,4 +1,4 @@
-﻿namespace UniDocuments.App.Shared.Activities;
+﻿namespace UniDocuments.App.Shared.Activities.Create;
 
 public class CreateActivityObject
 {

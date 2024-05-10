@@ -4,6 +4,8 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Shared.Activities;
+using UniDocuments.App.Shared.Activities.AddStudents;
+using UniDocuments.App.Shared.Activities.Display;
 
 namespace UniDocuments.App.Application.App.Activities.Commands;
 
@@ -60,7 +62,6 @@ public class CommandActivityAddStudentsHandler : IOperationResultCommandHandler<
             StartDate = activity.StartDate,
             EndDate = activity.EndDate,
             Name = activity.Name,
-            Description = activity.Description,
             DocumentsCount = 0,
             StudentsCount = activity.Students.Count
         };

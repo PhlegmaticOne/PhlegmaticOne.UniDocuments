@@ -4,6 +4,8 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Shared.Activities;
+using UniDocuments.App.Shared.Activities.Create;
+using UniDocuments.App.Shared.Activities.Display;
 
 namespace UniDocuments.App.Application.App.Activities.Commands;
 
@@ -50,7 +52,6 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
         var result = new ActivityDisplayObject
         {
             Id = entry.Entity.Id,
-            Description = createObject.Description,
             Name = createObject.Name,
             StartDate = createObject.StartDate,
             EndDate = createObject.EndDate,
