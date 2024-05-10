@@ -5,7 +5,7 @@ using UniDocuments.App.Api.Controllers.Base;
 using UniDocuments.App.Application.App.Profile;
 using UniDocuments.App.Shared.Users;
 
-namespace UniDocuments.App.Api.Controllers;
+namespace UniDocuments.App.Api.Controllers.App;
 
 [ApiController]
 [Route("api/[controller]")]

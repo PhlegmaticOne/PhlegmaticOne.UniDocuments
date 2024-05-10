@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Application.App.Login.Commands;
 using UniDocuments.App.Application.App.Login.Queries;
 using UniDocuments.App.Shared.Users;
-using UniDocuments.App.Shared.Users.Enums;
 
-namespace UniDocuments.App.Api.Controllers;
+namespace UniDocuments.App.Api.Controllers.App;
 
 [ApiController]
 [Route("api/[controller]")]

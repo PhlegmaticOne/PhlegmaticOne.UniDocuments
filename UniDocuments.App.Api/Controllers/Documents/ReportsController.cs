@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Requests;
 using UniDocuments.App.Application.Documents.Plagiarism.Reports;
 
-namespace UniDocuments.App.Api.Controllers;
+namespace UniDocuments.App.Api.Controllers.Documents;
 
 [ApiController]
 [Route("api/[controller]")]

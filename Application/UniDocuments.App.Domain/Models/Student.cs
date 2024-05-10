@@ -4,8 +4,8 @@ namespace UniDocuments.App.Domain.Models;
 
 public class Student : Person
 {
-    public IList<StudyActivity> Activities { get; set; } = null!;
-    public IList<StudyDocument> Documents { get; set; } = null!;
+    public List<StudyActivity> Activities { get; set; } = new();
+    public List<StudyDocument> Documents { get; set; } = new();
 
     public Student WithPassword(string password)
     {

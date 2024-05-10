@@ -10,8 +10,8 @@ public class StudyActivity : EntityBase
     public DateTime EndDate { get; set; }
     public Guid CreatorId { get; set; }
     public Teacher Creator { get; set; } = null!;
-    public IList<Student> Students { get; set; } = null!;
-    public IList<StudyDocument> Documents { get; set; } = null!;
+    public List<Student> Students { get; set; } = new();
+    public List<StudyDocument> Documents { get; set; } = new();
 
     public StudyActivity ToAnyActivity()
     {

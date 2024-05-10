@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PhlegmaticOne.OperationResults;
@@ -70,12 +71,17 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         catch (Exception e)
         {
             _logger.LogCritical(e, UploadDocumentInternalError);
-            return OperationResult.Failed(UploadDocumentInternalError, e.Message);
+            return OperationResult.Failed<Guid>(UploadDocumentInternalError, e.Message);
         }
     }
 
-    private async Task<Guid> ExecuteAsync(CommandUploadDocument request, CancellationToken cancellationToken)
+    private async Task<OperationResult<Guid>> ExecuteAsync(CommandUploadDocument request, CancellationToken cancellationToken)
     {
+        if (await CanLoadToActivityAsync(request.ActivityId, request.ProfileId, cancellationToken))
+        {
+            return OperationResult.Failed<Guid>("Can't load document to activity");
+        }
+        
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
 
         var newDocument = await CreateDocumentAsync(request, content, cancellationToken);
@@ -94,7 +100,28 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return documentId;
+        return OperationResult.Successful(documentId);
+    }
+
+    private async Task<bool> CanLoadToActivityAsync(Guid activityId, Guid studentId, CancellationToken cancellationToken)
+    {
+        var data = await _dbContext.Set<StudyActivity>()
+            .Where(x => x.Id == activityId)
+            .Select(x => new
+            {
+                Students = x.Students.Select(s => s.Id),
+                x.EndDate
+            })
+            .ToListAsync(cancellationToken);
+
+        if (data.Count == 0)
+        {
+            return false;
+        }
+
+        var activityData = data[0];
+
+        return DateTime.UtcNow < activityData.EndDate && activityData.Students.Contains(studentId);
     }
 
     private ValueTask<EntityEntry<StudyDocument>> CreateDocumentAsync(
@@ -106,7 +133,7 @@ public class CommandUploadDocumentHandler : IOperationResultCommandHandler<Comma
             StudentId = request.ProfileId,
             DateLoaded = DateTime.UtcNow,
             Name = request.FileName,
-            ValuableParagraphsCount = content.ParagraphsCount
+            ValuableParagraphsCount = content.ParagraphsCount,
         }, cancellationToken);
     }
 

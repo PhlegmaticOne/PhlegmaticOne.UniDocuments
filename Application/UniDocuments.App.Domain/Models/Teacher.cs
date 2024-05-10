@@ -4,5 +4,5 @@ namespace UniDocuments.App.Domain.Models;
 
 public class Teacher : Person
 {
-    public IList<StudyActivity> Activities { get; set; } = null!;
+    public List<StudyActivity> Activities { get; set; } = new();
 }

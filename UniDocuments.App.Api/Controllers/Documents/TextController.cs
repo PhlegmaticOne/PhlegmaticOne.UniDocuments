@@ -5,7 +5,7 @@ using UniDocuments.App.Application.Documents.Plagiarism.Text;
 using UniDocuments.Text.Domain.Providers.Comparing.Requests;
 using UniDocuments.Text.Domain.Providers.Matching.Requests;
 
-namespace UniDocuments.App.Api.Controllers;
+namespace UniDocuments.App.Api.Controllers.Documents;
 
 [ApiController]
 [Route("api/[controller]")]
