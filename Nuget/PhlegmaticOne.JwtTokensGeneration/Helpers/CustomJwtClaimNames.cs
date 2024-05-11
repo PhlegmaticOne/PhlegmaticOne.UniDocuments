@@ -5,4 +5,5 @@ public static class CustomJwtClaimNames
     public const string UserId = "UserId";
     public const string AppRole = "AppRole";
     public const string StudyRole = "StudyRole";
+    public const string JoinDate = "JoinDate";
 }

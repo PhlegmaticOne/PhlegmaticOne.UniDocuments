@@ -10,5 +10,6 @@ public class ProfileObject
     public string UserName { get; set; } = null!;
     public StudyRole StudyRole { get; set; }
     public AppRole AppRole { get; set; }
+    public DateTime JoinDate { get; set; }
     public JwtTokenObject JwtToken { get; set; } = null!;
 }

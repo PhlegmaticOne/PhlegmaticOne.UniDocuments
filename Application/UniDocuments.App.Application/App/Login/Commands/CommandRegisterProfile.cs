@@ -29,17 +29,20 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
     private readonly ApplicationDbContext _dbContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IProfileSetuper _profileSetuper;
+    private readonly ITimeProvider _timeProvider;
     private readonly ILogger<CommandRegisterProfileHandler> _logger;
 
     public CommandRegisterProfileHandler(
         ApplicationDbContext dbContext,
         IPasswordHasher passwordHasher,
         IProfileSetuper profileSetuper,
+        ITimeProvider timeProvider,
         ILogger<CommandRegisterProfileHandler> logger)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;
         _profileSetuper = profileSetuper;
+        _timeProvider = timeProvider;
         _logger = logger;
     }
     
@@ -83,7 +86,8 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
             LastName = registerObject.LastName,
             UserName = registerObject.UserName,
             Password = _passwordHasher.Hash(registerObject.Password),
-            Role = ApplicationRole.Default
+            Role = ApplicationRole.Default,
+            JoinDate = _timeProvider.Now
         };
     }
 }

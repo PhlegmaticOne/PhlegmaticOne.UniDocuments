@@ -32,6 +32,8 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
             .WithOne(x => x.Student)
             .HasForeignKey(x => x.StudentId);
 
+        builder.Property(x => x.JoinDate).IsRequired();
+
         builder.Property(x => x.Password).IsRequired();
 
         builder.Property(x => x.UserName).IsRequired();

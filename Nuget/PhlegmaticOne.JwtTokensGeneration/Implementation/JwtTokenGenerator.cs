@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
 using PhlegmaticOne.JwtTokensGeneration.Helpers;
 using PhlegmaticOne.JwtTokensGeneration.Models;
 using PhlegmaticOne.JwtTokensGeneration.Options;
@@ -26,6 +27,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(CustomJwtClaimNames.UserId, userRegisteringModel.Id.ToString()),
             new(CustomJwtClaimNames.AppRole, userRegisteringModel.AppRole.ToString()),
             new(CustomJwtClaimNames.StudyRole, userRegisteringModel.StudyRole.ToString()),
+            new(CustomJwtClaimNames.JoinDate, userRegisteringModel.JoinDate.ToString(CultureInfo.InvariantCulture)),
         };
 
         var securityKey = _jwtOptions.GetSecretKey();

@@ -5,6 +5,7 @@ using PhlegmaticOne.PythonTasks;
 using UniDocuments.App.Api.Infrastructure.Configurations;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
+using UniDocuments.App.Domain.Services;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Preprocessing.Stopwords;
@@ -25,6 +26,7 @@ public static class AppInitializer
         var passwordHasher = services.GetRequiredService<IPasswordHasher>();
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
         var settings = services.GetRequiredService<IOptions<ApplicationSettings>>();
+        var timeProvider = services.GetRequiredService<ITimeProvider>();
         
         if (configuration.UseRealDatabase)
         {
@@ -33,7 +35,7 @@ public static class AppInitializer
         }
 
         await CreateOrMigrate(dbContext, cancellationToken);
-        await SeedUsersAsync(dbContext, settings.Value, passwordHasher, cancellationToken);
+        await SeedUsersAsync(dbContext, settings.Value, timeProvider, passwordHasher, cancellationToken);
         await stopWordsService.InitializeAsync(cancellationToken);
         await documentMapperInitializer.InitializeAsync(cancellationToken);
         pythonTaskPool.Start(cancellationToken);
@@ -52,26 +54,38 @@ public static class AppInitializer
     }
 
     private static async Task SeedUsersAsync(
-        ApplicationDbContext context, ApplicationSettings settings, IPasswordHasher passwordHasher, CancellationToken cancellationToken)
+        ApplicationDbContext context, ApplicationSettings settings,
+        ITimeProvider timeProvider, IPasswordHasher passwordHasher, CancellationToken cancellationToken)
     {
         var students = context.Set<Student>();
         var activities = context.Set<StudyActivity>();
+        var teachers = context.Set<Teacher>();
+        var date = timeProvider.Now;
+        Teacher? teacher = null;
 
         if (await students.AnyAsync(cancellationToken) == false)
         {
             var users = new List<Student>
             {
-                settings.Admin.WithPassword(passwordHasher.Hash(settings.Admin.Password)),
-                settings.Teacher.WithPassword(passwordHasher.Hash(settings.Teacher.Password)),
-                settings.Student.WithPassword(passwordHasher.Hash(settings.Student.Password)),
+                settings.Admin.With<Student>(
+                    passwordHasher.Hash(settings.Admin.Password), date),
+                settings.Student.With<Student>(
+                    passwordHasher.Hash(settings.Student.Password), date),
             };
             
             await students.AddRangeAsync(users, cancellationToken);
         }
 
+        if (await teachers.AnyAsync(cancellationToken) == false)
+        {
+            teacher = settings.Teacher.With<Teacher>(
+                passwordHasher.Hash(settings.Teacher.Password), date);
+            await teachers.AddAsync(teacher, cancellationToken);
+        }
+
         if (await activities.AnyAsync(cancellationToken) == false)
         {
-            var activity = settings.DefaultActivity.ToAnyActivity();
+            var activity = settings.DefaultActivity.ToAnyActivity(teacher!, date);
             await activities.AddAsync(activity, cancellationToken);
         }
         

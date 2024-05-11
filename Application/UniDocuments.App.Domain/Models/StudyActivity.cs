@@ -8,12 +8,13 @@ public class StudyActivity : EntityBase
     public string Description { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public DateTime CreationDate { get; set; }
     public Guid CreatorId { get; set; }
     public Teacher Creator { get; set; } = null!;
     public List<Student> Students { get; set; } = new();
     public List<StudyDocument> Documents { get; set; } = new();
 
-    public StudyActivity ToAnyActivity()
+    public StudyActivity ToAnyActivity(Teacher creator, DateTime creationDate)
     {
         return new StudyActivity
         {
@@ -21,7 +22,10 @@ public class StudyActivity : EntityBase
             Name = Name,
             StartDate = DateTime.MinValue,
             EndDate = DateTime.MaxValue,
-            Id = Id
+            Id = Id,
+            Creator = creator,
+            CreatorId = creator.Id,
+            CreationDate = creationDate
         };
     }
 }

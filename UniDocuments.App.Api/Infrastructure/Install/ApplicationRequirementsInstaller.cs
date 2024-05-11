@@ -14,7 +14,14 @@ public static class ApplicationRequirementsInstaller
         this IServiceCollection serviceCollection, string connectionString, ApplicationConfiguration applicationConfiguration)
     {
         serviceCollection.AddPythonTaskPool(applicationConfiguration.IncludePythonScripts);
-        serviceCollection.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly));
+        
+        serviceCollection.AddMediatR(x =>
+        {
+            x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly);
+        });
+        
+        serviceCollection.AddAutoMapper(_ => { }, typeof(UniDocumentApplicationReference).Assembly);
+        
         serviceCollection.AddDbContext<ApplicationDbContext>(x =>
         {
             if (!applicationConfiguration.UseRealDatabase)

@@ -19,6 +19,7 @@ public class StudyActivityConfiguration : IEntityTypeConfiguration<StudyActivity
         builder.Property(x => x.Description).IsRequired();
         builder.Property(x => x.StartDate).IsRequired();
         builder.Property(x => x.EndDate).IsRequired();
+        builder.Property(x => x.CreationDate).IsRequired();
 
         builder.HasIndex(x => x.Name);
 

@@ -29,6 +29,8 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
             .WithOne(x => x.Creator)
             .HasForeignKey(x => x.CreatorId);
 
+        builder.Property(x => x.JoinDate).IsRequired();
+        
         builder.Property(x => x.Password).IsRequired();
 
         builder.Property(x => x.UserName).IsRequired();
