@@ -1,16 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PhlegmaticOne.OperationResults;
+﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using PhlegmaticOne.PagedLists.Extensions;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Shared.Activities;
 using UniDocuments.App.Shared.Activities.Display;
+using UniDocuments.App.Shared.Shared;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 
 public class QueryGetActivitiesTeacher : IdentityOperationResultQuery<ActivityDisplayList>
 {
-    public QueryGetActivitiesTeacher(Guid profileId) : base(profileId) { }
+    public PagedListData Data { get; }
+
+    public QueryGetActivitiesTeacher(Guid profileId, PagedListData data) : base(profileId)
+    {
+        Data = data;
+    }
 }
 
 public class QueryGetActivitiesTeacherHandler : IOperationResultQueryHandler<QueryGetActivitiesTeacher, ActivityDisplayList>
@@ -35,9 +40,10 @@ public class QueryGetActivitiesTeacherHandler : IOperationResultQueryHandler<Que
                 DocumentsCount = x.Documents.Count,
                 StudentsCount = x.Students.Count,
                 Name = x.Name,
-                Creator = x.Creator.UserName,
+                CreatorFirstName = x.Creator.FirstName,
+                CreatorLastName = x.Creator.LastName,
                 IsExpired = DateTime.UtcNow > x.EndDate
-            }).ToListAsync(cancellationToken);
+            }).ToPagedListAsync(request.Data.PageIndex, request.Data.PageSize, cancellationToken: cancellationToken);
 
         return OperationResult.Successful(new ActivityDisplayList
         {

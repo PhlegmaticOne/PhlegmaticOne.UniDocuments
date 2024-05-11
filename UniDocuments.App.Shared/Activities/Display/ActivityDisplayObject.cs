@@ -3,7 +3,8 @@
 public class ActivityDisplayObject
 {
     public Guid Id { get; set; }
-    public string Creator { get; set; } = null!;
+    public string CreatorFirstName { get; set; } = null!;
+    public string CreatorLastName { get; set; } = null!;
     public string Name { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

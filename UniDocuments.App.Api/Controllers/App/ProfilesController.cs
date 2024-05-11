@@ -27,7 +27,7 @@ public class ProfilesController : IdentityController
 
         if (!result.IsSuccess)
         {
-            return Ok(result);
+            return BadRequest(result);
         }
 
         return Ok(result);

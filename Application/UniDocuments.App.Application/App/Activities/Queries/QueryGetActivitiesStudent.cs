@@ -1,19 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PhlegmaticOne.OperationResults;
+﻿using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using PhlegmaticOne.PagedLists.Extensions;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Shared.Activities;
 using UniDocuments.App.Shared.Activities.Display;
+using UniDocuments.App.Shared.Shared;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 
 public class QueryGetActivitiesStudent : IdentityOperationResultQuery<ActivityDisplayList>
 {
-    public QueryGetActivitiesStudent(Guid profileId) : base(profileId) { }
+    public PagedListData Data { get; }
+    
+    public QueryGetActivitiesStudent(Guid profileId, PagedListData data) : base(profileId)
+    {
+        Data = data;
+    }
 }
 
-public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<QueryGetActivitiesTeacher, ActivityDisplayList>
+public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<QueryGetActivitiesStudent, ActivityDisplayList>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -23,7 +28,7 @@ public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<Que
     }
     
     public async Task<OperationResult<ActivityDisplayList>> Handle(
-        QueryGetActivitiesTeacher request, CancellationToken cancellationToken)
+        QueryGetActivitiesStudent request, CancellationToken cancellationToken)
     {
         var activities = await _dbContext.Set<StudyActivity>()
             .Where(x => x.Students.Any(s => s.Id == request.ProfileId))
@@ -35,9 +40,10 @@ public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<Que
                 DocumentsCount = x.Documents.Count,
                 StudentsCount = x.Students.Count,
                 Name = x.Name,
-                Creator = x.Creator.UserName,
+                CreatorFirstName = x.Creator.FirstName,
+                CreatorLastName = x.Creator.LastName,
                 IsExpired = DateTime.UtcNow > x.EndDate
-            }).ToListAsync(cancellationToken);
+            }).ToPagedListAsync(request.Data.PageIndex, request.Data.PageSize, cancellationToken: cancellationToken);
 
         return OperationResult.Successful(new ActivityDisplayList
         {

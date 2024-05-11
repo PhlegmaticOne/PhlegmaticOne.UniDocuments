@@ -44,7 +44,11 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
 
         var creatorName = await _dbContext.Set<Teacher>()
             .Where(x => x.Id == createObject.TeacherId)
-            .Select(x => x.UserName)
+            .Select(x => new
+            {
+                x.FirstName,
+                x.LastName
+            })
             .FirstOrDefaultAsync(cancellationToken);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -55,7 +59,8 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
             Name = createObject.Name,
             StartDate = createObject.StartDate,
             EndDate = createObject.EndDate,
-            Creator = creatorName!,
+            CreatorFirstName = creatorName!.FirstName,
+            CreatorLastName = creatorName.LastName,
             DocumentsCount = 0,
             StudentsCount = 0,
             IsExpired = DateTime.UtcNow > createObject.EndDate

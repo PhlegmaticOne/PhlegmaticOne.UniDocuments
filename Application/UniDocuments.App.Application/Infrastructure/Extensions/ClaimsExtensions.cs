@@ -11,4 +11,10 @@ public static class ClaimsExtensions
         var claimValue = claimsPrincipal.Claims.First(x => x.Type == CustomJwtClaimNames.StudyRole).Value;
         return (StudyRole)int.Parse(claimValue);
     }
+    
+    public static AppRole AppRole(this ClaimsPrincipal claimsPrincipal)
+    {
+        var claimValue = claimsPrincipal.Claims.First(x => x.Type == CustomJwtClaimNames.AppRole).Value;
+        return (AppRole)int.Parse(claimValue);
+    }
 }
