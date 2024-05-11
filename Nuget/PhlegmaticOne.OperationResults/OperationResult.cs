@@ -28,13 +28,13 @@ public class OperationResult
         };
     }
 
-    public static OperationResult<T> Failed<T>(string? errorCode = null, string? errorMessage = null)
+    public static OperationResult<T> Failed<T>(string? errorCode = null, string? errorMessage = null, T? result = default)
     {
         return new OperationResult<T>
         {
             IsSuccess = false,
             ErrorMessage = errorMessage ?? string.Empty,
-            Result = default,
+            Result = result,
             ErrorCode = errorCode ?? string.Empty
         };
     }

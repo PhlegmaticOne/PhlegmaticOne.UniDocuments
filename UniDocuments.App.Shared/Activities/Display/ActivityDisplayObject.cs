@@ -10,5 +10,4 @@ public class ActivityDisplayObject
     public DateTime EndDate { get; set; }
     public int StudentsCount { get; set; }
     public int DocumentsCount { get; set; }
-    public bool IsExpired { get; set; }
 }

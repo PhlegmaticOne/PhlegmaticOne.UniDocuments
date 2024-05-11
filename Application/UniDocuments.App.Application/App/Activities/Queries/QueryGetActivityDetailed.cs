@@ -37,23 +37,22 @@ public class QueryGetActivityDetailedHandler :
                 Id = x.Id,
                 Description = x.Description,
                 Name = x.Name,
-                IsExpired = DateTime.UtcNow > x.EndDate,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
-                Creator = x.Creator.UserName,
+                CreatorFirstName = x.Creator.FirstName,
+                CreatorLastName = x.Creator.LastName,
                 Students = x.Students.Select(s => new ActivityDetailedStudentObject
                 {
                     Id = s.Id,
                     FirstName = s.FirstName,
                     LastName = s.LastName,
-                    Documents = s.Documents
-                        .Where(d => d.Id == request.ActivityId)
-                        .Select(d => new ActivityDetailedDocumentObject
-                        {
-                            Id = d.Id,
-                            Name = d.Name,
-                            DateLoaded = d.DateLoaded
-                        }).ToList()
+                }).ToList(),
+                Documents = x.Documents.Select(d => new ActivityDetailedDocumentObject
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    DateLoaded = d.DateLoaded,
+                    StudentId = d.StudentId
                 }).ToList()
             })
             .FirstOrDefaultAsync(cancellationToken);

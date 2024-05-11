@@ -42,7 +42,6 @@ public class QueryGetActivitiesTeacherHandler : IOperationResultQueryHandler<Que
                 Name = x.Name,
                 CreatorFirstName = x.Creator.FirstName,
                 CreatorLastName = x.Creator.LastName,
-                IsExpired = DateTime.UtcNow > x.EndDate
             }).ToPagedListAsync(request.Data.PageIndex, request.Data.PageSize, cancellationToken: cancellationToken);
 
         return OperationResult.Successful(new ActivityDisplayList
