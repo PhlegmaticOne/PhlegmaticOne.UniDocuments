@@ -90,6 +90,13 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
             CreatorLastName = request.ProfileData.LastName,
             Description = entity.Description,
             CreationDate = entity.CreationDate,
+            Students = entity.Students.Select(x => new ActivityDetailedStudentObject
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Document = null
+            }).ToList()
         };
     }
 }

@@ -34,6 +34,20 @@ public class ActivitiesController : IdentityController
 
         return Ok(result);
     }
+
+    [HttpGet("GetDetailed")]
+    public async Task<IActionResult> GetDetailed([FromQuery] Guid activityId, CancellationToken cancellationToken)
+    {
+        var query = new QueryGetActivityDetailed(ProfileData(), activityId);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
     
     [HttpPost("Create")]
     public async Task<IActionResult> Create(

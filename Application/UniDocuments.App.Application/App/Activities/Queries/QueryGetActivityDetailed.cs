@@ -73,6 +73,7 @@ public class QueryGetActivityDetailedHandler :
                 EndDate = x.EndDate,
                 CreatorFirstName = request.ProfileData.FirstName,
                 CreatorLastName = request.ProfileData.LastName,
+                CreationDate = x.CreationDate,
                 Students = x.Students.Select(s => new ActivityDetailedStudentPrivate
                 {
                     Id = s.Id,

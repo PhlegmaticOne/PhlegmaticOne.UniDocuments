@@ -8,7 +8,12 @@ namespace UniDocuments.App.Application.Documents.ContentRead;
 
 public class QueryGetDocumentById : IOperationResultQuery<DocumentLoadResponse>
 {
-    public Guid Id { get; set; }
+    public QueryGetDocumentById(Guid id)
+    {
+        Id = id;
+    }
+    
+    public Guid Id { get; }
 }
 
 public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGetDocumentById, DocumentLoadResponse>
