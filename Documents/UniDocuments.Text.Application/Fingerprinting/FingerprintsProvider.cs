@@ -29,15 +29,17 @@ public class FingerprintsProvider : IFingerprintsProvider
         _dbContext = dbContext;
     }
 
+    public TextFingerprint Compute(UniDocument document)
+    {
+        var options = _optionsProvider.GetOptions();
+        var fingerprint = _algorithm.Fingerprint(document, options);
+        _container.AddOrReplace(document.Id, fingerprint);
+        return fingerprint;
+    }
+
     public Task<TextFingerprint> ComputeAsync(UniDocument document, CancellationToken cancellationToken)
     {
-        return Task.Run(() =>
-        {
-            var options = _optionsProvider.GetOptions();
-            var fingerprint = _algorithm.Fingerprint(document, options);
-            _container.AddOrReplace(document.Id, fingerprint);
-            return fingerprint;
-        }, cancellationToken);
+        return Task.Run(() => Compute(document), cancellationToken);
     }
 
     public Task<TextFingerprint> GetForDocumentAsync(UniDocument content, CancellationToken cancellationToken)

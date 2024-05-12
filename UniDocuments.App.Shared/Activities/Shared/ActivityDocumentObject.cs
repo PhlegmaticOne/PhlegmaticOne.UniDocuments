@@ -1,6 +1,6 @@
-﻿namespace UniDocuments.App.Shared.Activities.Detailed;
+﻿namespace UniDocuments.App.Shared.Activities.Shared;
 
-public class ActivityDetailedDocumentObject
+public class ActivityDocumentObject
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;

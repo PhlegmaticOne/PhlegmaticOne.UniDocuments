@@ -34,6 +34,20 @@ public class ActivitiesController : IdentityController
 
         return Ok(result);
     }
+    
+    [HttpGet("GetForStudent")]
+    public async Task<IActionResult> GetForStudent([FromQuery] PagedListData data, CancellationToken cancellationToken)
+    {
+        var query = new QueryGetActivitiesStudent(ProfileId(), data);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
 
     [HttpGet("GetDetailed")]
     public async Task<IActionResult> GetDetailed([FromQuery] Guid activityId, CancellationToken cancellationToken)

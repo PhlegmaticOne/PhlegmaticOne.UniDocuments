@@ -62,6 +62,7 @@ public static class AppInitializer
         var teachers = context.Set<Teacher>();
         var date = timeProvider.Now;
         Teacher? teacher = null;
+        Student? student = null;
 
         if (await students.AnyAsync(cancellationToken) == false)
         {
@@ -72,7 +73,8 @@ public static class AppInitializer
                 settings.Student.With<Student>(
                     passwordHasher.Hash(settings.Student.Password), date),
             };
-            
+
+            student = users[0];
             await students.AddRangeAsync(users, cancellationToken);
         }
 
@@ -86,6 +88,7 @@ public static class AppInitializer
         if (await activities.AnyAsync(cancellationToken) == false)
         {
             var activity = settings.DefaultActivity.ToAnyActivity(teacher!, date);
+            activity.Students.Add(student!);
             await activities.AddAsync(activity, cancellationToken);
         }
         

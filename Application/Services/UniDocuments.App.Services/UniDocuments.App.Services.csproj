@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Nuget\PhlegmaticOne.JwtTokensGeneration\PhlegmaticOne.JwtTokensGeneration.csproj" />
       <ProjectReference Include="..\..\..\UniDocuments.App.Shared\UniDocuments.App.Shared.csproj" />
+      <ProjectReference Include="..\..\Data\UniDocuments.App.Data.EntityFramework\UniDocuments.App.Data.EntityFramework.csproj" />
       <ProjectReference Include="..\..\UniDocuments.App.Domain\UniDocuments.App.Domain.csproj" />
     </ItemGroup>
 

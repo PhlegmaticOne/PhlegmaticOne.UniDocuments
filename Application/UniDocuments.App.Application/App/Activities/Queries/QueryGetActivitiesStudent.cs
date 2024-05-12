@@ -3,12 +3,13 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using PhlegmaticOne.PagedLists.Extensions;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Shared.Activities.Display;
+using UniDocuments.App.Shared.Activities.My;
+using UniDocuments.App.Shared.Activities.Shared;
 using UniDocuments.App.Shared.Shared;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 
-public class QueryGetActivitiesStudent : IdentityOperationResultQuery<ActivityDisplayList>
+public class QueryGetActivitiesStudent : IdentityOperationResultQuery<ActivityMyList>
 {
     public PagedListData Data { get; }
     
@@ -18,7 +19,7 @@ public class QueryGetActivitiesStudent : IdentityOperationResultQuery<ActivityDi
     }
 }
 
-public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<QueryGetActivitiesStudent, ActivityDisplayList>
+public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<QueryGetActivitiesStudent, ActivityMyList>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -27,24 +28,33 @@ public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<Que
         _dbContext = dbContext;
     }
     
-    public async Task<OperationResult<ActivityDisplayList>> Handle(
+    public async Task<OperationResult<ActivityMyList>> Handle(
         QueryGetActivitiesStudent request, CancellationToken cancellationToken)
     {
         var activities = await _dbContext.Set<StudyActivity>()
             .Where(x => x.Students.Any(s => s.Id == request.ProfileId))
-            .Select(x => new ActivityDisplayObject
+            .OrderByDescending(x => x.StartDate)
+            .Select(x => new ActivityMyObject
             {
                 Id = x.Id,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
-                DocumentsCount = x.Documents.Count,
-                StudentsCount = x.Students.Count,
                 Name = x.Name,
                 CreatorFirstName = x.Creator.FirstName,
                 CreatorLastName = x.Creator.LastName,
-            }).ToPagedListAsync(request.Data.PageIndex, request.Data.PageSize, cancellationToken: cancellationToken);
+                Description = x.Description,
+                Document = x.Documents
+                    .Where(d => d.StudentId == request.ProfileId)
+                    .Select(d => new ActivityDocumentObject 
+                    { 
+                        Id = d.Id, 
+                        Name = d.Name, 
+                        DateLoaded = d.DateLoaded 
+                    }).FirstOrDefault()
+            })
+            .ToPagedListAsync(request.Data.PageIndex, request.Data.PageSize, cancellationToken: cancellationToken);
 
-        return OperationResult.Successful(new ActivityDisplayList
+        return OperationResult.Successful(new ActivityMyList
         {
             Activities = activities
         });

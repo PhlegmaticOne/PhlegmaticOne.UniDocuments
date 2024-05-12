@@ -26,20 +26,44 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         return new DocumentLoadResponse(document.Name, stream);
     }
 
-    public async Task<Guid> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<Guid> SaveAsync(StorageSaveRequest saveRequest, CancellationToken cancellationToken)
     {
+        var set = _dbContext.Set<StudyDocumentFile>();
         saveRequest.Stream.SeekToZero();
         
         await using var memoryStream = new MemoryStream();
         await saveRequest.Stream.CopyToAsync(memoryStream, cancellationToken);
-        
+
+        var file = await set.FirstOrDefaultAsync(x => x.StudyDocumentId == saveRequest.Id, cancellationToken);
+
+        if (file is not null)
+        {
+            return UpdateExisting(file, memoryStream, saveRequest);
+        }
+
+        return await CreateNew(memoryStream, saveRequest, cancellationToken);
+    }
+
+    private async Task<Guid> CreateNew(
+        MemoryStream memoryStream, StorageSaveRequest saveRequest, CancellationToken cancellationToken)
+    {
         var entry = await _dbContext.Set<StudyDocumentFile>().AddAsync(new StudyDocumentFile
         {
+            Id = saveRequest.Id,
             StudyDocumentId = saveRequest.Id,
             Content = memoryStream.ToArray(),
             Name = saveRequest.Name
         }, cancellationToken);
         
         return entry.Entity.Id;
+    }
+
+    private Guid UpdateExisting(
+        StudyDocumentFile file, MemoryStream memoryStream, StorageSaveRequest saveRequest)
+    {
+        file.Content = memoryStream.ToArray();
+        file.Name = saveRequest.Name;
+        _dbContext.Update(file);
+        return file.Id;
     }
 }

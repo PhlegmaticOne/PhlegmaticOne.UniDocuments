@@ -57,7 +57,7 @@ public class DocumentsStorageSql : IDocumentsStorage
         }
     }
 
-    public async Task<Guid> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<Guid> SaveAsync(StorageSaveRequest saveRequest, CancellationToken cancellationToken)
     {
         var fileName = saveRequest.Name;
         var transactionContext = Array.Empty<byte>();

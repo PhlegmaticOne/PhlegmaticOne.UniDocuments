@@ -4,6 +4,7 @@ using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Shared.Activities.Detailed;
+using UniDocuments.App.Shared.Activities.Shared;
 using UniDocuments.Text.Domain.Extensions;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
@@ -104,7 +105,7 @@ public class QueryGetActivityDetailedHandler :
                 Id = student.Id,
                 FirstName = student.FirstName,
                 LastName = student.LastName,
-                Document = subgroup is null ? null : new ActivityDetailedDocumentObject
+                Document = subgroup is null ? null : new ActivityDocumentObject
                 {
                     Id = subgroup.Id,
                     Name = subgroup.Name,

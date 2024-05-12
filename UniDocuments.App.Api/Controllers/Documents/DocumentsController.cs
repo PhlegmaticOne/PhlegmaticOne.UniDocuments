@@ -1,16 +1,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UniDocuments.App.Api.Controllers.Requests;
+using UniDocuments.App.Api.Controllers.Base;
 using UniDocuments.App.Application.Documents.ContentRead;
 using UniDocuments.App.Application.Documents.Uploading;
+using UniDocuments.App.Shared.Documents;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
 
 [ApiController]
 [Route("api/[controller]")]
-[AllowAnonymous]
-public class DocumentsController : ControllerBase
+[Authorize]
+public class DocumentsController : IdentityController
 {
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     
@@ -23,12 +24,12 @@ public class DocumentsController : ControllerBase
 
     [HttpPost("Upload")]
     public async Task<IActionResult> Upload(
-        [FromForm] DocumentUploadRequest uploadRequest, CancellationToken cancellationToken)
+        [FromForm] DocumentUploadObject uploadRequest, CancellationToken cancellationToken)
     {
-        var profileId = uploadRequest.StudentId;
-        var activityId = uploadRequest.ActivityId;
-        var document = uploadRequest.Document;
-        var request = new CommandUploadDocument(profileId, activityId, document.OpenReadStream(), document.FileName);
+        var document = uploadRequest.File;
+        var request = new CommandUploadDocument(
+            ProfileId(), uploadRequest.Id, document.OpenReadStream(), document.FileName);
+        
         var result = await _mediator.Send(request, cancellationToken);
         
         if (!result.IsSuccess)

@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Domain.Services.DocumentsStorage;
+﻿using UniDocuments.Text.Domain.Extensions;
+using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
@@ -35,8 +36,9 @@ public class DocumentsStorageInMemory : IDocumentsStorage
         return Task.FromResult(result);
     }
 
-    public async Task<Guid> SaveAsync(DocumentSaveRequest saveRequest, CancellationToken cancellationToken)
+    public async Task<Guid> SaveAsync(StorageSaveRequest saveRequest, CancellationToken cancellationToken)
     {
+        saveRequest.Stream.SeekToZero();
         var fileBytes = await GetFileContentAsync(saveRequest, cancellationToken);
         var fileId = saveRequest.Id;
         _fileContents[fileId] = new FileLoadResponsePrepared(saveRequest.Name, fileBytes);
@@ -44,10 +46,10 @@ public class DocumentsStorageInMemory : IDocumentsStorage
     }
 
     private static async Task<byte[]> GetFileContentAsync(
-        DocumentSaveRequest documentSaveRequest, CancellationToken cancellationToken)
+        StorageSaveRequest storageSaveRequest, CancellationToken cancellationToken)
     {
         using var memoryStream = new MemoryStream();
-        await documentSaveRequest.Stream.CopyToAsync(memoryStream, cancellationToken);
+        await storageSaveRequest.Stream.CopyToAsync(memoryStream, cancellationToken);
         return memoryStream.ToArray();
     }
 }
