@@ -7,4 +7,5 @@ internal static class ConfigurationConstants
     public const string TeachersTableName = "Teachers";
     public const string StudyActivitiesTableName = "StudyActivities";
     public const string StudyDocumentsTableName = "StudyDocuments";
+    public const string StudyDocumentFilesTableName = "StudyDocumentFiles";
 }

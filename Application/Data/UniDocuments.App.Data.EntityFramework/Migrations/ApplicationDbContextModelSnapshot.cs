@@ -165,7 +165,8 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("StudyDocumentId")
                         .HasColumnType("uniqueidentifier");
@@ -175,7 +176,7 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     b.HasIndex("StudyDocumentId")
                         .IsUnique();
 
-                    b.ToTable("StudyDocumentFile");
+                    b.ToTable("StudyDocumentFiles", (string)null);
                 });
 
             modelBuilder.Entity("UniDocuments.App.Domain.Models.Teacher", b =>

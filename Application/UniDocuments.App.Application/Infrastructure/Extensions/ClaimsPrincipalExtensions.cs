@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
+using Microsoft.IdentityModel.JsonWebTokens;
 using PhlegmaticOne.JwtTokensGeneration.Helpers;
 using UniDocuments.App.Shared.Users.Enums;
 
 namespace UniDocuments.App.Application.Infrastructure.Extensions;
 
-public static class ClaimsExtensions
+public static class ClaimsPrincipalExtensions
 {
     public static StudyRole StudyRole(this ClaimsPrincipal claimsPrincipal)
     {

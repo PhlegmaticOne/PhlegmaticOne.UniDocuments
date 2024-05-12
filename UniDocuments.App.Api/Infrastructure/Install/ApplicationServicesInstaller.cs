@@ -4,7 +4,6 @@ using PhlegmaticOne.PasswordHasher;
 using PhlegmaticOne.PasswordHasher.Implementation;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Services;
-using UniDocuments.App.Services.Jwt;
 
 namespace UniDocuments.App.Api.Infrastructure.Install;
 

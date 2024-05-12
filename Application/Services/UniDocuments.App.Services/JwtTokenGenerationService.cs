@@ -3,7 +3,7 @@ using PhlegmaticOne.JwtTokensGeneration.Models;
 using UniDocuments.App.Domain.Services;
 using UniDocuments.App.Shared.Users;
 
-namespace UniDocuments.App.Services.Jwt;
+namespace UniDocuments.App.Services;
 
 public class JwtTokenGenerationService : IJwtTokenGenerationService
 {

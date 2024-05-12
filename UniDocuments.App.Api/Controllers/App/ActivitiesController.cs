@@ -24,7 +24,7 @@ public class ActivitiesController : IdentityController
     [HttpGet("GetForTeacher")]
     public async Task<IActionResult> GetForTeacher([FromQuery] PagedListData data, CancellationToken cancellationToken)
     {
-        var query = new QueryGetActivitiesTeacher(ProfileId(), data);
+        var query = new QueryGetActivitiesTeacher(ProfileData(), data);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)
@@ -39,7 +39,7 @@ public class ActivitiesController : IdentityController
     public async Task<IActionResult> Create(
         [FromBody] ActivityCreateObject data, CancellationToken cancellationToken)
     {
-        var query = new CommandCreateActivity(ProfileId(), data);
+        var query = new CommandCreateActivity(ProfileData(), data);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)

@@ -9,6 +9,6 @@ public class ActivityDetailedObject
     public string Description { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public DateTime CreationDate { get; set; }
     public List<ActivityDetailedStudentObject> Students { get; set; } = new();
-    public List<ActivityDetailedDocumentObject> Documents { get; set; } = new();
 }

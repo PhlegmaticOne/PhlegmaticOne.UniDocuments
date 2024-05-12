@@ -1,22 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Services;
-using UniDocuments.App.Shared.Activities;
 using UniDocuments.App.Shared.Activities.Create;
 using UniDocuments.App.Shared.Activities.Detailed;
-using UniDocuments.App.Shared.Activities.Display;
 
 namespace UniDocuments.App.Application.App.Activities.Commands;
 
-public class CommandCreateActivity : IdentityOperationResultCommand
+public class CommandCreateActivity : IOperationResultCommand
 {
+    public IdentityProfileData ProfileData { get; }
     public ActivityCreateObject CreateActivityObject { get; }
 
-    public CommandCreateActivity(Guid profileId, ActivityCreateObject createActivityObject) : base(profileId)
+    public CommandCreateActivity(IdentityProfileData profileData, ActivityCreateObject createActivityObject)
     {
+        ProfileData = profileData;
         CreateActivityObject = createActivityObject;
     }
 }
@@ -42,42 +43,53 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
 
         if (students.Count != createObject.Students.Count)
         {
-            var found = students.Select(x => x.UserName.ToLower());
-            var notFound = createObject.Students.Except(found).ToList();
-            return OperationResult.Failed(result: notFound);
+            return ErrorWithNotFoundStudents(students, createObject);
         }
 
+        var entity = await CreateActivity(request.ProfileData.Id, createObject, students, cancellationToken);
+        return OperationResult.Successful(CreateResult(entity, request));
+    }
+
+    private OperationResult<ActivityDetailedObject> ErrorWithNotFoundStudents(
+        List<Student> students, ActivityCreateObject createObject)
+    {
+        var found = students.Select(x => x.UserName.ToLower());
+        var notFound = createObject.Students.Except(found).ToList();
+        var errorData = JsonConvert.SerializeObject(notFound);
+        return OperationResult.Failed<ActivityDetailedObject>(errorMessage: errorData);
+    }
+    
+    private async Task<StudyActivity> CreateActivity(
+        Guid profileId, ActivityCreateObject createObject, List<Student> students, CancellationToken cancellationToken)
+    {
         var entry = await _dbContext.Set<StudyActivity>().AddAsync(new StudyActivity
         {
             Name = createObject.Name,
             Description = createObject.Description,
             StartDate = createObject.StartDate,
             EndDate = createObject.EndDate,
-            CreatorId = request.ProfileId,
             Students = students,
             CreationDate = _timeProvider.Now,
+            CreatorId = profileId
         }, cancellationToken);
-
-        var creatorName = await _dbContext.Set<Teacher>()
-            .Where(x => x.Id == request.ProfileId)
-            .Select(x => new
-            {
-                x.FirstName,
-                x.LastName
-            })
-            .FirstOrDefaultAsync(cancellationToken);
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
         
-        return OperationResult.Successful(new ActivityDetailedObject
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return entry.Entity;
+    }
+
+    private static ActivityDetailedObject CreateResult(StudyActivity entity, CommandCreateActivity request)
+    {
+        return new ActivityDetailedObject
         {
-            Id = entry.Entity.Id,
-            Name = createObject.Name,
-            StartDate = createObject.StartDate,
-            EndDate = createObject.EndDate,
-            CreatorFirstName = creatorName!.FirstName,
-            CreatorLastName = creatorName.LastName,
-            Description = createObject.Description,
-        });
+            Id = entity.Id,
+            Name = entity.Name,
+            StartDate = entity.StartDate,
+            EndDate = entity.EndDate,
+            CreatorFirstName = request.ProfileData.FirstName,
+            CreatorLastName = request.ProfileData.LastName,
+            Description = entity.Description,
+            CreationDate = entity.CreationDate,
+        };
     }
 }

@@ -8,12 +8,14 @@ using UniDocuments.App.Shared.Shared;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 
-public class QueryGetActivitiesTeacher : IdentityOperationResultQuery<ActivityDisplayList>
+public class QueryGetActivitiesTeacher : IOperationResultQuery<ActivityDisplayList>
 {
+    public IdentityProfileData ProfileData { get; }
     public PagedListData Data { get; }
 
-    public QueryGetActivitiesTeacher(Guid profileId, PagedListData data) : base(profileId)
+    public QueryGetActivitiesTeacher(IdentityProfileData profileData, PagedListData data)
     {
+        ProfileData = profileData;
         Data = data;
     }
 }
@@ -31,7 +33,7 @@ public class QueryGetActivitiesTeacherHandler : IOperationResultQueryHandler<Que
         QueryGetActivitiesTeacher request, CancellationToken cancellationToken)
     {
         var activities = await _dbContext.Set<StudyActivity>()
-            .Where(x => x.CreatorId == request.ProfileId)
+            .Where(x => x.CreatorId == request.ProfileData.Id)
             .Select(x => new ActivityDisplayObject
             {
                 Id = x.Id,
@@ -40,8 +42,8 @@ public class QueryGetActivitiesTeacherHandler : IOperationResultQueryHandler<Que
                 DocumentsCount = x.Documents.Count,
                 StudentsCount = x.Students.Count,
                 Name = x.Name,
-                CreatorFirstName = x.Creator.FirstName,
-                CreatorLastName = x.Creator.LastName,
+                CreatorFirstName = request.ProfileData.FirstName,
+                CreatorLastName = request.ProfileData.LastName,
             }).ToPagedListAsync(request.Data.PageIndex, request.Data.PageSize, cancellationToken: cancellationToken);
 
         return OperationResult.Successful(new ActivityDisplayList
