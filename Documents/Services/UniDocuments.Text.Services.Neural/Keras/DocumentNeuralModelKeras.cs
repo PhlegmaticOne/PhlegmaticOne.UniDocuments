@@ -20,6 +20,7 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
     private readonly ISavePathProvider _savePathProvider;
 
     private KerasManagedModel? _customManagedModel;
+    private bool _isTraining;
 
     public DocumentNeuralModelKeras(
         INeuralOptionsProvider<KerasModelOptions> optionsProvider,
@@ -50,6 +51,7 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
 
     public async Task<NeuralModelTrainResult> TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
     {
+        _isTraining = true;
         var options = _optionsProvider.GetOptions();
         var vocab = _documentsVocabProvider.GetVocab();
         var input = new TrainKerasModelInput(source, options, vocab);
@@ -57,6 +59,7 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
         _customManagedModel = await new PythonTaskTrainKerasModel(input);
         timer.Stop();
         IsLoaded = true;
+        _isTraining = false;
 
         return new NeuralModelTrainResult
         {

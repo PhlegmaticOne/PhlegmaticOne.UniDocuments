@@ -20,10 +20,25 @@ public class ProfilesController : IdentityController
     }
 
     [HttpPost("Update")]
-    public async Task<IActionResult> Update([FromBody] UpdateProfileObject updateProfileObject)
+    public async Task<IActionResult> Update(
+        [FromBody] UpdateProfileObject updateProfileObject, CancellationToken cancellationToken)
     {
         var command = new CommandUpdateProfile(ProfileId(), StudyRole(), updateProfileObject);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("MakeAdmin")]
+    public async Task<IActionResult> MakeAdmin(
+        [FromBody] CommandMakeAdmin command, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
         {

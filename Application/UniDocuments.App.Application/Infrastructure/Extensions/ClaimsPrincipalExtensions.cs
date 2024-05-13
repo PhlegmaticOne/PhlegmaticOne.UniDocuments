@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Microsoft.IdentityModel.JsonWebTokens;
 using PhlegmaticOne.JwtTokensGeneration.Helpers;
 using UniDocuments.App.Shared.Users.Enums;
 

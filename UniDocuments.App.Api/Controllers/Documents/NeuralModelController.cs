@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PhlegmaticOne.OperationResults;
 using UniDocuments.App.Application.Documents.Training;
+using UniDocuments.Text.Domain.Services.Neural.Models;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
 
@@ -33,10 +35,10 @@ public class NeuralModelController : ControllerBase
     
     [HttpPost("Train")]
     public async Task<IActionResult> Train(
-        [FromQuery] CommandTrainDocumentsNeuralModel command, CancellationToken cancellationToken)
+        [FromBody] CommandTrainDocumentsNeuralModel command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-
+        
         if (!result.IsSuccess)
         {
             return BadRequest(result);

@@ -7,5 +7,4 @@ public class NeuralModelTrainResult
     public int EmbeddingSize { get; set; }
     public int Epochs { get; set; }
     public TimeSpan TrainTime { get; set; }
-    public Dictionary<string, object> Parameters { get; set; } = new();
 }

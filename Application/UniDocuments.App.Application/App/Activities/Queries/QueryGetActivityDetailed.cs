@@ -5,7 +5,6 @@ using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Shared.Activities.Detailed;
 using UniDocuments.App.Shared.Activities.Shared;
-using UniDocuments.Text.Domain.Extensions;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 

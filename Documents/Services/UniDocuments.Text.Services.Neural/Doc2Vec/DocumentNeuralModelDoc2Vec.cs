@@ -19,6 +19,7 @@ public class DocumentNeuralModelDoc2Vec : IDocumentsNeuralModel
     private readonly ISavePathProvider _savePathProvider;
 
     private Doc2VecManagedModel? _doc2VecModel;
+    private bool _isTraining;
 
     public DocumentNeuralModelDoc2Vec(
         INeuralOptionsProvider<Doc2VecOptions> optionsProvider,
@@ -47,29 +48,36 @@ public class DocumentNeuralModelDoc2Vec : IDocumentsNeuralModel
     public async Task<NeuralModelTrainResult> TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
     {
         var options = _optionsProvider.GetOptions();
+
+        if (_isTraining)
+        {
+            return GetResult(options, TimeSpan.Zero);
+        }
+        
+        _isTraining = true;
         var input = new TrainDoc2VecModelInput(source, options);
         var timer = Stopwatch.StartNew();
         _doc2VecModel = await new PythonTaskTrainDoc2VecModel(input);
         timer.Stop();
         IsLoaded = true;
-
-        return new NeuralModelTrainResult
-        {
-            Name = Name,
-            Epochs = options.Epochs,
-            EmbeddingSize = options.EmbeddingSize,
-            Parameters = new Dictionary<string, object>
-            {
-                { "dm", options.Dm },
-                { "workersCount", options.WorkersCount }
-            },
-            TrainTime = timer.Elapsed
-        };
+        _isTraining = false;
+        return GetResult(options, timer.Elapsed);
     }
 
     public Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
         var options = _optionsProvider.GetOptions();
         return _doc2VecModel!.InferDocumentAsync(request, options);
+    }
+
+    private NeuralModelTrainResult GetResult(Doc2VecOptions options, TimeSpan time)
+    {
+        return new NeuralModelTrainResult
+        {
+            Name = Name,
+            Epochs = options.Epochs,
+            EmbeddingSize = options.EmbeddingSize,
+            TrainTime = time
+        };
     }
 }
