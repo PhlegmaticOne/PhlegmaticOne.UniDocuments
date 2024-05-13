@@ -17,15 +17,11 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
     public async Task<PlagiarismSearchResponseDocument> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var response = new PlagiarismSearchResponseDocument(request.Document.Id, request.Document.Name);
-        await FindNeuralPlagiarismAsync(request, response, cancellationToken);
-        return response;
-    }
+        var response = new PlagiarismSearchResponseDocument(request.Document.Id, request.Document.Name)
+        {
+            SuspiciousParagraphs = await _networkPlagiarismSearcher.SearchAsync(request, cancellationToken)
+        };
 
-    private async Task FindNeuralPlagiarismAsync(
-        PlagiarismSearchRequest request, PlagiarismSearchResponseDocument response, CancellationToken cancellationToken)
-    {
-        var result = await _networkPlagiarismSearcher.SearchAsync(request, cancellationToken);
-        response.SuspiciousParagraphs = result;
+        return response;
     }
 }

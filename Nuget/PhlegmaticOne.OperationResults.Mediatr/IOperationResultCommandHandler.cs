@@ -2,7 +2,7 @@
 
 namespace PhlegmaticOne.OperationResults.Mediatr;
 
-public interface IOperationResultCommandHandler<in TCommand> : IRequestHandler<TCommand, OperationResult>
-    where TCommand : IOperationResultCommand
+public interface IOperationResultCommandHandler<in TCommand> : 
+    IRequestHandler<TCommand, OperationResult> where TCommand : IOperationResultCommand
 {
 }

@@ -74,7 +74,7 @@ public class ReportCreatorWord : IReportCreator
     private static void AddParagraphsComparing(ReportData reportData, Body body)
     {
         AddTitle("Сравнение параграфов", body);
-
+        
         if (reportData.ParagraphsData.Count == 0)
         {
             AddTitle("Не найдено слишком подозрительных параграфов", body);

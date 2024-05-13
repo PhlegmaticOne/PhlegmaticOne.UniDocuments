@@ -55,6 +55,12 @@ public class ReportDataBuilder : IReportDataBuilder
             var paragraph = paragraphs[i];
             var suspicious = buildRequest.PlagiarismSearchResponse.SuspiciousParagraphs[i];
             var suspiciousParagraphs = await LoadSuspiciousParagraphs(suspicious, cancellationToken);
+
+            if (suspiciousParagraphs.Length == 0)
+            {
+                continue;
+            }
+            
             var compareRequest = new CompareTextsRequest(paragraph, suspiciousParagraphs, buildRequest.BaseMetric);
             var compareResponse = await _textCompareProvider.CompareAsync(compareRequest, cancellationToken);
             var reportData = MapToReportParagraphData(paragraph, suspicious, compareResponse);
@@ -114,7 +120,11 @@ public class ReportDataBuilder : IReportDataBuilder
     private Task<string[]> LoadSuspiciousParagraphs(ParagraphPlagiarismData data, CancellationToken token)
     {
         var suspiciousData = data.SuspiciousParagraphs;
-        var suspiciousParagraphsLoad = suspiciousData.Select(x => _paragraphGlobalReader.ReadAsync(x.Id, token));
+        
+        var suspiciousParagraphsLoad = suspiciousData
+            .Where(x => x.DocumentId != Guid.Empty)
+            .Select(x => _paragraphGlobalReader.ReadAsync(x.Id, token));
+        
         return Task.WhenAll(suspiciousParagraphsLoad);
     }
 }

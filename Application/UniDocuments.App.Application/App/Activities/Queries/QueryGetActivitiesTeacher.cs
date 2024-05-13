@@ -40,7 +40,6 @@ public class QueryGetActivitiesTeacherHandler : IOperationResultQueryHandler<Que
                 Id = x.Id,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
-                DocumentsCount = x.Documents.Count,
                 StudentsCount = x.Students.Count,
                 Name = x.Name,
                 CreatorFirstName = request.ProfileData.FirstName,
