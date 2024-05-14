@@ -7,7 +7,7 @@ using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
-namespace UniDocuments.Text.Services.FileStorage.EntityFramework;
+namespace UniDocuments.Text.Services.FileStorage;
 
 public class DocumentsStorageEntityFramework : IDocumentsStorage
 {
@@ -24,6 +24,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
             .Where(x => x.StudyDocumentId == id)
             .Select(x => new DocumentLoadResponse
             {
+                Id = id,
                 Name = x.Name,
                 Bytes = x.Content
             })
@@ -36,6 +37,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
             .Where(x => ids.Contains(x.StudyDocumentId))
             .Select(x => new DocumentLoadResponse
             {
+                Id = x.Id,
                 Bytes = x.Content,
                 Name = x.Name
             })

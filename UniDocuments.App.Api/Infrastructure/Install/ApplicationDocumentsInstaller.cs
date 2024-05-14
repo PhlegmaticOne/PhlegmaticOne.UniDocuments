@@ -7,15 +7,13 @@ using UniDocuments.Text.Application.Fingerprinting;
 using UniDocuments.Text.Application.Neural;
 using UniDocuments.Text.Application.PlagiarismSearching;
 using UniDocuments.Text.Application.Reports;
-using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Root;
 using UniDocuments.Text.Services.BaseMetrics;
 using UniDocuments.Text.Services.BaseMetrics.Options;
 using UniDocuments.Text.Services.Cache;
 using UniDocuments.Text.Services.DocumentMapping;
 using UniDocuments.Text.Services.DocumentMapping.Initializers;
-using UniDocuments.Text.Services.FileStorage.EntityFramework;
-using UniDocuments.Text.Services.FileStorage.InMemory;
+using UniDocuments.Text.Services.FileStorage;
 using UniDocuments.Text.Services.Fingerprinting;
 using UniDocuments.Text.Services.Fingerprinting.Hashing;
 using UniDocuments.Text.Services.Fingerprinting.Options;
@@ -57,7 +55,7 @@ public static class ApplicationDocumentsInstaller
 
             appBuilder.UseDocumentsCache<UniDocumentsCache>();
 
-            appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageEntityFramework>(applicationConfiguration.UseRealDatabase);
+            appBuilder.UseFileStorage<DocumentsStorageEntityFramework>();
 
             appBuilder.UseFingerprint(b =>
             {

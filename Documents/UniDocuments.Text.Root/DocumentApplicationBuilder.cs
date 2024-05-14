@@ -45,18 +45,9 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IUniDocumentsCache, T>();
     }
         
-    public void UseFileStorage<TDev, TProd>(bool useRealDatabase) 
-        where TDev : class, IDocumentsStorage
-        where TProd : class, IDocumentsStorage
+    public void UseFileStorage<T>() where T : class, IDocumentsStorage
     {
-        if (!useRealDatabase)
-        {
-            _serviceCollection.AddSingleton<IDocumentsStorage, TDev>();
-        }
-        else
-        {
-            _serviceCollection.AddScoped<IDocumentsStorage, TProd>();
-        }
+        _serviceCollection.AddScoped<IDocumentsStorage, T>();
     }
 
     public void UseFingerprint(Action<FingerprintingInstallBuilder> builderAction)

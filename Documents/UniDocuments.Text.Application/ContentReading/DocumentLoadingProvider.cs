@@ -3,6 +3,7 @@ using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
+using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.Text.Application.ContentReading;
@@ -35,30 +36,47 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             }
 
             var loadResponse = await _documentsStorage.LoadAsync(documentId, cancellationToken);
-            var stream = loadResponse.ToStream();
-            var content = await _streamContentReader.ReadAsync(stream, cancellationToken);
-            var result = new UniDocument(documentId, content);
-
-            if (cache)
-            {
-                _documentsCache.Cache(result);
-            }
-
-            await stream.DisposeAsync();
-            return result;
+            return CreateDocument(loadResponse, cache);
         }
     }
 
     public async Task<Dictionary<Guid, UniDocument>> LoadAsync(ISet<Guid> documentIds, bool cache, CancellationToken cancellationToken)
     {
+        var finding = new List<Guid>(documentIds);
         var result = new Dictionary<Guid, UniDocument>();
 
-        foreach (var documentId in documentIds)
+        for (var i = finding.Count - 1; i >= 0; i--)
         {
-            var document = await LoadAsync(documentId, cache, cancellationToken);
-            result.Add(documentId, document);
+            var saved = _documentsCache.Get(finding[i]);
+
+            if (saved is not null)
+            {
+                _documentsCache.Cache(saved);
+                result.Add(finding[i], saved);
+                finding.RemoveAt(i);
+            }
+        }
+        
+        await foreach (var response in _documentsStorage.LoadAsync(finding, cancellationToken))
+        {
+            result.Add(response.Id, CreateDocument(response, cache));
         }
 
+        return result;
+    }
+
+    private UniDocument CreateDocument(DocumentLoadResponse loadResponse, bool cache)
+    {
+        var stream = loadResponse.ToStream();
+        var content = _streamContentReader.Read(stream);
+        var result = new UniDocument(loadResponse.Id, content);
+
+        if (cache)
+        {
+            _documentsCache.Cache(result);
+        }
+
+        stream.Dispose();
         return result;
     }
 }
