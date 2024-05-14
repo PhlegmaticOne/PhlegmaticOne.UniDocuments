@@ -20,7 +20,9 @@ public static class ApplicationRequirementsInstaller
             x.RegisterServicesFromAssembly(typeof(UniDocumentApplicationReference).Assembly);
         });
         
-        serviceCollection.AddAutoMapper(_ => { }, typeof(UniDocumentApplicationReference).Assembly);
+        serviceCollection.AddAutoMapper(_ => { },
+            typeof(UniDocumentApplicationReference).Assembly,
+            typeof(Program).Assembly);
         
         serviceCollection.AddDbContext<ApplicationDbContext>(x =>
         {

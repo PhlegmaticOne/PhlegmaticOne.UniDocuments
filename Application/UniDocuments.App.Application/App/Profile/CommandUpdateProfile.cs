@@ -6,22 +6,17 @@ using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Models.Base;
 using UniDocuments.App.Domain.Models.Enums;
-using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Domain.Services.Profiles;
 using UniDocuments.App.Shared.Users;
 using StudyRole = UniDocuments.App.Shared.Users.Enums.StudyRole;
 
 namespace UniDocuments.App.Application.App.Profile;
 
-public class CommandUpdateProfile : IdentityOperationResultCommand
+public class CommandUpdateProfile : IOperationResultCommand
 {
-    public StudyRole StudyRole { get; }
-    public UpdateProfileObject UpdateProfileObject { get; }
-    
-    public CommandUpdateProfile(Guid profileId, StudyRole studyRole, UpdateProfileObject updateProfileObject) : base(profileId)
-    {
-        StudyRole = studyRole;
-        UpdateProfileObject = updateProfileObject;
-    }
+    public Guid ProfileId { get; set; }
+    public StudyRole StudyRole { get; set; }
+    public UpdateProfileObject UpdateProfileObject { get; set; } = null!;
 }
 
 public class CommandUpdateProfileHandler : IOperationResultCommandHandler<CommandUpdateProfile>

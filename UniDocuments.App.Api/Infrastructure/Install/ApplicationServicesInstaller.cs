@@ -2,10 +2,12 @@
 using PhlegmaticOne.JwtTokensGeneration.Options;
 using PhlegmaticOne.PasswordHasher;
 using PhlegmaticOne.PasswordHasher.Implementation;
-using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.App.Domain.Services.Documents;
-using UniDocuments.App.Services;
+using UniDocuments.App.Domain.Services.Profiles;
+using UniDocuments.App.Services.Common;
 using UniDocuments.App.Services.Documents;
+using UniDocuments.App.Services.Profiles;
 
 namespace UniDocuments.App.Api.Infrastructure.Install;
 

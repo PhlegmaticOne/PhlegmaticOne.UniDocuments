@@ -4,7 +4,7 @@ namespace UniDocuments.Text.Domain.Providers.Reports.Builder;
 
 public class ReportDataBuildRequest
 {
-    public ReportDataBuildRequest(UniDocument document, PlagiarismSearchResponseDocument plagiarismSearchResponse, string baseMetric)
+    public ReportDataBuildRequest(UniDocument document, PlagiarismSearchResponse plagiarismSearchResponse, string baseMetric)
     {
         Document = document;
         PlagiarismSearchResponse = plagiarismSearchResponse;
@@ -12,6 +12,6 @@ public class ReportDataBuildRequest
     }
 
     public UniDocument Document { get; }
-    public PlagiarismSearchResponseDocument PlagiarismSearchResponse { get; }
+    public PlagiarismSearchResponse PlagiarismSearchResponse { get; }
     public string BaseMetric { get; }
 }

@@ -36,7 +36,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
 
             var loadResponse = await _documentsStorage.LoadAsync(documentId, cancellationToken);
             var content = await _streamContentReader.ReadAsync(loadResponse.Stream!, cancellationToken);
-            var result = new UniDocument(documentId, content, loadResponse.Name);
+            var result = new UniDocument(documentId, content);
 
             if (cache)
             {

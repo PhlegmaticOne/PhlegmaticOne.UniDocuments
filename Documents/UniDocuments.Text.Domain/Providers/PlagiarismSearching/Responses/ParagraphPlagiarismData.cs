@@ -12,7 +12,6 @@ public class ParagraphPlagiarismData
         SuspiciousParagraphs = suspiciousParagraphs;
     }
 
-    [JsonProperty]
     public int ParagraphId { get; set; }
     [JsonProperty]
     public List<ParagraphSearchData> SuspiciousParagraphs { get; set; }

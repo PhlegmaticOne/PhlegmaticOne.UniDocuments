@@ -5,7 +5,7 @@ using PhlegmaticOne.PythonTasks;
 using UniDocuments.App.Api.Infrastructure.Configurations;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Preprocessing.Stopwords;

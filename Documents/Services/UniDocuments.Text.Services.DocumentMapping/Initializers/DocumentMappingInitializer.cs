@@ -23,7 +23,6 @@ public class DocumentMappingInitializer : IDocumentMappingInitializer
             .Select(x => new 
             { 
                 x.Id, 
-                x.Name,
                 x.ValuableParagraphsCount
             })
             .AsAsyncEnumerable()
@@ -31,7 +30,7 @@ public class DocumentMappingInitializer : IDocumentMappingInitializer
 
         await foreach (var data in query)
         {
-            _documentMapper.AddDocument(data.Id, data.ValuableParagraphsCount, data.Name);
+            _documentMapper.AddDocument(data.Id, data.ValuableParagraphsCount);
         }
     }
 }

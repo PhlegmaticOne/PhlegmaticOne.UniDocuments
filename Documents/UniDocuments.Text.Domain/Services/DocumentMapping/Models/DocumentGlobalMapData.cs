@@ -2,15 +2,13 @@
 
 public class DocumentGlobalMapData
 {
-    public DocumentGlobalMapData(Guid id, string name, int globalFirstParagraphId)
+    public DocumentGlobalMapData(Guid id, int globalFirstParagraphId)
     {
         Id = id;
-        Name = name;
         GlobalFirstParagraphId = globalFirstParagraphId;
     }
 
     public Guid Id { get; }
-    public string Name { get; }
     public int GlobalFirstParagraphId { get; }
 
     public int GetLocalParagraphId(int globalParagraphId)

@@ -46,13 +46,13 @@ public class DocumentMapper : IDocumentMapper
         return _documentsIdMap[documentId];
     }
 
-    public void AddDocument(Guid id, int paragraphsCount, string name)
+    public void AddDocument(Guid id, int paragraphsCount)
     {
         var globalLastDocumentId = _documentsMap.Count;
         var globalFirstParagraphId = _paragraphsToDocumentsMap.Count;
         
         MapNewParagraphs(paragraphsCount, globalLastDocumentId);
-        MapNewDocument(id, name, globalFirstParagraphId);
+        MapNewDocument(id, globalFirstParagraphId);
         MapNewDocumentId(id, globalLastDocumentId);
     }
 
@@ -64,9 +64,9 @@ public class DocumentMapper : IDocumentMapper
         }
     }
 
-    private void MapNewDocument(Guid id, string name, int globalFirstParagraphId)
+    private void MapNewDocument(Guid id, int globalFirstParagraphId)
     {
-        _documentsMap.Add(new DocumentGlobalMapData(id, name, globalFirstParagraphId));
+        _documentsMap.Add(new DocumentGlobalMapData(id, globalFirstParagraphId));
     }
 
     private void MapNewDocumentId(Guid id, int globalLastDocumentId)

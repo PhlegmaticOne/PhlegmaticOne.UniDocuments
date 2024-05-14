@@ -38,7 +38,12 @@ public class ActivitiesController : IdentityController
     [HttpGet("GetForStudent")]
     public async Task<IActionResult> GetForStudent([FromQuery] PagedListData data, CancellationToken cancellationToken)
     {
-        var query = new QueryGetActivitiesStudent(ProfileId(), data);
+        var query = new QueryGetActivitiesStudent
+        {
+            ProfileId = ProfileId(),
+            Data = data
+        };
+        
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)

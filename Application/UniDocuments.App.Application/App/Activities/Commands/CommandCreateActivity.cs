@@ -4,7 +4,7 @@ using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.App.Shared.Activities.Create;
 using UniDocuments.App.Shared.Activities.Detailed;
 
@@ -56,7 +56,7 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
         var found = students.Select(x => x.UserName.ToLower());
         var notFound = createObject.Students.Except(found).ToList();
         var errorData = JsonConvert.SerializeObject(notFound);
-        return OperationResult.Failed<ActivityDetailedObject>(errorMessage: errorData);
+        return OperationResult.Failed<ActivityDetailedObject>(errorData: errorData);
     }
     
     private async Task<StudyActivity> CreateActivity(

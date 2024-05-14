@@ -4,15 +4,10 @@ namespace UniDocuments.App.Api.Infrastructure;
 
 public static class AppRunner
 {
-    public static void Run(WebApplicationBuilder builder, WebApplication app, ApplicationConfiguration applicationConfiguration)
+    public static void Run(WebApplication app, ApplicationConfiguration applicationConfiguration)
     {
-        // if (builder.Environment.IsDevelopment())
-        // {
-        //     app.UseSwagger();
-        //     app.UseSwaggerUI();
-        // }
-
         app.UseDeveloperExceptionPage();
+        
         app.UseHttpsRedirection();
 
         if (applicationConfiguration.UseAuthentication)

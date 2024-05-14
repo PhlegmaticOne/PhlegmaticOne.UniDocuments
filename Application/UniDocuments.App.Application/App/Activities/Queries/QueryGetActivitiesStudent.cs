@@ -9,14 +9,10 @@ using UniDocuments.App.Shared.Shared;
 
 namespace UniDocuments.App.Application.App.Activities.Queries;
 
-public class QueryGetActivitiesStudent : IdentityOperationResultQuery<ActivityMyList>
+public class QueryGetActivitiesStudent : IOperationResultQuery<ActivityMyList>
 {
-    public PagedListData Data { get; }
-    
-    public QueryGetActivitiesStudent(Guid profileId, PagedListData data) : base(profileId)
-    {
-        Data = data;
-    }
+    public Guid ProfileId { get; set; }
+    public PagedListData Data { get; set; } = null!;
 }
 
 public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<QueryGetActivitiesStudent, ActivityMyList>

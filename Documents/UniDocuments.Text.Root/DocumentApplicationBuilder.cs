@@ -122,9 +122,9 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddScoped<IDocumentLoadingProvider, T>();
     }
     
-    public void UseParagraphGlobalReader<T>() where T : class, IParagraphGlobalReader
+    public void UseParagraphGlobalReader<T>() where T : class, IDocumentsProvider
     {
-        _serviceCollection.AddScoped<IParagraphGlobalReader, T>();
+        _serviceCollection.AddScoped<IDocumentsProvider, T>();
     }
 
     public void UseReportProvider<T>(Action<ReportInstallBuilder> builderAction)

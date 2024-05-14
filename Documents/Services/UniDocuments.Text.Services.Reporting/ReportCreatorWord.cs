@@ -54,7 +54,7 @@ public class ReportCreatorWord : IReportCreator
 
     private static ReportResponse BuildReport(ReportData reportData)
     {
-        var fileName = GetFileName(reportData.DocumentName);
+        var fileName = GetFileName(reportData.SourceData.Name);
 
         using var stream = new MemoryStream();
         
@@ -147,7 +147,7 @@ public class ReportCreatorWord : IReportCreator
             var reportParagraphData = paragraphsData.ParagraphsData[j];
             
             body.AppendChild(CreateParagraph(
-                GetSuspiciousParagraphHeader(j + 1, reportParagraphData.LocalId), SuspiciousHeader));
+                GetSuspiciousParagraphHeader(j + 1), SuspiciousHeader));
             
             body.AppendChild(CreateParagraph(
                 GetSuspiciousParagraphHeaderData(reportParagraphData), SuspiciousHeaderData));
@@ -163,18 +163,23 @@ public class ReportCreatorWord : IReportCreator
     
     private static string GetSuspiciousDocumentData(ReportDocumentData reportData)
     {
-        return $"Имя: {reportData.Name} [{reportData.Id}]. Сходство: {reportData.Similarity:F}";
+        return $"Сходство: {reportData.Similarity:F}. " +
+               $"Документ: {reportData.Name} " +
+               $"Загрузил: {reportData.StudentFirstName} {reportData.StudentLastName} {reportData.DateLoaded:f}";
     }
     
-    private static string GetSuspiciousParagraphHeader(int id, int globalId)
+    private static string GetSuspiciousParagraphHeader(int id)
     {
-        return $"Подозрительный параграф №{id} [{globalId}]";
+        return $"Подозрительный параграф №{id}";
     }
     
     private static string GetSuspiciousParagraphHeaderData(ReportParagraphData reportParagraphData)
     {
-        return $"Сходство: {reportParagraphData.Similarity:F}. " +
-               $"Документ: {reportParagraphData.DocumentName} [{reportParagraphData.DocumentId}]";
+        var d = reportParagraphData.DocumentData;
+        
+        return $"Сходство: {d.Similarity:F}. " +
+               $"Документ: {d.Name} " +
+               $"Загрузил: {d.StudentFirstName} {d.StudentLastName} {d.DateLoaded:f}";
     }
     
     private static string GetSourceParagraphHeader(int id)

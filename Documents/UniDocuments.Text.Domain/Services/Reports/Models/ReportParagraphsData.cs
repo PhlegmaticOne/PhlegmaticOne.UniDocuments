@@ -1,6 +1,4 @@
-﻿using UniDocuments.Text.Domain.Providers.Comparing.Responses;
-
-namespace UniDocuments.Text.Domain.Services.Reports.Models;
+﻿namespace UniDocuments.Text.Domain.Services.Reports.Models;
 
 public class ReportParagraphsData
 {
@@ -11,14 +9,5 @@ public class ReportParagraphsData
     {
         Content = content;
         ParagraphsData = new List<ReportParagraphData>();
-    }
-
-    public void AddParagraphData(Guid documentId, string documentName, int localId, CompareTextResult compareTextResult)
-    {
-        var data = ReportParagraphData
-            .WithDocumentData(documentId, documentName, localId)
-            .FillFromCompareResult(compareTextResult);
-        
-        ParagraphsData.Add(data);   
     }
 }

@@ -6,7 +6,7 @@ using PhlegmaticOne.PasswordHasher;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Models.Base;
-using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Domain.Services.Profiles;
 using UniDocuments.App.Shared.Users;
 using StudyRole = UniDocuments.App.Shared.Users.Enums.StudyRole;
 

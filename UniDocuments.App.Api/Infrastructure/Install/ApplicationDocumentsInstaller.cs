@@ -122,7 +122,7 @@ public static class ApplicationDocumentsInstaller
 
             appBuilder.UseDocumentLoadingProvider<DocumentLoadingProvider>();
             
-            appBuilder.UseParagraphGlobalReader<ParagraphGlobalReader>();
+            appBuilder.UseParagraphGlobalReader<DocumentsProvider>();
             
             appBuilder.UseReportProvider<ReportProvider>(b =>
             {

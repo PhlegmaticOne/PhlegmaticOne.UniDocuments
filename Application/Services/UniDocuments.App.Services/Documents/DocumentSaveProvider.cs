@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
-using UniDocuments.App.Domain.Services;
+using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.App.Domain.Services.Documents;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Fingerprinting;
@@ -40,7 +40,7 @@ public class DocumentSaveProvider : IDocumentSaveProvider
         var content = await _streamContentReader.ReadAsync(request.DocumentStream, cancellationToken);
         var newDocument = await CreateDocumentAsync(request, content, cancellationToken);
         var documentId = newDocument.Entity.Id;
-        var document = new UniDocument(documentId, content, request.FileName);
+        var document = new UniDocument(documentId, content);
 
         await Task.WhenAll(
             CalculateFingerprintAsync(newDocument, document, cancellationToken),

@@ -14,10 +14,10 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
         _networkPlagiarismSearcher = networkPlagiarismSearcher;
     }
     
-    public async Task<PlagiarismSearchResponseDocument> SearchAsync(
+    public async Task<PlagiarismSearchResponse> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var response = new PlagiarismSearchResponseDocument(request.Document.Id, request.Document.Name)
+        var response = new PlagiarismSearchResponse(request.Document.Id)
         {
             SuspiciousParagraphs = await _networkPlagiarismSearcher.SearchAsync(request, cancellationToken)
         };

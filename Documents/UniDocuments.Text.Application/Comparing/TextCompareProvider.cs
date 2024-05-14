@@ -33,6 +33,14 @@ public class TextCompareProvider : ITextCompareProvider
         return response;
     }
 
+    public CompareTextResult Compare(string a, string b, string metric)
+    {
+        var baseMetric = _baseMetricsProvider.GetBaseMetric(metric);
+        var metricValue = baseMetric.Calculate(a, b);
+        var isSuspicious = baseMetric.IsSuspicious(metricValue);
+        return new CompareTextResult(a, metricValue, isSuspicious);
+    }
+
     private static CompareTextResult Compare(
         string sourceText, string suspiciousText, ITextSimilarityBaseMetric baseMetric)
     {

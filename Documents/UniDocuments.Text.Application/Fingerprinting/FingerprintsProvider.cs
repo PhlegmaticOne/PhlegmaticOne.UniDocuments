@@ -31,51 +31,22 @@ public class FingerprintsProvider : IFingerprintsProvider
 
     public TextFingerprint Compute(UniDocument document)
     {
-        var options = _optionsProvider.GetOptions();
-        var fingerprint = _algorithm.Fingerprint(document, options);
+        var fingerprint = Get(document);
         _container.AddOrReplace(document.Id, fingerprint);
         return fingerprint;
     }
 
-    public Task<TextFingerprint> ComputeAsync(UniDocument document, CancellationToken cancellationToken)
+    public TextFingerprint Get(UniDocument content)
     {
-        return Task.Run(() => Compute(document), cancellationToken);
+        var options = _optionsProvider.GetOptions();
+        return _algorithm.Fingerprint(content, options);
     }
 
-    public Task<TextFingerprint> GetForDocumentAsync(UniDocument content, CancellationToken cancellationToken)
-    {
-        if (content.Id == Guid.Empty)
-        {
-            var options = _optionsProvider.GetOptions();
-            return Task.Run(() => _algorithm.Fingerprint(content, options), cancellationToken);
-        }
-
-        return GetForDocumentAsync(content.Id, cancellationToken);
-    }
-
-    public async Task<TextFingerprint> GetForDocumentAsync(Guid documentId, CancellationToken cancellationToken)
-    {
-        var cached = _container.Get(documentId);
-
-        if (cached is not null)
-        {
-            return cached;
-        }
-
-        var fingerprintText = await _dbContext.Set<StudyDocument>()
-            .Where(x => x.Id == documentId)
-            .Select(x => x.Fingerprint)
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        return CreateFingerprint(documentId, fingerprintText!);
-    }
-
-    public async Task<List<TextFingerprint>> GetForDocumentsAsync(
+    public async Task<Dictionary<Guid, TextFingerprint>> GetForDocumentsAsync(
         IEnumerable<Guid> documentIds, CancellationToken cancellationToken)
     {
         var finding = new List<Guid>(documentIds);
-        var result = new List<TextFingerprint>();
+        var result = new Dictionary<Guid, TextFingerprint>();
 
         for (var i = finding.Count - 1; i >= 0; i--)
         {
@@ -83,24 +54,26 @@ public class FingerprintsProvider : IFingerprintsProvider
 
             if (saved is not null)
             {
-                result.Add(saved);
+                _container.AddOrReplace(finding[i], saved);
+                result.Add(finding[i], saved);
                 finding.RemoveAt(i);
             }
         }
 
-        var fingerprintsQuery = await _dbContext.Set<StudyDocument>()
+        var fingerprintsQuery = _dbContext.Set<StudyDocument>()
             .Where(x => finding.Contains(x.Id))
             .Select(x => new
             {
                 x.Id,
                 x.Fingerprint,
             })
-            .ToListAsync(cancellationToken)
+            .AsAsyncEnumerable()
+            .WithCancellation(cancellationToken)
             .ConfigureAwait(false);
         
-        foreach (var fingerprintData in fingerprintsQuery)
+        await foreach (var fingerprintData in fingerprintsQuery)
         {
-            result.Add(CreateFingerprint(fingerprintData.Id, fingerprintData.Fingerprint));
+            result.Add(fingerprintData.Id, CreateFingerprint(fingerprintData.Id, fingerprintData.Fingerprint));
         }
 
         return result;

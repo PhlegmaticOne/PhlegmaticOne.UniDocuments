@@ -7,5 +7,5 @@ public interface IDocumentMapper
     int GetDocumentIdFromGlobalParagraphId(int paragraphId);
     DocumentGlobalMapData? GetDocumentData(int documentId);
     int GetDocumentId(Guid documentId);
-    void AddDocument(Guid id, int paragraphsCount, string name);
+    void AddDocument(Guid id, int paragraphsCount);
 }

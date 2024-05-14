@@ -2,14 +2,11 @@
 
 public class ReportDocumentData
 {
-    public Guid Id { get; }
-    public string Name { get; }
-    public double Similarity { get; }
-
-    public ReportDocumentData(Guid id, string name, double similarity)
-    {
-        Id = id;
-        Name = name;
-        Similarity = similarity;
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; } = null!;
+    public DateTime DateLoaded { get; set; }
+    public string StudentFirstName { get; set; } = null!;
+    public string StudentLastName { get; set; } = null!;
+    public string StudentUserName { get; set; } = null!;
+    public double Similarity { get; set; }
 }

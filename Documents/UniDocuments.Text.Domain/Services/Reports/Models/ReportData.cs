@@ -3,18 +3,16 @@
 public class ReportData
 {
     public ReportData(
-        Guid documentId, string documentName,
+        ReportDocumentData sourceData,
         List<ReportDocumentData> documentData, 
         List<ReportParagraphsData> paragraphsData)
     {
+        SourceData = sourceData;
         DocumentData = documentData;
         ParagraphsData = paragraphsData;
-        DocumentId = documentId;
-        DocumentName = documentName;
     }
     
-    public Guid DocumentId { get; }
-    public string DocumentName { get; }
+    public ReportDocumentData SourceData { get; }
     public List<ReportDocumentData> DocumentData { get; }
     public List<ReportParagraphsData> ParagraphsData { get; }
 }

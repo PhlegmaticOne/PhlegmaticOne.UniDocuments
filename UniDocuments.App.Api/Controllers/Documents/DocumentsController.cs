@@ -1,9 +1,10 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Base;
-using UniDocuments.App.Application.Documents.ContentRead;
-using UniDocuments.App.Application.Documents.Uploading;
+using UniDocuments.App.Application.Documents.Loading.Commands;
+using UniDocuments.App.Application.Documents.Loading.Queries;
 using UniDocuments.App.Shared.Documents;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
@@ -16,21 +17,21 @@ public class DocumentsController : IdentityController
     private const string ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public DocumentsController(IMediator mediator)
+    public DocumentsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpPost("Upload")]
     public async Task<IActionResult> Upload(
-        [FromForm] DocumentUploadObject uploadRequest, CancellationToken cancellationToken)
+        [FromForm] DocumentUploadObject uploadObject, CancellationToken cancellationToken)
     {
-        var document = uploadRequest.File;
-        var request = new CommandUploadDocument(
-            ProfileId(), uploadRequest.Id, document.OpenReadStream(), document.FileName);
+        var command = _mapper.Map<CommandUploadDocument>(uploadObject, o => o.AfterMap((_, d) => d.ProfileId = ProfileId()));
         
-        var result = await _mediator.Send(request, cancellationToken);
+        var result = await _mediator.Send(command, cancellationToken);
         
         if (!result.IsSuccess)
         {
@@ -39,51 +40,10 @@ public class DocumentsController : IdentityController
         
         return new JsonResult(result);
     }
-
-    [HttpGet("GetParagraphById")]
-    public async Task<IActionResult> GetParagraphById(
-        [FromQuery] QueryReadParagraphById query, CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(query, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result);
-        }
-
-        return Ok(result);
-    }
     
-    [HttpGet("GetDocumentContentByGlobalId")]
-    public async Task<IActionResult> GetDocumentContentByGlobalId(
-        [FromQuery] QueryReadDocumentContentByGlobalId query, CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(query, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result);
-        }
-
-        return Ok(result);
-    }
-    
-    [HttpGet("GetDocumentContentById")]
-    public async Task<IActionResult> GetDocumentContentById(
-        [FromQuery] QueryReadDocumentContentById query, CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(query, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result);
-        }
-
-        return Ok(result);
-    }
-    
-    [HttpGet("GetFileById")]
-    public async Task<IActionResult> GetFileById([FromQuery] Guid documentId, CancellationToken cancellationToken)
+    [HttpGet("Download")]
+    public async Task<IActionResult> Download(
+        [FromQuery] Guid documentId, CancellationToken cancellationToken)
     {
         var query = new QueryGetDocumentById(documentId);
         var response = await _mediator.Send(query, cancellationToken);
