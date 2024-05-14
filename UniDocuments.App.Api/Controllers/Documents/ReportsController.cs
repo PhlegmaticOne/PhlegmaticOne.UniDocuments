@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.Documents.Reports;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
@@ -21,6 +22,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("BuildForDocument")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
     public async Task<IActionResult> BuildForDocument(
         [FromForm] DocumentBuildReportRequest request, CancellationToken cancellationToken)
     {
@@ -37,6 +39,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("BuildForExistingDocument")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
     public async Task<IActionResult> BuildForExistingDocument(
         [FromQuery] QueryBuildPlagiarismExistingDocumentReport request, CancellationToken cancellationToken)
     {

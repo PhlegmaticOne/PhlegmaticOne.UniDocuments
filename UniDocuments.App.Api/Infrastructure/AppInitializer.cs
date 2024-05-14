@@ -6,8 +6,8 @@ using UniDocuments.App.Api.Infrastructure.Configurations;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Services.Common;
+using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
-using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.Preprocessing.Stopwords;
 
 namespace UniDocuments.App.Api.Infrastructure;
@@ -27,8 +27,11 @@ public static class AppInitializer
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
         var settings = services.GetRequiredService<IOptions<ApplicationSettings>>();
         var timeProvider = services.GetRequiredService<ITimeProvider>();
+        var neuralModelsProvider = services.GetRequiredService<IDocumentNeuralModelsProvider>();
+
         await CreateOrMigrate(dbContext, cancellationToken);
         await SeedUsersAsync(dbContext, settings.Value, timeProvider, passwordHasher, cancellationToken);
+        await neuralModelsProvider.LoadModelsAsync(cancellationToken);
         await stopWordsService.InitializeAsync(cancellationToken);
         await documentMapperInitializer.InitializeAsync(cancellationToken);
         pythonTaskPool.Start(cancellationToken);

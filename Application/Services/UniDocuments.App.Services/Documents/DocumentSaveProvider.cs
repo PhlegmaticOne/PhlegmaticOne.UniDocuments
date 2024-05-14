@@ -7,6 +7,9 @@ using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.App.Domain.Services.Documents;
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.Fingerprinting;
+using UniDocuments.Text.Domain.Services.Cache;
+using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping.Extensions;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.StreamReading;
@@ -20,19 +23,25 @@ public class DocumentSaveProvider : IDocumentSaveProvider
     private readonly ITimeProvider _timeProvider;
     private readonly IDocumentsStorage _documentsStorage;
     private readonly IFingerprintsProvider _fingerprintsProvider;
+    private readonly IUniDocumentsCache _cache;
+    private readonly IDocumentMapper _documentMapper;
 
     public DocumentSaveProvider(
         ApplicationDbContext dbContext,
         IStreamContentReader streamContentReader,
         ITimeProvider timeProvider,
         IDocumentsStorage documentsStorage,
-        IFingerprintsProvider fingerprintsProvider)
+        IFingerprintsProvider fingerprintsProvider,
+        IUniDocumentsCache cache,
+        IDocumentMapper documentMapper)
     {
         _dbContext = dbContext;
         _streamContentReader = streamContentReader;
         _timeProvider = timeProvider;
         _documentsStorage = documentsStorage;
         _fingerprintsProvider = fingerprintsProvider;
+        _cache = cache;
+        _documentMapper = documentMapper;
     }
 
     public async Task<UniDocument> SaveAsync(DocumentSaveRequest request, CancellationToken cancellationToken)
@@ -46,6 +55,9 @@ public class DocumentSaveProvider : IDocumentSaveProvider
             CalculateFingerprintAsync(newDocument, document, cancellationToken),
             SaveDocumentFileAsync(documentId, request, cancellationToken));
 
+        _cache.Cache(document);
+        _documentMapper.AddDocument(document);
+        
         await _dbContext.SaveChangesAsync(cancellationToken);
         
         return document;

@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Base;
+using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.Documents.Loading.Commands;
 using UniDocuments.App.Application.Documents.Loading.Queries;
 using UniDocuments.App.Shared.Documents;
@@ -26,6 +27,7 @@ public class DocumentsController : IdentityController
     }
 
     [HttpPost("Upload")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Student)]
     public async Task<IActionResult> Upload(
         [FromForm] DocumentUploadObject uploadObject, CancellationToken cancellationToken)
     {

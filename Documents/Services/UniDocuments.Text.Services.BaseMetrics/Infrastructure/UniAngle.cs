@@ -3,7 +3,7 @@
 public readonly partial struct UniAngle : IEquatable<UniAngle>
 {
     // ReSharper disable once InconsistentNaming
-    public const double PI = System.Math.PI;
+    public const double PI = Math.PI;
     
     public readonly double ValueRadians;
 
@@ -15,8 +15,8 @@ public readonly partial struct UniAngle : IEquatable<UniAngle>
     public static UniAngle operator -(in UniAngle a, in UniAngle b) => new(a.ValueRadians - b.ValueRadians);
     public double SegmentSquare(in double segmentRadius) => PI * segmentRadius * segmentRadius * ToDegrees() / 360;
     public double TriangleSquare(in double sideA, in double sideB) => sideA * sideB * ToSinus() / 2;
-    public double ToSinus() => System.Math.Sin(ValueRadians);
-    public double ToCosine() => System.Math.Cos(ValueRadians);
+    public double ToSinus() => Math.Sin(ValueRadians);
+    public double ToCosine() => Math.Cos(ValueRadians);
     public double ToDegrees() => ToDegrees(ValueRadians);
     private static double ToDegrees(double radians) => radians * 180 / PI;
     private static double ToRadians(double degrees) => degrees * PI / 180;
@@ -31,13 +31,13 @@ public readonly partial struct UniAngle
 {
     public static UniAngle ArcCos(double angle)
     {
-        var acos = System.Math.Acos(angle);
+        var acos = Math.Acos(angle);
         return FromRadians(acos);
     }
     
     public static UniAngle ArcSin(double angle)
     {
-        var asin = System.Math.Asin(angle);
+        var asin = Math.Asin(angle);
         return FromRadians(asin);
     }
 }

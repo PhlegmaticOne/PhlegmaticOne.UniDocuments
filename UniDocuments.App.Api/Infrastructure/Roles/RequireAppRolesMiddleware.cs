@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Net;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using UniDocuments.App.Application.Infrastructure.Extensions;
 using UniDocuments.App.Shared.Users.Enums;
@@ -17,16 +18,20 @@ public class RequireAppRolesMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         var appRole = context.User.AppRole();
+        var endpoint = context.GetEndpoint();
 
-        if (appRole != AppRole.Admin)
+        if (endpoint is not null && appRole != AppRole.Admin)
         {
-            var endpointActionData = context.GetEndpoint()!.Metadata.GetRequiredMetadata<ControllerActionDescriptor>();
+            var endpointActionData = endpoint.Metadata.GetRequiredMetadata<ControllerActionDescriptor>();
 
             var appRolesAttribute = endpointActionData.MethodInfo.GetCustomAttribute<RequireAppRolesAttribute>();
 
             if (appRolesAttribute is not null && appRolesAttribute.AppRoles.Contains(appRole) == false)
             {
-                context.Response.Redirect("/Home/UserUnauthorized");
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync("Restricted by role");
+                return;
             }
         }
         

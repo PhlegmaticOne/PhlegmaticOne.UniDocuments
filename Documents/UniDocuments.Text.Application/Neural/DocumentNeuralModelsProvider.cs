@@ -26,4 +26,12 @@ public class DocumentNeuralModelsProvider : IDocumentNeuralModelsProvider
 
         return model;
     }
+
+    public async Task LoadModelsAsync(CancellationToken cancellationToken)
+    {
+        foreach (var neuralModel in _neuralModels)
+        {
+            await neuralModel.Value.LoadAsync(cancellationToken);
+        }
+    }
 }

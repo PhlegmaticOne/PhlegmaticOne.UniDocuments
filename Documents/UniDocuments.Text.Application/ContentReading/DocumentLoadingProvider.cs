@@ -24,7 +24,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
         _documentsCache = documentsCache;
     }
     
-    public async Task<UniDocument> LoadAsync(Guid documentId, bool cache, CancellationToken cancellationToken)
+    public async Task<UniDocument?> LoadAsync(Guid documentId, bool cache, CancellationToken cancellationToken)
     {
         using (await KeyedSemaphore.LockAsync(documentId.ToString(), cancellationToken))
         {
@@ -36,7 +36,8 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             }
 
             var loadResponse = await _documentsStorage.LoadAsync(documentId, cancellationToken);
-            return CreateDocument(loadResponse, cache);
+
+            return loadResponse is null ? null : CreateDocument(loadResponse, cache);
         }
     }
 

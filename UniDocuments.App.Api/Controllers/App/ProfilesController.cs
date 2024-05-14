@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Base;
+using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.App.Profile;
 using UniDocuments.App.Shared.Users;
 
@@ -41,6 +42,7 @@ public class ProfilesController : IdentityController
     }
 
     [HttpPost("MakeAdmin")]
+    [RequireAppRoles(Shared.Users.Enums.AppRole.Admin)]
     public async Task<IActionResult> MakeAdmin(
         [FromBody] CommandMakeAdmin command, CancellationToken cancellationToken)
     {

@@ -85,7 +85,7 @@ public class FingerprintsProvider : IFingerprintsProvider
 
         return result;
     }
-
+    
     private TextFingerprint CreateFingerprint(Guid documentId, string fingerprintText)
     {
         var fingerprintData = JsonConvert.DeserializeObject<HashSet<uint>>(fingerprintText);

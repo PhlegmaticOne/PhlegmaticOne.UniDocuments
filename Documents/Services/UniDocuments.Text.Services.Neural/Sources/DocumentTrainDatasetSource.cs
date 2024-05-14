@@ -2,6 +2,7 @@
 using UniDocuments.Text.Domain;
 using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
+using UniDocuments.Text.Domain.Services.DocumentMapping.Extensions;
 using UniDocuments.Text.Domain.Services.DocumentMapping.Models;
 using UniDocuments.Text.Domain.Services.Neural;
 using UniDocuments.Text.Domain.Services.Neural.Models;
@@ -32,29 +33,32 @@ public class DocumentTrainDatasetSource : IDocumentsTrainDatasetSource
         }
 
         var document = await _documentLoadingProvider.LoadAsync(documentData.Id, false, _cancellationToken);
-        return CreateDocument(document.Content!, documentData);
+        return CreateDocument(document!.Content, documentData);
     }
 
     public async Task<List<DocumentTrainModel>> GetBatchAsync(object paragraphIdsObject)
     {
         var batch = new List<DocumentTrainModel>();
         var paragraphIds = (dynamic)paragraphIdsObject;
-        var loadData = (Dictionary<int, List<int>>)GetLoadData(paragraphIds);
-
-        foreach (var data in loadData)
+        var loadData = (Dictionary<Guid, List<int>>)GetLoadData(paragraphIds);
+        var keys = loadData.Keys.ToHashSet();
+        var result = await _documentLoadingProvider.LoadAsync(keys, false, _cancellationToken);
+        
+        foreach (var documentKeyValue in result)
         {
-            var documentData = _documentMapper.GetDocumentData(data.Key)!;
-            var document = await _documentLoadingProvider.LoadAsync(documentData.Id, false, _cancellationToken);
-            var documentModel = CreateDocumentWithParagraphs(document.Content!, data.Value, documentData);
+            var paragraphs = loadData[documentKeyValue.Key];
+            var content = documentKeyValue.Value.Content;
+            var documentData = _documentMapper.GetDocumentData(documentKeyValue.Key)!;
+            var documentModel = CreateDocumentWithParagraphs(content, paragraphs, documentData);
             batch.Add(documentModel);
         }
         
         return batch;
     }
 
-    private Dictionary<int, List<int>> GetLoadData(dynamic paragraphIds)
+    private Dictionary<Guid, List<int>> GetLoadData(dynamic paragraphIds)
     {
-        var loadData = new Dictionary<int, List<int>>();
+        var loadData = new Dictionary<Guid, List<int>>();
 
         foreach (var id in paragraphIds)
         {
@@ -67,14 +71,15 @@ public class DocumentTrainDatasetSource : IDocumentsTrainDatasetSource
             }
 
             var documentData = _documentMapper.GetDocumentData(documentId)!;
+            var documentIdGuid = documentData.Id;
 
-            if (loadData.TryGetValue(documentId, out var loadParagraphIds))
+            if (loadData.TryGetValue(documentIdGuid, out var loadParagraphIds))
             {
                 loadParagraphIds.Add(documentData.GetLocalParagraphId(paragraphId));
             }
             else
             {
-                loadData.Add(documentId, new List<int>
+                loadData.Add(documentIdGuid, new List<int>
                 {
                     documentData.GetLocalParagraphId(paragraphId)
                 });

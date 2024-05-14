@@ -17,6 +17,7 @@ public class QueryBuildPlagiarismExistingDocumentReportHandler :
     IOperationResultQueryHandler<QueryBuildPlagiarismExistingDocumentReport, ReportResponse>
 {
     private const string ErrorMessage = "BuildPlagiarismExistingDocumentReport.InternalError";
+    private const string ErrorMessageNotFound = "BuildPlagiarismExistingDocumentReport.DocumentNotFound";
 
     private readonly IReportProvider _reportProvider;
     private readonly IDocumentLoadingProvider _loadingProvider;
@@ -38,6 +39,12 @@ public class QueryBuildPlagiarismExistingDocumentReportHandler :
         try
         {
             var document = await _loadingProvider.LoadAsync(request.DocumentId, true, cancellationToken);
+
+            if (document is null)
+            {
+                return OperationResult.Failed<ReportResponse>(ErrorMessageNotFound);
+            }
+            
             var plagiarismRequest = request.ToReportRequest(document);
             var report = await _reportProvider.BuildReportAsync(plagiarismRequest, cancellationToken);
             return OperationResult.Successful(report);

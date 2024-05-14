@@ -18,7 +18,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         _dbContext = dbContext;
     }
     
-    public Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
+    public Task<DocumentLoadResponse?> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
         return _dbContext.Set<StudyDocumentFile>()
             .Where(x => x.StudyDocumentId == id)
@@ -28,7 +28,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
                 Name = x.Name,
                 Bytes = x.Content
             })
-            .FirstOrDefaultAsync(cancellationToken: cancellationToken)!;
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public ConfiguredCancelableAsyncEnumerable<DocumentLoadResponse> LoadAsync(IList<Guid> ids, CancellationToken cancellationToken)

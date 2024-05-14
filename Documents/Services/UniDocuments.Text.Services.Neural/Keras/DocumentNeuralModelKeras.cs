@@ -53,6 +53,12 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
     {
         _isTraining = true;
         var options = _optionsProvider.GetOptions();
+
+        if (_isTraining)
+        {
+            return GetResult(options, TimeSpan.Zero);
+        }
+        
         var vocab = _documentsVocabProvider.GetVocab();
         var input = new TrainKerasModelInput(source, options, vocab);
         var timer = Stopwatch.StartNew();
@@ -61,13 +67,7 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
         IsLoaded = true;
         _isTraining = false;
 
-        return new NeuralModelTrainResult
-        {
-            Name = Name,
-            Epochs = options.Epochs,
-            EmbeddingSize = options.EmbeddingSize,
-            TrainTime = timer.Elapsed
-        };
+        return GetResult(options, timer.Elapsed);
     }
 
     public Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken)
@@ -84,5 +84,16 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
         }
         
         return _documentsVocabProvider.GetVocab();
+    }
+
+    private NeuralModelTrainResult GetResult(KerasModelOptions options, TimeSpan time)
+    {
+        return new NeuralModelTrainResult
+        {
+            Name = Name,
+            Epochs = options.Epochs,
+            EmbeddingSize = options.EmbeddingSize,
+            TrainTime = time
+        };
     }
 }

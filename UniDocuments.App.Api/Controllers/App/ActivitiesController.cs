@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Base;
+using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.App.Activities.Commands;
 using UniDocuments.App.Application.App.Activities.Queries;
 using UniDocuments.App.Shared.Activities.Create;
@@ -22,6 +23,7 @@ public class ActivitiesController : IdentityController
     }
 
     [HttpGet("GetForTeacher")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
     public async Task<IActionResult> GetForTeacher([FromQuery] PagedListData data, CancellationToken cancellationToken)
     {
         var query = new QueryGetActivitiesTeacher(ProfileData(), data);
@@ -36,6 +38,7 @@ public class ActivitiesController : IdentityController
     }
     
     [HttpGet("GetForStudent")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Student)]
     public async Task<IActionResult> GetForStudent([FromQuery] PagedListData data, CancellationToken cancellationToken)
     {
         var query = new QueryGetActivitiesStudent
@@ -55,6 +58,7 @@ public class ActivitiesController : IdentityController
     }
 
     [HttpGet("GetDetailed")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
     public async Task<IActionResult> GetDetailed([FromQuery] Guid activityId, CancellationToken cancellationToken)
     {
         var query = new QueryGetActivityDetailed(ProfileData(), activityId);
@@ -69,6 +73,7 @@ public class ActivitiesController : IdentityController
     }
     
     [HttpPost("Create")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
     public async Task<IActionResult> Create(
         [FromBody] ActivityCreateObject data, CancellationToken cancellationToken)
     {

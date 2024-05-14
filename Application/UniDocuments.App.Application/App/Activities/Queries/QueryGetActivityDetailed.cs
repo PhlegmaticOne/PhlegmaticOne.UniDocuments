@@ -23,6 +23,8 @@ public class QueryGetActivityDetailed : IOperationResultQuery<ActivityDetailedOb
 public class QueryGetActivityDetailedHandler :
     IOperationResultQueryHandler<QueryGetActivityDetailed, ActivityDetailedObject>
 {
+    private const string ErrorActivityNotFound = "GetActivityDetailed.NotFound";
+    
     private class ActivityDetailedPrivate
     {
         public Guid Id { get; set; }
@@ -89,8 +91,10 @@ public class QueryGetActivityDetailedHandler :
                 }).ToList()
             })
             .FirstOrDefaultAsync(cancellationToken);
-        
-        return OperationResult.Successful(Map(result!));
+
+        return result is null ? 
+            OperationResult.Failed<ActivityDetailedObject>(ErrorActivityNotFound) : 
+            OperationResult.Successful(Map(result));
     }
 
     private static ActivityDetailedObject Map(ActivityDetailedPrivate selectedObject)

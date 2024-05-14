@@ -29,7 +29,7 @@ public class OperationResult
         return Failed(errorCode, JsonConvert.SerializeObject(errorData));
     }
 
-    public static OperationResult Failed<T>(string? errorCode, object errorData)
+    public static OperationResult<T> Failed<T>(string? errorCode, object errorData)
     {
         return Failed<T>(errorCode, JsonConvert.SerializeObject(errorData));
     }

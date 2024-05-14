@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.Documents.Training;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
@@ -18,6 +19,7 @@ public class NeuralModelController : ControllerBase
     }
     
     [HttpPost("Train")]
+    [RequireAppRoles(Shared.Users.Enums.AppRole.Admin)]
     public async Task<IActionResult> Train(
         [FromBody] CommandTrainDocumentsNeuralModel command, CancellationToken cancellationToken)
     {

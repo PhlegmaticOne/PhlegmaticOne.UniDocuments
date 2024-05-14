@@ -24,6 +24,8 @@ public class CommandCreateActivity : IOperationResultCommand
 
 public class CommandCreateActivityHandler : IOperationResultCommandHandler<CommandCreateActivity>
 {
+    private const string ErrorNoFoundStudents = "CreateActivity.StudentsNotFound";
+    
     private readonly ApplicationDbContext _dbContext;
     private readonly ITimeProvider _timeProvider;
 
@@ -50,15 +52,6 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
         return OperationResult.Successful(CreateResult(entity, request));
     }
 
-    private OperationResult<ActivityDetailedObject> ErrorWithNotFoundStudents(
-        List<Student> students, ActivityCreateObject createObject)
-    {
-        var found = students.Select(x => x.UserName.ToLower());
-        var notFound = createObject.Students.Except(found).ToList();
-        var errorData = JsonConvert.SerializeObject(notFound);
-        return OperationResult.Failed<ActivityDetailedObject>(errorData: errorData);
-    }
-    
     private async Task<StudyActivity> CreateActivity(
         Guid profileId, ActivityCreateObject createObject, List<Student> students, CancellationToken cancellationToken)
     {
@@ -70,12 +63,20 @@ public class CommandCreateActivityHandler : IOperationResultCommandHandler<Comma
             EndDate = createObject.EndDate,
             Students = students,
             CreationDate = _timeProvider.Now,
-            CreatorId = profileId
+            CreatorId = profileId,
         }, cancellationToken);
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entry.Entity;
+    }
+
+    private static OperationResult<ActivityDetailedObject> ErrorWithNotFoundStudents(
+        List<Student> students, ActivityCreateObject createObject)
+    {
+        var found = students.Select(x => x.UserName.ToLower());
+        var notFound = createObject.Students.Except(found).ToList();
+        return OperationResult.Failed<ActivityDetailedObject>(ErrorNoFoundStudents, notFound);
     }
 
     private static ActivityDetailedObject CreateResult(StudyActivity entity, CommandCreateActivity request)

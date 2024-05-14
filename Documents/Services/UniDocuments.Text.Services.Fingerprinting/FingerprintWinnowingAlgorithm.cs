@@ -24,7 +24,7 @@ public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
     {
         var processed = _textPreprocessor.Preprocess(new PreprocessorTextInput
         {
-            Text = document.Content!.ToRawText()
+            Text = document.Content.ToRawText()
         });
 
         var concat = string.Concat(processed.Words);
