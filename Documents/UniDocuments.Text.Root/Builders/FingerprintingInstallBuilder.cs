@@ -35,11 +35,6 @@ public class FingerprintingInstallBuilder
         _serviceCollection.AddSingleton<IFingerprintAlgorithm, T>();
     }
     
-    public void UseFingerprintsComparer<T>() where T : class, IFingerprintsComparer
-    {
-        _serviceCollection.AddSingleton<IFingerprintsComparer, T>();
-    }
-    
     public void UseOptionsProvider<T>(IConfiguration configuration) where T : class, IFingerprintOptionsProvider
     {
         _serviceCollection.AddSingleton<IFingerprintOptionsProvider, T>();

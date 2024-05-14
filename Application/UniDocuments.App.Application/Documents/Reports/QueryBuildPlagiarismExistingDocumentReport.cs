@@ -2,7 +2,7 @@
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Application.Documents.Reports.Base;
-using UniDocuments.Text.Domain.Providers.Loading;
+using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Providers.Reports.Provider;
 using UniDocuments.Text.Domain.Services.Reports;
 

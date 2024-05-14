@@ -27,11 +27,6 @@ public class DocumentNeuralInstallBuilder
         _serviceCollection.AddSingleton<IDocumentsVocabProvider, T>();
     }
     
-    public void UseTextPreprocessor<T>() where T : class, IDocumentTextPreprocessor
-    {
-        _serviceCollection.AddSingleton<IDocumentTextPreprocessor, T>();
-    }
-    
     public void UsePlagiarismSearcher<T>() where T : class, INeuralNetworkPlagiarismSearcher
     {
         _serviceCollection.AddSingleton<INeuralNetworkPlagiarismSearcher, T>();

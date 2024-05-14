@@ -6,5 +6,6 @@ public interface IFingerprintsProvider
 {
     TextFingerprint Compute(UniDocument document);
     TextFingerprint Get(UniDocument content);
+    FingerprintCompareResult Compare(TextFingerprint a, TextFingerprint b);
     Task<Dictionary<Guid, TextFingerprint>> GetForDocumentsAsync(IEnumerable<Guid> documentIds, CancellationToken cancellationToken);
 }

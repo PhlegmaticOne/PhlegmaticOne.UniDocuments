@@ -16,7 +16,7 @@ public class AppInstaller
         builder.Services.AddApplicationWeb(applicationConfiguration, jwtOptions);
         builder.Services.AddApplicationConfiguration(builder.Configuration);
         builder.Services.AddApplicationServices(jwtOptions);
-        builder.Services.AddDocumentApplication(builder.Configuration, connectionString, applicationConfiguration);
+        builder.Services.AddDocumentApplication(builder.Configuration, applicationConfiguration);
         builder.Services.AddApplicationRequirements(connectionString, applicationConfiguration);
         
         return applicationConfiguration;

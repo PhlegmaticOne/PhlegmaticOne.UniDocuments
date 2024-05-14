@@ -28,7 +28,6 @@ public class ReportDataBuilder : IReportDataBuilder
         {
             return new ReportDocumentData
             {
-                Id = Id,
                 DateLoaded = DateLoaded,
                 StudentFirstName = StudentFirstName,
                 StudentLastName = StudentLastName,
@@ -39,13 +38,13 @@ public class ReportDataBuilder : IReportDataBuilder
     }
     
     private readonly ITextCompareProvider _textCompareProvider;
-    private readonly IDocumentsProvider _documentsProvider;
+    private readonly IDocumentLoadingProvider _documentsProvider;
     private readonly IFingerprintsProvider _fingerprintsProvider;
     private readonly ApplicationDbContext _dbContext;
 
     public ReportDataBuilder(
         ITextCompareProvider textCompareProvider,
-        IDocumentsProvider documentsProvider,
+        IDocumentLoadingProvider documentsProvider,
         IFingerprintsProvider fingerprintsProvider,
         ApplicationDbContext dbContext)
     {
@@ -69,7 +68,7 @@ public class ReportDataBuilder : IReportDataBuilder
         return new ReportData(sourceData.Map(0), documentsData, paragraphsData);
     }
 
-    private static List<ReportDocumentData> BuildDocumentData(Dictionary<Guid, DocumentData> documentData, DocumentData sourceData)
+    private List<ReportDocumentData> BuildDocumentData(Dictionary<Guid, DocumentData> documentData, DocumentData sourceData)
     {
         var result = new List<ReportDocumentData>();
 
@@ -80,8 +79,12 @@ public class ReportDataBuilder : IReportDataBuilder
                 continue;
             }
 
-            var similarity = sourceData.Fingerprint.CalculateJaccard(data.Value.Fingerprint);
-            result.Add(data.Value.Map(similarity));
+            var compareResult = _fingerprintsProvider.Compare(sourceData.Fingerprint, data.Value.Fingerprint);
+
+            if (compareResult.IsSuspicious)
+            {
+                result.Add(data.Value.Map(compareResult.Similarity));
+            }
         }
 
         return result;
@@ -199,7 +202,7 @@ public class ReportDataBuilder : IReportDataBuilder
 
     private Task<Dictionary<Guid, UniDocument>> LoadDocumentsContent(HashSet<Guid> documents, CancellationToken cancellationToken)
     {
-        return _documentsProvider.GetDocumentsAsync(documents, cancellationToken);
+        return _documentsProvider.LoadAsync(documents, true, cancellationToken);
     }
 
     private static HashSet<Guid> GetIncludedDocuments(ReportDataBuildRequest request)

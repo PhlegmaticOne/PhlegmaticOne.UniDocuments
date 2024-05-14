@@ -26,7 +26,6 @@
       <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.Cache\UniDocuments.Text.Services.Cache.csproj" />
       <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.DocumentMapping\UniDocuments.Text.Services.DocumentMapping.csproj" />
       <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.Fingerprinting\UniDocuments.Text.Services.Fingerprinting.csproj" />
-      <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.Matching\UniDocuments.Text.Services.Matching.csproj" />
       <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.Preprocessing\UniDocuments.Text.Services.Preprocessing.csproj" />
       <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.Reporting\UniDocuments.Text.Services.Reporting.csproj" />
       <ProjectReference Include="..\Documents\Services\UniDocuments.Text.Services.StreamReading\UniDocuments.Text.Services.StreamReading.csproj" />

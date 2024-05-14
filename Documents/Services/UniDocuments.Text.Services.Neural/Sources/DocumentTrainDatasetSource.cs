@@ -1,6 +1,6 @@
 ﻿using PhlegmaticOne.PythonTasks;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Domain.Providers.Loading;
+using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Services.DocumentMapping;
 using UniDocuments.Text.Domain.Services.DocumentMapping.Models;
 using UniDocuments.Text.Domain.Services.Neural;

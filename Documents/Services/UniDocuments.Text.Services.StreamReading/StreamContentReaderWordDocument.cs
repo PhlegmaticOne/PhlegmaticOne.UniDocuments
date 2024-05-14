@@ -22,7 +22,12 @@ public class StreamContentReaderWordDocument : IStreamContentReader
         _textProcessOptionsProvider = textProcessOptionsProvider;
         _wordsCountApproximator = wordsCountApproximator;
     }
-    
+
+    public UniDocumentContent Read(Stream stream)
+    {
+        return ReadAsyncPrivate(stream);
+    }
+
     public Task<UniDocumentContent> ReadAsync(Stream stream, CancellationToken cancellationToken)
     {
         return Task.Run(() => ReadAsyncPrivate(stream), cancellationToken);
@@ -72,11 +77,6 @@ public class StreamContentReaderWordDocument : IStreamContentReader
         }
                 
         var innerText = xmlElement.InnerText;
-
-        if (innerText == "СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ")
-        {
-            Console.WriteLine("");
-        }
 
         if (string.IsNullOrWhiteSpace(innerText))
         {

@@ -54,6 +54,6 @@ public class DocumentsController : IdentityController
         }
 
         var result = response.Result!;
-        return File(result.Stream!, ContentType, result.Name);
+        return File(result.ToStream(), ContentType, result.Name);
     }
 }

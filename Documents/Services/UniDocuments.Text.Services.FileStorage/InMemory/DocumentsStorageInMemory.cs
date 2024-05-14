@@ -1,4 +1,5 @@
-﻿using UniDocuments.Text.Domain.Extensions;
+﻿using System.Runtime.CompilerServices;
+using UniDocuments.Text.Domain.Extensions;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
@@ -20,8 +21,11 @@ public class DocumentsStorageInMemory : IDocumentsStorage
 
         public DocumentLoadResponse ToFileLoadResponse()
         {
-            var stream = new MemoryStream(_fileContent);
-            return new DocumentLoadResponse(_fileName, stream);
+            return new DocumentLoadResponse
+            {
+                Bytes = _fileContent,
+                Name = _fileName
+            };
         }
     }
     
@@ -34,6 +38,16 @@ public class DocumentsStorageInMemory : IDocumentsStorage
             DocumentLoadResponse.NoContent();
 
         return Task.FromResult(result);
+    }
+
+    public ConfiguredCancelableAsyncEnumerable<DocumentLoadResponse> LoadAsync(IList<Guid> ids, CancellationToken cancellationToken)
+    {
+        return _fileContents
+            .Where(x => ids.Contains(x.Key))
+            .Select(x => x.Value.ToFileLoadResponse())
+            .ToAsyncEnumerable()
+            .WithCancellation(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task<Guid> SaveAsync(StorageSaveRequest saveRequest, CancellationToken cancellationToken)

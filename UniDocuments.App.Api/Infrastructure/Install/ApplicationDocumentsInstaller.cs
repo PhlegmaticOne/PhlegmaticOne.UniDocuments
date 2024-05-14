@@ -4,8 +4,7 @@ using UniDocuments.Text.Application.BaseMetrics;
 using UniDocuments.Text.Application.Comparing;
 using UniDocuments.Text.Application.ContentReading;
 using UniDocuments.Text.Application.Fingerprinting;
-using UniDocuments.Text.Application.Loading;
-using UniDocuments.Text.Application.Matching;
+using UniDocuments.Text.Application.Neural;
 using UniDocuments.Text.Application.PlagiarismSearching;
 using UniDocuments.Text.Application.Reports;
 using UniDocuments.Text.Domain.Providers.Neural;
@@ -20,13 +19,10 @@ using UniDocuments.Text.Services.FileStorage.InMemory;
 using UniDocuments.Text.Services.Fingerprinting;
 using UniDocuments.Text.Services.Fingerprinting.Hashing;
 using UniDocuments.Text.Services.Fingerprinting.Options;
-using UniDocuments.Text.Services.Matching;
-using UniDocuments.Text.Services.Matching.Options;
 using UniDocuments.Text.Services.Neural;
 using UniDocuments.Text.Services.Neural.Doc2Vec;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 using UniDocuments.Text.Services.Neural.Keras;
-using UniDocuments.Text.Services.Neural.Preprocessors;
 using UniDocuments.Text.Services.Neural.Sources;
 using UniDocuments.Text.Services.Neural.Vocab;
 using UniDocuments.Text.Services.Preprocessing.Preprocessor;
@@ -41,7 +37,7 @@ namespace UniDocuments.App.Api.Infrastructure.Install;
 public static class ApplicationDocumentsInstaller
 {
     public static IServiceCollection AddDocumentApplication(this IServiceCollection serviceCollection,
-        IConfiguration configuration, string connectionString, ApplicationConfiguration applicationConfiguration)
+        IConfiguration configuration, ApplicationConfiguration applicationConfiguration)
     {
         serviceCollection.AddDocumentsApplication(appBuilder =>
         {
@@ -61,11 +57,7 @@ public static class ApplicationDocumentsInstaller
 
             appBuilder.UseDocumentsCache<UniDocumentsCache>();
 
-            appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageEntityFramework>(applicationConfiguration.UseRealDatabase,
-                b =>
-                {
-                    b.UseSqlConnectionString(connectionString);
-                });
+            appBuilder.UseFileStorage<DocumentsStorageInMemory, DocumentsStorageEntityFramework>(applicationConfiguration.UseRealDatabase);
 
             appBuilder.UseFingerprint(b =>
             {
@@ -74,13 +66,6 @@ public static class ApplicationDocumentsInstaller
                 b.UseFingerprintContainer<FingerprintContainer>();
                 b.UseFingerprintsProvider<FingerprintsProvider>();
                 b.UseFingerprintHash<FingerprintHashCrc32C>();
-                b.UseFingerprintsComparer<FingerprintsComparer>();
-            });
-
-            appBuilder.UseMatchingService<TextMatchProvider>(b =>
-            {
-                b.UseOptionsProvider<MatchingOptionsProvider>(configuration);
-                b.UseMatchingAlgorithm<TextMatchingAlgorithm>();
             });
 
             appBuilder.UseNeuralModelProvider<DocumentNeuralModelsProvider>(b =>
@@ -90,8 +75,6 @@ public static class ApplicationDocumentsInstaller
 
                 b.UseVocabProvider<DocumentsVocabProvider>();
                 b.UseVocabProvider<DocumentsVocabProvider>();
-                
-                b.UseTextPreprocessor<DocumentTextPreprocessor>();
                 
                 b.UsePlagiarismSearcher<NeuralNetworkPlagiarismSearcher>();
 
@@ -121,8 +104,6 @@ public static class ApplicationDocumentsInstaller
             appBuilder.UseSimilarityService<TextCompareProvider>();
 
             appBuilder.UseDocumentLoadingProvider<DocumentLoadingProvider>();
-            
-            appBuilder.UseParagraphGlobalReader<DocumentsProvider>();
             
             appBuilder.UseReportProvider<ReportProvider>(b =>
             {

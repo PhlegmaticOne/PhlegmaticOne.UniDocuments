@@ -2,8 +2,6 @@
 using UniDocuments.Text.Domain.Providers.BaseMetrics;
 using UniDocuments.Text.Domain.Providers.Comparing;
 using UniDocuments.Text.Domain.Providers.ContentReading;
-using UniDocuments.Text.Domain.Providers.Loading;
-using UniDocuments.Text.Domain.Providers.Matching;
 using UniDocuments.Text.Domain.Providers.Neural;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching;
 using UniDocuments.Text.Domain.Providers.Reports.Provider;
@@ -47,13 +45,10 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IUniDocumentsCache, T>();
     }
         
-    public void UseFileStorage<TDev, TProd>(bool useRealDatabase, Action<DocumentStorageInstallBuilder> action) 
+    public void UseFileStorage<TDev, TProd>(bool useRealDatabase) 
         where TDev : class, IDocumentsStorage
         where TProd : class, IDocumentsStorage
     {
-        var builder = new DocumentStorageInstallBuilder(_serviceCollection);
-        action(builder);
-        
         if (!useRealDatabase)
         {
             _serviceCollection.AddSingleton<IDocumentsStorage, TDev>();
@@ -98,14 +93,6 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IDocumentNeuralModelsProvider, T>();
         action(builder);
     }
-
-    public void UseMatchingService<T>(Action<MatchingInstallBuilder> builderAction) 
-        where T : class, ITextMatchProvider
-    {
-        var builder = new MatchingInstallBuilder(_serviceCollection);
-        _serviceCollection.AddScoped<ITextMatchProvider, T>();
-        builderAction(builder);
-    }
     
     public void UseSimilarityService<T>() where T : class, ITextCompareProvider
     {
@@ -120,11 +107,6 @@ public class DocumentApplicationBuilder
     public void UseDocumentLoadingProvider<T>() where T : class, IDocumentLoadingProvider
     {
         _serviceCollection.AddScoped<IDocumentLoadingProvider, T>();
-    }
-    
-    public void UseParagraphGlobalReader<T>() where T : class, IDocumentsProvider
-    {
-        _serviceCollection.AddScoped<IDocumentsProvider, T>();
     }
 
     public void UseReportProvider<T>(Action<ReportInstallBuilder> builderAction)

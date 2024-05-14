@@ -1,6 +1,7 @@
-﻿using UniDocuments.Text.Domain.Services.Neural;
+﻿using UniDocuments.Text.Domain.Providers.Neural;
+using UniDocuments.Text.Domain.Services.Neural;
 
-namespace UniDocuments.Text.Domain.Providers.Neural;
+namespace UniDocuments.Text.Application.Neural;
 
 public class DocumentNeuralModelsProvider : IDocumentNeuralModelsProvider
 {

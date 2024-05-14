@@ -42,6 +42,13 @@ public class FingerprintsProvider : IFingerprintsProvider
         return _algorithm.Fingerprint(content, options);
     }
 
+    public FingerprintCompareResult Compare(TextFingerprint a, TextFingerprint b)
+    {
+        var options = _optionsProvider.GetOptions();
+        var similarity = a.CalculateJaccard(b);
+        return new FingerprintCompareResult(similarity, similarity > options.Baseline);
+    }
+
     public async Task<Dictionary<Guid, TextFingerprint>> GetForDocumentsAsync(
         IEnumerable<Guid> documentIds, CancellationToken cancellationToken)
     {

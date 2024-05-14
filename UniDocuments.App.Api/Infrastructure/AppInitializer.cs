@@ -14,7 +14,7 @@ namespace UniDocuments.App.Api.Infrastructure;
 
 public static class AppInitializer
 {
-    public static async Task InitializeAsync(WebApplication application, ApplicationConfiguration configuration)
+    public static async Task InitializeAsync(WebApplication application)
     {
         using var scope = application.Services.CreateScope();
         var services = scope.ServiceProvider;
@@ -27,13 +27,6 @@ public static class AppInitializer
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
         var settings = services.GetRequiredService<IOptions<ApplicationSettings>>();
         var timeProvider = services.GetRequiredService<ITimeProvider>();
-        
-        if (configuration.UseRealDatabase)
-        {
-            var sqlConnectionProvider = services.GetRequiredService<ISqlConnection>();
-            await sqlConnectionProvider.InitializeAsync(cancellationToken);
-        }
-
         await CreateOrMigrate(dbContext, cancellationToken);
         await SeedUsersAsync(dbContext, settings.Value, timeProvider, passwordHasher, cancellationToken);
         await stopWordsService.InitializeAsync(cancellationToken);

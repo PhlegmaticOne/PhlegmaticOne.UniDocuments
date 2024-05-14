@@ -31,11 +31,6 @@ public class TextFingerprint
         return similarity;
     }
 
-    public bool HasFingerprint(uint fingerprint)
-    {
-        return Entries.Contains(fingerprint);
-    }
-
     public byte[] ToByteArray()
     {
         return Entries.SelectMany(o => BitConverter.GetBytes(o)).ToArray();

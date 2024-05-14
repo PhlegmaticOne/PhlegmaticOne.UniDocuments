@@ -1,11 +1,11 @@
 ﻿using KeyedSemaphores;
 using UniDocuments.Text.Domain;
-using UniDocuments.Text.Domain.Providers.Loading;
+using UniDocuments.Text.Domain.Providers.ContentReading;
 using UniDocuments.Text.Domain.Services.Cache;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.StreamReading;
 
-namespace UniDocuments.Text.Application.Loading;
+namespace UniDocuments.Text.Application.ContentReading;
 
 public class DocumentLoadingProvider : IDocumentLoadingProvider
 {
@@ -35,7 +35,8 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             }
 
             var loadResponse = await _documentsStorage.LoadAsync(documentId, cancellationToken);
-            var content = await _streamContentReader.ReadAsync(loadResponse.Stream!, cancellationToken);
+            var stream = loadResponse.ToStream();
+            var content = await _streamContentReader.ReadAsync(stream, cancellationToken);
             var result = new UniDocument(documentId, content);
 
             if (cache)
@@ -43,8 +44,21 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
                 _documentsCache.Cache(result);
             }
 
-            await loadResponse.DisposeAsync();
+            await stream.DisposeAsync();
             return result;
         }
+    }
+
+    public async Task<Dictionary<Guid, UniDocument>> LoadAsync(ISet<Guid> documentIds, bool cache, CancellationToken cancellationToken)
+    {
+        var result = new Dictionary<Guid, UniDocument>();
+
+        foreach (var documentId in documentIds)
+        {
+            var document = await LoadAsync(documentId, cache, cancellationToken);
+            result.Add(documentId, document);
+        }
+
+        return result;
     }
 }

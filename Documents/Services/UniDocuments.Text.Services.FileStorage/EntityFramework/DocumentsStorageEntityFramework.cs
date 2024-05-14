@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 using UniDocuments.App.Data.EntityFramework.Context;
 using UniDocuments.App.Domain.Models;
 using UniDocuments.Text.Domain.Extensions;
@@ -17,13 +18,30 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         _dbContext = dbContext;
     }
     
-    public async Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
+    public Task<DocumentLoadResponse> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
-        var document = await _dbContext.Set<StudyDocumentFile>()
-            .FirstOrDefaultAsync(x => x.StudyDocumentId == id, cancellationToken: cancellationToken);
+        return _dbContext.Set<StudyDocumentFile>()
+            .Where(x => x.StudyDocumentId == id)
+            .Select(x => new DocumentLoadResponse
+            {
+                Name = x.Name,
+                Bytes = x.Content
+            })
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken)!;
+    }
 
-        var stream = new MemoryStream(document!.Content);
-        return new DocumentLoadResponse(document.Name, stream);
+    public ConfiguredCancelableAsyncEnumerable<DocumentLoadResponse> LoadAsync(IList<Guid> ids, CancellationToken cancellationToken)
+    {
+        return _dbContext.Set<StudyDocumentFile>()
+            .Where(x => ids.Contains(x.StudyDocumentId))
+            .Select(x => new DocumentLoadResponse
+            {
+                Bytes = x.Content,
+                Name = x.Name
+            })
+            .AsAsyncEnumerable()
+            .WithCancellation(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task<Guid> SaveAsync(StorageSaveRequest saveRequest, CancellationToken cancellationToken)
