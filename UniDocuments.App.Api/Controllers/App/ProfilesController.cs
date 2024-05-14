@@ -24,13 +24,7 @@ public class ProfilesController : IdentityController
     public async Task<IActionResult> Update(
         [FromBody] UpdateProfileObject updateProfileObject, CancellationToken cancellationToken)
     {
-        var command = new CommandUpdateProfile
-        {
-            ProfileId = ProfileId(),
-            StudyRole = StudyRole(),
-            UpdateProfileObject = updateProfileObject
-        };
-        
+        var command = new CommandUpdateProfile(ProfileId(), StudyRole(), updateProfileObject);
         var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)

@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Newtonsoft.Json;
+using PhlegmaticOne.OperationResults;
 using UniDocuments.App.Application.Infrastructure.Extensions;
 using UniDocuments.App.Shared.Users.Enums;
 
@@ -29,12 +31,17 @@ public class RequireAppRolesMiddleware
             if (appRolesAttribute is not null && appRolesAttribute.AppRoles.Contains(appRole) == false)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync("Restricted by role");
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(GetResponse());
                 return;
             }
         }
         
         await _next(context);
+    }
+    
+    private static string GetResponse()
+    {
+        return JsonConvert.SerializeObject(OperationResult.Failed("Restricted by app role"));
     }
 }

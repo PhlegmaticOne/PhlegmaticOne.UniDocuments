@@ -41,12 +41,7 @@ public class ActivitiesController : IdentityController
     [RequireStudyRoles(Shared.Users.Enums.StudyRole.Student)]
     public async Task<IActionResult> GetForStudent([FromQuery] PagedListData data, CancellationToken cancellationToken)
     {
-        var query = new QueryGetActivitiesStudent
-        {
-            ProfileId = ProfileId(),
-            Data = data
-        };
-        
+        var query = new QueryGetActivitiesStudent(ProfileId(), data);
         var result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
 using UniDocuments.App.Data.EntityFramework.Context;

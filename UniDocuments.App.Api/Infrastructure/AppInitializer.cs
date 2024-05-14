@@ -30,7 +30,7 @@ public static class AppInitializer
         var neuralModelsProvider = services.GetRequiredService<IDocumentNeuralModelsProvider>();
 
         await CreateOrMigrate(dbContext, cancellationToken);
-        await SeedUsersAsync(dbContext, settings.Value, timeProvider, passwordHasher, cancellationToken);
+        await DatabaseSeed.SeedAsync(dbContext, settings.Value, timeProvider, passwordHasher, cancellationToken);
         await neuralModelsProvider.LoadModelsAsync(cancellationToken);
         await stopWordsService.InitializeAsync(cancellationToken);
         await documentMapperInitializer.InitializeAsync(cancellationToken);
@@ -48,8 +48,11 @@ public static class AppInitializer
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
         }
     }
+}
 
-    private static async Task SeedUsersAsync(
+public static class DatabaseSeed
+{
+    public static async Task SeedAsync(
         ApplicationDbContext context, ApplicationSettings settings,
         ITimeProvider timeProvider, IPasswordHasher passwordHasher, CancellationToken cancellationToken)
     {

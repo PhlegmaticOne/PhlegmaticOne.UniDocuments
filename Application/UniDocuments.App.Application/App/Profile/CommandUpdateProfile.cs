@@ -14,9 +14,16 @@ namespace UniDocuments.App.Application.App.Profile;
 
 public class CommandUpdateProfile : IOperationResultCommand
 {
-    public Guid ProfileId { get; set; }
-    public StudyRole StudyRole { get; set; }
-    public UpdateProfileObject UpdateProfileObject { get; set; } = null!;
+    public CommandUpdateProfile(Guid profileId, StudyRole studyRole, UpdateProfileObject updateProfileObject)
+    {
+        ProfileId = profileId;
+        StudyRole = studyRole;
+        UpdateProfileObject = updateProfileObject;
+    }
+
+    public Guid ProfileId { get; }
+    public StudyRole StudyRole { get; }
+    public UpdateProfileObject UpdateProfileObject { get; }
 }
 
 public class CommandUpdateProfileHandler : IOperationResultCommandHandler<CommandUpdateProfile>

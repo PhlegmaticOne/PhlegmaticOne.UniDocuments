@@ -1,4 +1,5 @@
 ﻿using UniDocuments.App.Api.Infrastructure.Configurations;
+using UniDocuments.App.Api.Infrastructure.Roles;
 
 namespace UniDocuments.App.Api.Infrastructure;
 
@@ -16,6 +17,9 @@ public static class AppRunner
         }
 
         app.UseAuthorization();
+
+        app.UseRequireAppRoles();
+        app.UseRequireStudyRoles();
 
         app.MapControllers();
 

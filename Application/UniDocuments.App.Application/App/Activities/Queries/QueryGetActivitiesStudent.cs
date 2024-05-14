@@ -11,8 +11,13 @@ namespace UniDocuments.App.Application.App.Activities.Queries;
 
 public class QueryGetActivitiesStudent : IOperationResultQuery<ActivityMyList>
 {
-    public Guid ProfileId { get; set; }
-    public PagedListData Data { get; set; } = null!;
+    public QueryGetActivitiesStudent(Guid profileId, PagedListData data)
+    {
+        ProfileId = profileId;
+        Data = data;
+    }
+    public Guid ProfileId { get; }
+    public PagedListData Data { get; }
 }
 
 public class QueryGetActivitiesStudentHandler : IOperationResultQueryHandler<QueryGetActivitiesStudent, ActivityMyList>
