@@ -18,6 +18,12 @@ public class RequireStudyRolesMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (context.User.Identity is null || !context.User.Identity.IsAuthenticated)
+        {
+            await _next(context);
+            return;
+        }
+        
         var studyRole = context.User.StudyRole();
         var endpoint = context.GetEndpoint();
 

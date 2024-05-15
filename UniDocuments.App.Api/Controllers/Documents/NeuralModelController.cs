@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.Documents.Training;
+using UniDocuments.App.Shared.Users.Enums;
+using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
+using UniDocuments.Text.Services.Neural.Keras.Options;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
 
@@ -17,19 +20,36 @@ public class NeuralModelController : ControllerBase
     {
         _mediator = mediator;
     }
-    
-    [HttpPost("Train")]
-    [RequireAppRoles(Shared.Users.Enums.AppRole.Admin)]
-    public async Task<IActionResult> Train(
-        [FromBody] CommandTrainDocumentsNeuralModel command, CancellationToken cancellationToken)
+
+    [HttpPost("TrainKeras")]
+    [RequireAppRoles(AppRole.Admin)]
+    public async Task<IActionResult> TrainKeras(
+        [FromBody] NeuralTrainOptionsKeras trainOptions, CancellationToken cancellationToken)
     {
+        var command = new CommandTrainKerasModel(trainOptions);
         var result = await _mediator.Send(command, cancellationToken);
-        
+
         if (!result.IsSuccess)
         {
             return BadRequest(result);
         }
-        
-        return new JsonResult(result);
+
+        return Ok(result);
+    }
+    
+    [HttpPost("TrainDoc2Vec")]
+    [RequireAppRoles(AppRole.Admin)]
+    public async Task<IActionResult> TrainDoc2Vec(
+        [FromBody] NeuralTrainOptionsDoc2Vec trainTrainOptions, CancellationToken cancellationToken)
+    {
+        var command = new CommandTrainDoc2VecModel(trainTrainOptions);
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result); 
     }
 }

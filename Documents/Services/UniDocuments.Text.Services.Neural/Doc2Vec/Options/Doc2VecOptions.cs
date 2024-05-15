@@ -23,4 +23,22 @@ public class Doc2VecOptions : INeuralOptions, IInferOptions
     {
         return epochs <= 0 ? DefaultInferEpochs : Math.Min(epochs, MaxInferEpochs);
     }
+
+    public Doc2VecOptions Merge(NeuralTrainOptionsDoc2Vec optionsDoc2Vec)
+    {
+        return new Doc2VecOptions
+        {
+            Alpha = optionsDoc2Vec.LearningRate == 0 ? Alpha : optionsDoc2Vec.LearningRate,
+            MinAlpha = optionsDoc2Vec.MinAlpha == 0 ? MinAlpha : optionsDoc2Vec.MinAlpha,
+            MaxInferEpochs = MaxInferEpochs,
+            Dm = optionsDoc2Vec.Dm,
+            Epochs = optionsDoc2Vec.Epochs == 0 ? Epochs : optionsDoc2Vec.Epochs,
+            EmbeddingSize = optionsDoc2Vec.EmbeddingSize == 0 ? EmbeddingSize : optionsDoc2Vec.EmbeddingSize,
+            TokenizeRegex = TokenizeRegex,
+            WorkersCount = optionsDoc2Vec.WorkersCount == 0 ? WorkersCount : optionsDoc2Vec.WorkersCount,
+            Name = Name,
+            DefaultInferEpochs = DefaultInferEpochs,
+            MinWordsCount = optionsDoc2Vec.MinWordsCount == 0 ? MinWordsCount : optionsDoc2Vec.MinWordsCount,
+        };
+    }
 }

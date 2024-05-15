@@ -12,7 +12,7 @@ public class DocumentNeuralModelsProvider : IDocumentNeuralModelsProvider
         _neuralModels = neuralModels.ToDictionary(x => x.Name.ToLower(), x => x);
     }
     
-    public async Task<IDocumentsNeuralModel?> GetModelAsync(string key, bool loadIfNotLoaded, CancellationToken cancellationToken)
+    public async Task<IDocumentsNeuralModel?> GetModelAsync(string key, bool loadIfNotLoaded)
     {
         if (_neuralModels.TryGetValue(key.ToLower(), out var model) == false)
         {
@@ -21,17 +21,17 @@ public class DocumentNeuralModelsProvider : IDocumentNeuralModelsProvider
 
         if (!model.IsLoaded && loadIfNotLoaded)
         {
-            await model.LoadAsync(cancellationToken);
+            await model.LoadAsync();
         }
 
         return model;
     }
 
-    public async Task LoadModelsAsync(CancellationToken cancellationToken)
+    public async Task LoadModelsAsync()
     {
         foreach (var neuralModel in _neuralModels)
         {
-            await neuralModel.Value.LoadAsync(cancellationToken);
+            await neuralModel.Value.LoadAsync();
         }
     }
 }

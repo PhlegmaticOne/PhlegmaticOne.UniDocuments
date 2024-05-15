@@ -9,12 +9,15 @@ using UniDocuments.Text.Domain.Services.SavePath;
 using UniDocuments.Text.Services.Neural.Common;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Models;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Options;
+using UniDocuments.Text.Services.Neural.Doc2Vec.Result;
 using UniDocuments.Text.Services.Neural.Doc2Vec.Tasks;
 
 namespace UniDocuments.Text.Services.Neural.Doc2Vec;
 
 public class DocumentNeuralModelDoc2Vec : IDocumentsNeuralModel
 {
+    private const string ModelIsTrainingErrorMessage = "Model is training now";
+    
     private readonly INeuralOptionsProvider<Doc2VecOptions> _optionsProvider;
     private readonly ISavePathProvider _savePathProvider;
 
@@ -32,52 +35,73 @@ public class DocumentNeuralModelDoc2Vec : IDocumentsNeuralModel
     public bool IsLoaded { get; private set; }
     public string Name => _optionsProvider.GetOptions().Name;
 
-    public async Task LoadAsync(CancellationToken cancellationToken)
+    public async Task LoadAsync()
     {
         var input = new PythonModelPathData(_savePathProvider.SavePath, Name);
         _doc2VecModel = await new PythonTaskLoadDoc2VecModel(input);
         IsLoaded = true;
     }
 
-    public Task SaveAsync(CancellationToken cancellationToken)
+    public Task SaveAsync()
     {
+        if (_doc2VecModel is null)
+        {
+            return Task.CompletedTask;
+        }
+        
         var input = new PythonModelPathData(_savePathProvider.SavePath, Name);
-        return _doc2VecModel!.SaveAsync(input);
+        return _doc2VecModel.SaveAsync(input);
     }
 
-    public async Task<NeuralModelTrainResult> TrainAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken)
+    public async Task<NeuralModelTrainResult> TrainAsync(
+        IDocumentsTrainDatasetSource source, NeuralTrainOptionsBase optionsBase)
     {
-        var options = _optionsProvider.GetOptions();
+        var merged = _optionsProvider.GetOptions().Merge((NeuralTrainOptionsDoc2Vec)optionsBase);
 
         if (_isTraining)
         {
-            return GetResult(options, TimeSpan.Zero);
+            return GetResult(merged, TimeSpan.Zero, ModelIsTrainingErrorMessage);
         }
         
         _isTraining = true;
-        var input = new TrainDoc2VecModelInput(source, options);
+        var input = new TrainDoc2VecModelInput(source, merged);
         var timer = Stopwatch.StartNew();
-        _doc2VecModel = await new PythonTaskTrainDoc2VecModel(input);
+        
+        try
+        {
+            _doc2VecModel = await new PythonTaskTrainDoc2VecModel(input);
+        }
+        catch (Exception e)
+        {
+            return GetResult(merged, timer.Elapsed, e.Message);
+        }
+        
         timer.Stop();
         IsLoaded = true;
         _isTraining = false;
-        return GetResult(options, timer.Elapsed);
+        return GetResult(merged, timer.Elapsed, null);
     }
 
-    public Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken)
+    public Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request)
     {
         var options = _optionsProvider.GetOptions();
         return _doc2VecModel!.InferDocumentAsync(request, options);
     }
 
-    private NeuralModelTrainResult GetResult(Doc2VecOptions options, TimeSpan time)
+    private NeuralModelTrainResult GetResult(Doc2VecOptions options, TimeSpan time, string? errorMessage)
     {
-        return new NeuralModelTrainResult
+        return new NeuralTrainResultDoc2Vec
         {
             Name = Name,
             Epochs = options.Epochs,
             EmbeddingSize = options.EmbeddingSize,
-            TrainTime = time
+            TrainTime = time,
+            WorkersCount = options.WorkersCount,
+            MinWordsCount = options.MinWordsCount,
+            MinAlpha = options.MinAlpha,
+            Dm = options.Dm,
+            LearningRate = options.Alpha,
+            ErrorMessage = errorMessage
         };
     }
 }

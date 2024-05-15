@@ -26,4 +26,25 @@ public class KerasModelOptions : INeuralOptions, IInferOptions
     {
         return epochs <= 0 ? DefaultInferEpochs : Math.Min(epochs, MaxInferEpochs);
     }
+
+    public KerasModelOptions Merge(NeuralTrainOptionsKeras optionsKeras)
+    {
+        return new KerasModelOptions
+        {
+            LearningRate = optionsKeras.LearningRate == 0 ? LearningRate : optionsKeras.LearningRate,
+            EmbeddingSize = optionsKeras.EmbeddingSize == 0 ? EmbeddingSize : optionsKeras.EmbeddingSize,
+            Epochs = optionsKeras.Epochs == 0 ? Epochs : optionsKeras.Epochs,
+            MaxInferEpochs = MaxInferEpochs,
+            TokenizeRegex = TokenizeRegex,
+            Name = Name,
+            Layers = Layers,
+            DefaultInferEpochs = DefaultInferEpochs,
+            Loss = Loss,
+            Metrics = Metrics,
+            BatchSize = optionsKeras.BatchSize == 0 ? BatchSize : optionsKeras.BatchSize,
+            WindowSize = optionsKeras.WindowSize == 0 ? WindowSize : optionsKeras.WindowSize,
+            IsPlotResults = IsPlotResults,
+            Verbose = Verbose
+        };
+    }
 }

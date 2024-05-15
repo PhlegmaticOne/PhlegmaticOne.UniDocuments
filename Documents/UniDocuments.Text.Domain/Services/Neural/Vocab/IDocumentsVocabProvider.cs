@@ -3,7 +3,7 @@
 public interface IDocumentsVocabProvider
 {
     bool IsLoaded { get; }
-    Task<DocumentVocabData> BuildAsync(IDocumentsTrainDatasetSource source, CancellationToken cancellationToken);
-    Task LoadAsync(CancellationToken cancellationToken);
+    Task<DocumentVocabData> BuildAsync(IDocumentsTrainDatasetSource source);
+    Task LoadAsync();
     object GetVocab();
 }

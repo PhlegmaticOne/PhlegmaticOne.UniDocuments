@@ -19,6 +19,12 @@ public class RequireAppRolesMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (context.User.Identity is null || !context.User.Identity.IsAuthenticated)
+        {
+            await _next(context);
+            return;
+        }
+        
         var appRole = context.User.AppRole();
         var endpoint = context.GetEndpoint();
 

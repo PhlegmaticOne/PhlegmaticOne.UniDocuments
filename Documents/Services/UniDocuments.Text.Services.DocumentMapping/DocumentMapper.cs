@@ -56,6 +56,11 @@ public class DocumentMapper : IDocumentMapper
         MapNewDocumentId(id, globalLastDocumentId);
     }
 
+    public ICollection<DocumentGlobalMapData> GetAll()
+    {
+        return _documentsMap;
+    }
+
     private void MapNewParagraphs(int paragraphsCount, int globalLastDocumentId)
     {
         for (var i = 0; i < paragraphsCount; i++)

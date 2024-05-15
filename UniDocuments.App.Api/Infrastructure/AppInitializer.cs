@@ -31,10 +31,10 @@ public static class AppInitializer
 
         await CreateOrMigrate(dbContext, cancellationToken);
         await DatabaseSeed.SeedAsync(dbContext, settings.Value, timeProvider, passwordHasher, cancellationToken);
-        await neuralModelsProvider.LoadModelsAsync(cancellationToken);
         await stopWordsService.InitializeAsync(cancellationToken);
         await documentMapperInitializer.InitializeAsync(cancellationToken);
         pythonTaskPool.Start(cancellationToken);
+        //await neuralModelsProvider.LoadModelsAsync();
     }
     
     private static async Task CreateOrMigrate(ApplicationDbContext dbContext, CancellationToken cancellationToken)

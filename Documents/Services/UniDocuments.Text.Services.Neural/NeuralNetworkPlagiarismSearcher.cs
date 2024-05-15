@@ -22,14 +22,14 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
     public async Task<List<ParagraphPlagiarismData>> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, true, cancellationToken);
+        var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, true);
 
         if (model is null)
         {
             return new List<ParagraphPlagiarismData>();
         }
         
-        var ingerOutputs = await model.FindSimilarAsync(request, cancellationToken);
+        var ingerOutputs = await model.FindSimilarAsync(request);
         return MapResults(ingerOutputs, request.Document.Id);
     }
     

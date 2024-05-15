@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Controllers.Base;
 using UniDocuments.App.Api.Infrastructure.Roles;
+using UniDocuments.App.Application.Documents.Data;
 using UniDocuments.App.Application.Documents.Loading.Commands;
 using UniDocuments.App.Application.Documents.Loading.Queries;
 using UniDocuments.App.Shared.Documents;
+using UniDocuments.App.Shared.Users.Enums;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
 
@@ -57,5 +59,20 @@ public class DocumentsController : IdentityController
 
         var result = response.Result!;
         return File(result.ToStream(), ContentType, result.Name);
+    }
+    
+    [HttpGet("GetGlobalData")]
+    [RequireAppRoles(AppRole.Admin)]
+    public async Task<IActionResult> GetGlobalData(CancellationToken cancellationToken)
+    {
+        var query = new QueryGetGlobalData();
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 }
