@@ -26,7 +26,7 @@ public class NeuralModelController : ControllerBase
     public async Task<IActionResult> TrainKeras(
         [FromBody] NeuralTrainOptionsKeras trainOptions, CancellationToken cancellationToken)
     {
-        var command = new CommandTrainKerasModel(trainOptions);
+        var command = new CommandTrainModel(trainOptions, "keras2vec");
         var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
@@ -40,9 +40,9 @@ public class NeuralModelController : ControllerBase
     [HttpPost("TrainDoc2Vec")]
     [RequireAppRoles(AppRole.Admin)]
     public async Task<IActionResult> TrainDoc2Vec(
-        [FromBody] NeuralTrainOptionsDoc2Vec trainTrainOptions, CancellationToken cancellationToken)
+        [FromBody] NeuralTrainOptionsDoc2Vec trainOptions, CancellationToken cancellationToken)
     {
-        var command = new CommandTrainDoc2VecModel(trainTrainOptions);
+        var command = new CommandTrainModel(trainOptions, "doc2vec");
         var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
@@ -50,6 +50,6 @@ public class NeuralModelController : ControllerBase
             return BadRequest(result);
         }
 
-        return Ok(result); 
+        return Ok(result);
     }
 }

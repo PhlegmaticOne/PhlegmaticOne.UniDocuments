@@ -8,41 +8,43 @@ using UniDocuments.Text.Domain.Services.Neural.Options;
 
 namespace UniDocuments.App.Application.Documents.Training;
 
-public class CommandTrainDoc2VecModel : IOperationResultCommand
+public class CommandTrainModel : IOperationResultCommand
 {
     public NeuralTrainOptionsBase Options { get; }
+    public string ModelName { get; }
 
-    public CommandTrainDoc2VecModel(NeuralTrainOptionsBase options)
+    public CommandTrainModel(NeuralTrainOptionsBase options, string modelName)
     {
         Options = options;
+        ModelName = modelName;
     }
 }
 
-public class CommandTrainDoc2VecModelHandler : IOperationResultCommandHandler<CommandTrainDoc2VecModel>
+public class CommandTrainModelHandler : IOperationResultCommandHandler<CommandTrainModel>
 {
-    private const string TrainDocumentInternalError = "TrainDoc2Vec.InternalError";
+    private const string TrainDocumentInternalError = "TrainKeras.InternalError";
     
     private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
     private readonly IDocumentsTrainDatasetSource _documentsTrainDatasetSource;
-    private readonly ILogger<CommandTrainDoc2VecModelHandler> _logger;
+    private readonly ILogger<CommandTrainModelHandler> _logger;
 
-    public CommandTrainDoc2VecModelHandler(
+    public CommandTrainModelHandler(
         IDocumentNeuralModelsProvider neuralModelsProvider,
         IDocumentsTrainDatasetSource documentsTrainDatasetSource,
-        ILogger<CommandTrainDoc2VecModelHandler> logger)
+        ILogger<CommandTrainModelHandler> logger)
     {
         _neuralModelsProvider = neuralModelsProvider;
         _documentsTrainDatasetSource = documentsTrainDatasetSource;
         _logger = logger;
     }
     
-    public async Task<OperationResult> Handle(CommandTrainDoc2VecModel request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CommandTrainModel request, CancellationToken cancellationToken)
     {
         try
         {
-            var model = await _neuralModelsProvider.GetModelAsync("doc2vec", false);
+            var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, false);
             var result = await model!.TrainAsync(_documentsTrainDatasetSource, request.Options);
-            
+
             if (result.IsError())
             {
                 return OperationResult.Failed<NeuralModelTrainResult>(TrainDocumentInternalError, result);
