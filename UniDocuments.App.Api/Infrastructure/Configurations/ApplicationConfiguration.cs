@@ -10,6 +10,7 @@ public class ApplicationConfiguration
     public ApplicationJwtSecrets JwtSecrets { get; set; } = null!;
     public string[] IncludePythonScripts { get; set; } = null!;
     public string SavePath { get; set; } = null!;
+    public DateTime StartTime { get; set; }
 
     public IJwtOptions CreateJwtOptions()
     {

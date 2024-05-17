@@ -2,9 +2,11 @@
 using PhlegmaticOne.JwtTokensGeneration.Options;
 using PhlegmaticOne.PasswordHasher;
 using PhlegmaticOne.PasswordHasher.Implementation;
+using UniDocuments.App.Api.Infrastructure.Services;
 using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.App.Domain.Services.Documents;
 using UniDocuments.App.Domain.Services.Profiles;
+using UniDocuments.App.Domain.Services.Statistics;
 using UniDocuments.App.Services.Common;
 using UniDocuments.App.Services.Documents;
 using UniDocuments.App.Services.Profiles;
@@ -19,6 +21,7 @@ public static class ApplicationServicesInstaller
         serviceCollection.AddSingleton<IJwtTokenGenerationService, JwtTokenGenerationService>();
         serviceCollection.AddSingleton<IProfileSetuper, ProfileSetuper>();
         serviceCollection.AddSingleton<ITimeProvider, TimeProvider>();
+        serviceCollection.AddSingleton<IPlatformActiveTimeProvider, PlatformActiveTimeProvider>();
         serviceCollection.AddScoped<IDocumentSaveProvider, DocumentSaveProvider>();
         serviceCollection.AddJwtTokenGeneration(jwtOptions);
         return serviceCollection;
