@@ -35,7 +35,7 @@ public static class AppInitializer
         await documentMapperInitializer.InitializeAsync(cancellationToken);
         pythonTaskPool.Start(cancellationToken);
         PythonTask.TaskPool = pythonTaskPool;
-        await neuralModelsProvider.LoadModelsAsync();
+        //await neuralModelsProvider.LoadModelsAsync();
     }
     
     private static async Task CreateOrMigrate(ApplicationDbContext dbContext, CancellationToken cancellationToken)

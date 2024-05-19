@@ -59,18 +59,19 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
     {
         var options = _optionsProvider.GetOptions().Merge((NeuralTrainOptionsKeras)optionsBase);
 
-        if (!_isTraining)
+        if (_isTraining)
         {
             return GetResult(options, TimeSpan.Zero, ModelIsTrainingErrorMessage);
         }
 
         _isTraining = true;
-        var vocab = _documentsVocabProvider.GetVocab();
-        var input = new TrainKerasModelInput(source, options, vocab);
         var timer = Stopwatch.StartNew();
         
         try
         {
+            await _documentsVocabProvider.BuildAsync(source);
+            var vocab = _documentsVocabProvider.GetVocab();
+            var input = new TrainKerasModelInput(source, options, vocab);
             _customManagedModel = await new PythonTaskTrainKerasModel(input);
         }
         catch (Exception e)

@@ -67,6 +67,11 @@ public class FingerprintsProvider : IFingerprintsProvider
             }
         }
 
+        if (finding.Count == 0)
+        {
+            return result;
+        }
+
         var fingerprintsQuery = _dbContext.Set<StudyDocument>()
             .Where(x => finding.Contains(x.Id))
             .Select(x => new

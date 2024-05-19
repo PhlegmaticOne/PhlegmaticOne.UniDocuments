@@ -57,6 +57,11 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
                 finding.RemoveAt(i);
             }
         }
+
+        if (finding.Count == 0)
+        {
+            return result;
+        }
         
         await foreach (var response in _documentsStorage.LoadAsync(finding, cancellationToken))
         {

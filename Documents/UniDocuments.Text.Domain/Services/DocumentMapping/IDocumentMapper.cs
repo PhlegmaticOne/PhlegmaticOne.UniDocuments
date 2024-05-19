@@ -8,5 +8,4 @@ public interface IDocumentMapper
     DocumentGlobalMapData? GetDocumentData(int documentId);
     int GetDocumentId(Guid documentId);
     void AddDocument(Guid id, int paragraphsCount);
-    ICollection<DocumentGlobalMapData> GetAll();
 }

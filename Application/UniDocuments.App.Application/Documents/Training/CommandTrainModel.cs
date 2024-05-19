@@ -22,7 +22,8 @@ public class CommandTrainModel : IOperationResultCommand
 
 public class CommandTrainModelHandler : IOperationResultCommandHandler<CommandTrainModel>
 {
-    private const string TrainDocumentInternalError = "TrainKeras.InternalError";
+    private const string TrainDocumentInternalError = "TrainModel.InternalError";
+    private const string TrainDocumentModelNotFoundError = "TrainModel.ModelNoFound";
     
     private readonly IDocumentNeuralModelsProvider _neuralModelsProvider;
     private readonly IDocumentsTrainDatasetSource _documentsTrainDatasetSource;
@@ -43,14 +44,20 @@ public class CommandTrainModelHandler : IOperationResultCommandHandler<CommandTr
         try
         {
             var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, false);
-            var result = await model!.TrainAsync(_documentsTrainDatasetSource, request.Options);
+
+            if (model is null)
+            {
+                return ModelNotFound();
+            }
+            
+            var result = await model.TrainAsync(_documentsTrainDatasetSource, request.Options);
 
             if (result.IsError())
             {
                 return OperationResult.Failed<NeuralModelTrainResult>(TrainDocumentInternalError, result);
             }
             
-            await model.SaveAsync();
+            //await model.SaveAsync();
             return OperationResult.Successful(result);
         }
         catch(Exception e)
@@ -58,5 +65,14 @@ public class CommandTrainModelHandler : IOperationResultCommandHandler<CommandTr
             _logger.LogCritical(e, TrainDocumentInternalError);
             return OperationResult.Failed(TrainDocumentInternalError, e.Message);
         }
+    }
+
+    private OperationResult ModelNotFound()
+    {
+        return OperationResult.Failed<NeuralModelTrainResult>(TrainDocumentModelNotFoundError,
+            new NeuralModelTrainResult
+            {
+                ErrorMessage = TrainDocumentModelNotFoundError
+            });
     }
 }
