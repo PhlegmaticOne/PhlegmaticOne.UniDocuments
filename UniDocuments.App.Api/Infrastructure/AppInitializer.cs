@@ -34,7 +34,8 @@ public static class AppInitializer
         await stopWordsService.InitializeAsync(cancellationToken);
         await documentMapperInitializer.InitializeAsync(cancellationToken);
         pythonTaskPool.Start(cancellationToken);
-        //await neuralModelsProvider.LoadModelsAsync();
+        PythonTask.TaskPool = pythonTaskPool;
+        await neuralModelsProvider.LoadModelsAsync();
     }
     
     private static async Task CreateOrMigrate(ApplicationDbContext dbContext, CancellationToken cancellationToken)

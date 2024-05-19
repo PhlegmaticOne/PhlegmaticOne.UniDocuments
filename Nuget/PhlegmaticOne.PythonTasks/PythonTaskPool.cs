@@ -5,36 +5,28 @@ namespace PhlegmaticOne.PythonTasks;
 
 public class PythonTaskPool : IPythonTaskPool
 {
-    private static PythonTaskPool? Instance;
-    
     private readonly IPythonScriptNamesProvider _scriptNamesProvider;
     private readonly BlockingCollection<PythonTask> _tasks;
-    
-    public PythonTaskPool(IPythonScriptNamesProvider scriptNamesProvider)
-    {
-        _scriptNamesProvider = scriptNamesProvider;
-        _tasks = new BlockingCollection<PythonTask>();
-        Instance = this;
-    }
 
     public static PythonTaskPool CreateAndStart(
         IPythonScriptNamesProvider scriptNamesProvider,
         CancellationToken cancellationToken)
     {
-        if (Instance is not null)
-        {
-            return Instance;
-        }
-        
-        Instance = new PythonTaskPool(scriptNamesProvider);
-        Instance.Start(cancellationToken);
-        PythonTask.TaskPool = Instance;
-        return Instance;
+        var result = new PythonTaskPool(scriptNamesProvider);
+        result.Start(cancellationToken);
+        return result;
     }
+
+    public PythonTaskPool(IPythonScriptNamesProvider scriptNamesProvider)
+    {
+        _scriptNamesProvider = scriptNamesProvider;
+        _tasks = new BlockingCollection<PythonTask>();
+    }
+
+    public int QueueCount => _tasks.Count;
 
     public void Start(CancellationToken cancellationToken)
     {
-        PythonTask.TaskPool = this;
         Task.Factory.StartNew(() => PythonExecutionThread(cancellationToken), TaskCreationOptions.LongRunning);
     }
 
