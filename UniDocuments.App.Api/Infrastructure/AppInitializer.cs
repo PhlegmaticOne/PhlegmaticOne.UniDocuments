@@ -14,7 +14,7 @@ namespace UniDocuments.App.Api.Infrastructure;
 
 public static class AppInitializer
 {
-    public static async Task InitializeAsync(WebApplication application)
+    public static async Task<WebApplication> InitializeAsync(this WebApplication application)
     {
         using var scope = application.Services.CreateScope();
         var services = scope.ServiceProvider;
@@ -36,6 +36,8 @@ public static class AppInitializer
         pythonTaskPool.Start(cancellationToken);
         PythonTask.TaskPool = pythonTaskPool;
         //await neuralModelsProvider.LoadModelsAsync();
+
+        return application;
     }
     
     private static async Task CreateOrMigrate(ApplicationDbContext dbContext, CancellationToken cancellationToken)
@@ -70,8 +72,6 @@ public static class DatabaseSeed
             {
                 settings.Admin.With<Student>(
                     passwordHasher.Hash(settings.Admin.Password), date),
-                settings.Student.With<Student>(
-                    passwordHasher.Hash(settings.Student.Password), date),
             };
 
             student = users[0];

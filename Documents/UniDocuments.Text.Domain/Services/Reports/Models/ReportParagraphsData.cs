@@ -10,4 +10,9 @@ public class ReportParagraphsData
         Content = content;
         ParagraphsData = new List<ReportParagraphData>();
     }
+
+    public void AddParagraphData(ReportParagraphData paragraphData)
+    {
+        ParagraphsData.Add(paragraphData);
+    }
 }

@@ -18,6 +18,11 @@ public class ReportInstallBuilder
         _serviceCollection.AddScoped<IReportDataBuilder, T>();
     }
     
+    public void UseReportDataLoader<T>() where T : class, IReportDataLoader
+    {
+        _serviceCollection.AddScoped<IReportDataLoader, T>();
+    }
+    
     public void UseReportCreator<T>() where T : class, IReportCreator
     {
         _serviceCollection.AddScoped<IReportCreator, T>();

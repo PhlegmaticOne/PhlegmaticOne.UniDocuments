@@ -22,10 +22,6 @@ public class StudyDocumentConfiguration : IEntityTypeConfiguration<StudyDocument
             .IsRequired()
             .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);
 
-        builder.HasOne(x => x.StudyDocumentFile)
-            .WithOne(x => x.StudyDocument)
-            .HasForeignKey<StudyDocumentFile>(x => x.StudyDocumentId);
-
         builder.HasIndex(x => x.Name);
     }
 }

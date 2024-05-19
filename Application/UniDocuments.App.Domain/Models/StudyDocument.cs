@@ -12,6 +12,4 @@ public class StudyDocument : EntityBase
     public Student Student { get; set; } = null!;
     public Guid ActivityId { get; set; }
     public StudyActivity Activity { get; set; } = null!;
-    public Guid StudyDocumentFileId { get; set; }
-    public StudyDocumentFile StudyDocumentFile { get; set; } = null!;
 }

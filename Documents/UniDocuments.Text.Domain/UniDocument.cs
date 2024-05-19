@@ -25,6 +25,11 @@ public class UniDocument : IEquatable<UniDocument>
         Content = content;
     }
 
+    public string GetParagraph(int id)
+    {
+        return Content.Paragraphs[id];
+    }
+
     public bool Equals(UniDocument? other)
     {
         if (ReferenceEquals(null, other)) return false;

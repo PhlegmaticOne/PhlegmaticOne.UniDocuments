@@ -1,5 +1,4 @@
 ﻿using PhlegmaticOne.PythonTasks;
-using Python.Runtime;
 using UniDocuments.Text.Domain.Providers.PlagiarismSearching.Requests;
 using UniDocuments.Text.Domain.Services.Neural.Models.Inferring;
 using UniDocuments.Text.Services.Neural.Common;
@@ -20,7 +19,7 @@ public class Doc2VecManagedModel
     public Task<InferVectorOutput[]> InferDocumentAsync(PlagiarismSearchRequest request, Doc2VecOptions options)
     {
         var content = request.Document.Content;
-        var topN = request.NDocuments;
+        var topN = options.GetTopN(request.NDocuments);
         var inferCount = options.GetInferEpochs(request.InferEpochs);
         var tasks = new Task<InferVectorOutput>[content.ParagraphsCount];
 

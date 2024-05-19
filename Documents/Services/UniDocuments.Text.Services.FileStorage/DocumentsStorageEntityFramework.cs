@@ -21,7 +21,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
     public Task<DocumentLoadResponse?> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
         return _dbContext.Set<StudyDocumentFile>()
-            .Where(x => x.StudyDocumentId == id)
+            .Where(x => x.Id == id)
             .Select(x => new DocumentLoadResponse
             {
                 Id = id,
@@ -34,7 +34,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
     public ConfiguredCancelableAsyncEnumerable<DocumentLoadResponse> LoadAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
         return _dbContext.Set<StudyDocumentFile>()
-            .Where(x => ids.Contains(x.StudyDocumentId))
+            .Where(x => ids.Contains(x.Id))
             .Select(x => new DocumentLoadResponse
             {
                 Id = x.Id,
@@ -54,7 +54,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         await using var memoryStream = new MemoryStream();
         await saveRequest.Stream.CopyToAsync(memoryStream, cancellationToken);
 
-        var file = await set.FirstOrDefaultAsync(x => x.StudyDocumentId == saveRequest.Id, cancellationToken);
+        var file = await set.FirstOrDefaultAsync(x => x.Id == saveRequest.Id, cancellationToken);
 
         if (file is not null)
         {
@@ -70,7 +70,6 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         var entry = await _dbContext.Set<StudyDocumentFile>().AddAsync(new StudyDocumentFile
         {
             Id = saveRequest.Id,
-            StudyDocumentId = saveRequest.Id,
             Content = memoryStream.ToArray(),
             Name = saveRequest.Name
         }, cancellationToken);

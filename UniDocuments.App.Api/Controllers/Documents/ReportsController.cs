@@ -53,6 +53,29 @@ public class ReportsController : ControllerBase
         var result = response.Result!;
         return File(result.ResponseStream, result.ContentType, result.Name);
     }
+    
+    [HttpGet("BuildForExistingDocumentDefault")]
+    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
+    public async Task<IActionResult> BuildForExistingDocumentDefault(
+        [FromQuery] Guid documentId, CancellationToken cancellationToken)
+    {
+        var request = new QueryBuildPlagiarismExistingDocumentReport
+        {
+            BaseMetric = "cosine",
+            ModelName = "doc2vec",
+            DocumentId = documentId
+        };
+        
+        var response = await _mediator.Send(request, cancellationToken);
+        
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+
+        var result = response.Result!;
+        return File(result.ResponseStream, result.ContentType, result.Name);
+    }
 }
 
 public class DocumentBuildReportRequest

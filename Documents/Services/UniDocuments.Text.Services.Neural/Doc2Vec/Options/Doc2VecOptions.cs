@@ -18,6 +18,12 @@ public class Doc2VecOptions : INeuralOptions, IInferOptions
     public int Dm { get; set; }
     public int WorkersCount { get; set; }
     public int MinWordsCount { get; set; }
+    public int DefaultTopN { get; set; }
+
+    public int GetTopN(int topN)
+    {
+        return topN <= 0 ? DefaultTopN : topN;
+    }
 
     public int GetInferEpochs(int epochs)
     {

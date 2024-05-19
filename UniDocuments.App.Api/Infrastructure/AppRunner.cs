@@ -1,21 +1,17 @@
-﻿using UniDocuments.App.Api.Infrastructure.Configurations;
-using UniDocuments.App.Api.Infrastructure.Roles;
+﻿using UniDocuments.App.Api.Infrastructure.Roles;
 
 namespace UniDocuments.App.Api.Infrastructure;
 
 public static class AppRunner
 {
-    public static void Run(WebApplication app, ApplicationConfiguration applicationConfiguration)
+    public static void Run(WebApplication app)
     {
         app.UseDeveloperExceptionPage();
         
         app.UseHttpsRedirection();
 
-        if (applicationConfiguration.UseAuthentication)
-        {
-            app.UseAuthentication();
-        }
-
+        app.UseAuthentication();
+        
         app.UseAuthorization();
 
         app.UseRequireAppRoles();

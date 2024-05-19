@@ -2,38 +2,34 @@
 using Microsoft.IdentityModel.Tokens;
 using PhlegmaticOne.JwtTokensGeneration.Options;
 using Serilog;
-using UniDocuments.App.Api.Infrastructure.Configurations;
 
 namespace UniDocuments.App.Api.Infrastructure.Install;
 
 public static class ApplicationWebInstaller
 {
     public static IServiceCollection AddApplicationWeb(
-        this IServiceCollection serviceCollection, ApplicationConfiguration configuration, IJwtOptions jwtOptions)
+        this IServiceCollection serviceCollection, IJwtOptions jwtOptions)
     {
-        if (configuration.UseAuthentication)
+        serviceCollection.AddAuthentication(x =>
         {
-            serviceCollection.AddAuthentication(x =>
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            o.RequireHttpsMetadata = false;
+            o.SaveToken = true;
+            o.TokenValidationParameters = new TokenValidationParameters
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                o.RequireHttpsMetadata = false;
-                o.SaveToken = true;
-                o.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = jwtOptions.GetSecretKey(),
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
-        }
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtOptions.Issuer,
+                ValidAudience = jwtOptions.Audience,
+                IssuerSigningKey = jwtOptions.GetSecretKey(),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
         serviceCollection.AddControllers().AddNewtonsoftJson();
         serviceCollection.AddEndpointsApiExplorer();
@@ -41,7 +37,7 @@ public static class ApplicationWebInstaller
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .CreateLogger();
 
         serviceCollection.AddSerilog();

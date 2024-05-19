@@ -2,6 +2,12 @@
 
 public class ReportParagraphData
 {
-    public string Content { get; set; } = null!;
-    public ReportDocumentData DocumentData { get; set; } = null!;
+    public ReportParagraphData(string content, ReportDocumentData documentData)
+    {
+        Content = content;
+        DocumentData = documentData;
+    }
+    
+    public string Content { get; }
+    public ReportDocumentData DocumentData { get; set; }
 }

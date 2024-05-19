@@ -83,7 +83,7 @@ public class StreamContentReaderWordDocument : IStreamContentReader
             return false;
         }
 
-        text = innerText;
+        text = innerText.Trim();
         return true;
     }
 }

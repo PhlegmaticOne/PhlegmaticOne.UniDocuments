@@ -107,6 +107,7 @@ public static class ApplicationDocumentsInstaller
             {
                 b.UseReportCreator<ReportCreatorWord>();
                 b.UseReportDataBuilder<ReportDataBuilder>();
+                b.UseReportDataLoader<ReportDataLoader>();
             });
         });
 

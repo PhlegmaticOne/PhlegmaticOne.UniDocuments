@@ -57,7 +57,7 @@ public class CommandTrainModelHandler : IOperationResultCommandHandler<CommandTr
                 return OperationResult.Failed<NeuralModelTrainResult>(TrainDocumentInternalError, result);
             }
             
-            //await model.SaveAsync();
+            await model.SaveAsync();
             return OperationResult.Successful(result);
         }
         catch(Exception e)
