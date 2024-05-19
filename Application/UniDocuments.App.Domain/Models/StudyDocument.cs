@@ -1,4 +1,6 @@
-﻿using UniDocuments.App.Domain.Models.Base;
+﻿using Newtonsoft.Json;
+using UniDocuments.App.Domain.Models.Base;
+using UniDocuments.Text.Domain.Services.Fingerprinting.Models;
 
 namespace UniDocuments.App.Domain.Models;
 
@@ -12,4 +14,9 @@ public class StudyDocument : EntityBase
     public Student Student { get; set; } = null!;
     public Guid ActivityId { get; set; }
     public StudyActivity Activity { get; set; } = null!;
+
+    public void UpdateFingerprint(TextFingerprint fingerprint)
+    {
+        Fingerprint = JsonConvert.SerializeObject(fingerprint.Entries);
+    }
 }

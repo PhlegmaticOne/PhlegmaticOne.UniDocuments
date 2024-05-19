@@ -5,15 +5,20 @@ namespace UniDocuments.Text.Services.Fingerprinting.Options;
 
 public class FingerprintOptionsProvider : IFingerprintOptionsProvider
 {
-    private readonly IOptions<FingerprintOptions> _options;
+    private FingerprintOptions _options;
 
-    public FingerprintOptionsProvider(IOptions<FingerprintOptions> options)
+    public FingerprintOptionsProvider(IOptionsMonitor<FingerprintOptions> options)
     {
-        _options = options;
+        _options = options.CurrentValue;
+
+        options.OnChange(newOptions =>
+        {
+            _options = newOptions;
+        });
     }
     
     public FingerprintOptions GetOptions()
     {
-        return _options.Value;
+        return _options;
     }
 }

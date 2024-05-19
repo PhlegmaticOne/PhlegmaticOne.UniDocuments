@@ -28,7 +28,7 @@ public class FingerprintWinnowingAlgorithm : IFingerprintAlgorithm
         });
 
         var concat = string.Concat(processed.Words);
-        var levelOptions = options.GetMatchingOptions(processed.Words.Length);
+        var levelOptions = options.Options;
         var fingerprints = FingerprintText(concat, levelOptions.GramSize);
         var winnowedFingerprints = WinnowFingerprints(fingerprints, levelOptions.WindowSize);
         return new TextFingerprint(document.Id, winnowedFingerprints);
