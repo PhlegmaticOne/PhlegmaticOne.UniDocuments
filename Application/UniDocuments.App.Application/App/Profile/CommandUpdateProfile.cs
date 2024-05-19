@@ -87,7 +87,6 @@ public class CommandUpdateProfileHandler : IOperationResultCommandHandler<Comman
     {
         profile.FirstName = GetNewValueOrExisting(updateProfileObject.FirstName, profile.FirstName);
         profile.LastName = GetNewValueOrExisting(updateProfileObject.LastName, profile.LastName);
-        profile.UserName = GetNewValueOrExisting(updateProfileObject.UserName, profile.UserName);
         profile.Password = ProcessPassword(profile.Password, updateProfileObject.NewPassword);
         profile.Role = (ApplicationRole)updateProfileObject.AppRole;
     }
