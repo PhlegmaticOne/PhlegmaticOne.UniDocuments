@@ -51,14 +51,25 @@ public class PythonTaskPool : IPythonTaskPool
                     continue;
                 }
 
-                dynamic method = script.GetAttr(task.MethodName);
-                var result = method(task.Input);
-                task.OnComplete(result);
+                try
+                {
+                    dynamic method = script.GetAttr(task.MethodName);
+                    var result = method(task.Input);
+                    task.OnComplete(result);
+                }
+                catch
+                {
+                    //Unexpected error
+                }
             }
         }
         catch (OperationCanceledException)
         {
             //Python thread pool running cancelled
+        }
+        catch
+        {
+            //Unexpected error
         }
         
         PythonEngine.Shutdown();

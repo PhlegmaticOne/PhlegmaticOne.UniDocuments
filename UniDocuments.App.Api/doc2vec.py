@@ -73,7 +73,9 @@ def train(input_data) -> Doc2Vec:
 
 def load(input_data) -> Doc2Vec:
     path = get_path(input_data)
-    return Doc2Vec.load(path)
+    result = Doc2Vec.load(path)
+    print('doc2vec loaded')
+    return result
 
 
 def save(input_data):

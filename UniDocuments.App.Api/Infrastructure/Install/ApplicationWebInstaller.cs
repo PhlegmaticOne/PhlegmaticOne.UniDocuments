@@ -37,7 +37,7 @@ public static class ApplicationWebInstaller
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .MinimumLevel.Information()
+            .MinimumLevel.Warning()
             .CreateLogger();
 
         serviceCollection.AddSerilog();

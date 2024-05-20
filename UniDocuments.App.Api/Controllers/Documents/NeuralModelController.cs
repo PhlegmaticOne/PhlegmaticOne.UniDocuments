@@ -53,11 +53,11 @@ public class NeuralModelController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("RebuildFingerprints")]
+    [HttpPost("RebuildDocuments")]
     [RequireAppRoles(AppRole.Admin)]
-    public async Task<IActionResult> RebuildFingerprints(CancellationToken cancellationToken)
+    public async Task<IActionResult> RebuildDocuments(CancellationToken cancellationToken)
     {
-        var command = new CommandRebuildFingerprints();
+        var command = new CommandRebuildDocuments();
         var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)

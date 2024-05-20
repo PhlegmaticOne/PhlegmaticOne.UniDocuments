@@ -46,6 +46,7 @@ public class Doc2VecOptions : INeuralOptions, IInferOptions
             Name = Name,
             DefaultInferEpochs = DefaultInferEpochs,
             MinWordsCount = optionsDoc2Vec.MinWordsCount == 0 ? MinWordsCount : optionsDoc2Vec.MinWordsCount,
+            BaseLine = BaseLine
         };
     }
 }

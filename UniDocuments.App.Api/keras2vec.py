@@ -64,6 +64,7 @@ def build_vocab(input_data):
 
 def load_vocab(input_data):
     vocab = DocumentVocab.load(input_data)
+    print('keras vocab loaded')
     return vocab
 
 
@@ -90,6 +91,7 @@ def load(input_data):
     path = get_path(input_data)
     model = load_model(path, safe_mode=False)
     result = KerasDoc2VecModel(vocab, options, model=model)
+    print('keras2vec loaded')
     return result
 
 

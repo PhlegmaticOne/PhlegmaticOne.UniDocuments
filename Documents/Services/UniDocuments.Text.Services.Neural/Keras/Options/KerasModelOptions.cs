@@ -45,7 +45,8 @@ public class KerasModelOptions : INeuralOptions, IInferOptions
             BatchSize = optionsKeras.BatchSize == 0 ? BatchSize : optionsKeras.BatchSize,
             WindowSize = optionsKeras.WindowSize == 0 ? WindowSize : optionsKeras.WindowSize,
             IsPlotResults = IsPlotResults,
-            Verbose = Verbose
+            Verbose = Verbose,
+            BaseLine = BaseLine
         };
     }
 }

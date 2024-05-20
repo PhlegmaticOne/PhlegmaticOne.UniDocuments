@@ -11,15 +11,15 @@ using UniDocuments.Text.Domain.Services.StreamReading;
 
 namespace UniDocuments.App.Application.Documents.Training;
 
-public class CommandRebuildFingerprints : IOperationResultCommand { }
+public class CommandRebuildDocuments : IOperationResultCommand { }
 
-public class CommandRebuildFingerprintsHandler : IOperationResultCommandHandler<CommandRebuildFingerprints>
+public class CommandRebuildDocumentsHandler : IOperationResultCommandHandler<CommandRebuildDocuments>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IStreamContentReader _streamContentReader;
     private readonly IFingerprintsProvider _fingerprintsProvider;
 
-    public CommandRebuildFingerprintsHandler(
+    public CommandRebuildDocumentsHandler(
         ApplicationDbContext dbContext, 
         IStreamContentReader streamContentReader,
         IFingerprintsProvider fingerprintsProvider)
@@ -29,7 +29,7 @@ public class CommandRebuildFingerprintsHandler : IOperationResultCommandHandler<
         _fingerprintsProvider = fingerprintsProvider;
     }
     
-    public async Task<OperationResult> Handle(CommandRebuildFingerprints request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CommandRebuildDocuments request, CancellationToken cancellationToken)
     {
         var timer = Stopwatch.StartNew();
 
@@ -37,7 +37,7 @@ public class CommandRebuildFingerprintsHandler : IOperationResultCommandHandler<
         {
             var count = await UpdateFingerprintsAsync(cancellationToken);
             
-            return OperationResult.Successful(new FingerprintsUpdateObject
+            return OperationResult.Successful(new DocumentsUpdateObject
             {
                 Count = count,
                 Time = timer.Elapsed
@@ -45,7 +45,7 @@ public class CommandRebuildFingerprintsHandler : IOperationResultCommandHandler<
         }
         catch (Exception e)
         {
-            return OperationResult.Failed(e.Message, new FingerprintsUpdateObject
+            return OperationResult.Failed(e.Message, new DocumentsUpdateObject
             {
                 Count = 0,
                 Time = timer.Elapsed
@@ -73,6 +73,8 @@ public class CommandRebuildFingerprintsHandler : IOperationResultCommandHandler<
             var content = await _streamContentReader.ReadAsync(stream, cancellationToken);
             var fingerprint = _fingerprintsProvider.Get(UniDocument.FromContent(content));
             file.StudyDocument.UpdateFingerprint(fingerprint);
+            file.StudyDocument.ValuableParagraphsCount = content.ParagraphsCount;
+            _dbContext.Update(file.StudyDocument);
             await _dbContext.SaveChangesAsync(cancellationToken);
             count++;
         }

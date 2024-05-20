@@ -6,4 +6,4 @@ var app = await WebApplication
     .Build()
     .InitializeAsync();
 
-AppRunner.Run(app);
+app.Start();
