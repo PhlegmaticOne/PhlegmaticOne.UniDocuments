@@ -5,5 +5,5 @@ namespace UniDocuments.Text.Domain.Services.Neural;
 
 public interface INeuralNetworkPlagiarismSearcher
 {
-    Task<List<ParagraphPlagiarismData>> SearchAsync(PlagiarismSearchRequest request, CancellationToken cancellationToken);
+    Task<List<ParagraphPlagiarismData>> SearchAsync(PlagiarismSearchRequest request);
 }

@@ -19,8 +19,7 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
         _documentMapper = documentMapper;
     }
 
-    public async Task<List<ParagraphPlagiarismData>> SearchAsync(
-        PlagiarismSearchRequest request, CancellationToken cancellationToken)
+    public async Task<List<ParagraphPlagiarismData>> SearchAsync(PlagiarismSearchRequest request)
     {
         var model = await _neuralModelsProvider.GetModelAsync(request.ModelName, true);
 
@@ -30,10 +29,11 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
         }
         
         var ingerOutputs = await model.FindSimilarAsync(request);
-        return MapResults(ingerOutputs, request.Document.Id);
+        return MapResults(ingerOutputs, model, request.Document.Id);
     }
     
-    private List<ParagraphPlagiarismData> MapResults(InferVectorOutput[] inferOutputs, Guid sourceId)
+    private List<ParagraphPlagiarismData> MapResults(
+        InferVectorOutput[] inferOutputs, IDocumentsNeuralModel neuralModel, Guid sourceId)
     {
         var result = new List<ParagraphPlagiarismData>();
         var sourceDocumentId = _documentMapper.GetDocumentId(sourceId);
@@ -46,7 +46,7 @@ public class NeuralNetworkPlagiarismSearcher : INeuralNetworkPlagiarismSearcher
             {
                 var documentId = _documentMapper.GetDocumentIdFromGlobalParagraphId(inferEntry.ParagraphId);
 
-                if (documentId == sourceDocumentId)
+                if (documentId == sourceDocumentId || neuralModel.IsSuspicious(inferEntry.Similarity) == false)
                 {
                     continue;
                 }

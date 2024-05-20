@@ -10,11 +10,7 @@ public class FingerprintOptionsProvider : IFingerprintOptionsProvider
     public FingerprintOptionsProvider(IOptionsMonitor<FingerprintOptions> options)
     {
         _options = options.CurrentValue;
-
-        options.OnChange(newOptions =>
-        {
-            _options = newOptions;
-        });
+        options.OnChange(newOptions => _options = newOptions);
     }
     
     public FingerprintOptions GetOptions()

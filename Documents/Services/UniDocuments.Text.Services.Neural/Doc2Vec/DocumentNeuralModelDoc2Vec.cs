@@ -88,6 +88,11 @@ public class DocumentNeuralModelDoc2Vec : IDocumentsNeuralModel
         return _doc2VecModel!.InferDocumentAsync(request, options);
     }
 
+    public bool IsSuspicious(double similarity)
+    {
+        return similarity >= _optionsProvider.GetOptions().BaseLine;
+    }
+
     private NeuralModelTrainResult GetResult(Doc2VecOptions options, TimeSpan time, string? errorMessage)
     {
         return new NeuralTrainResultDoc2Vec

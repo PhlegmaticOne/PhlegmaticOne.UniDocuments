@@ -6,19 +6,22 @@ namespace UniDocuments.Text.Services.Neural.Keras.Options;
 
 public class KerasModelOptionsProvider : INeuralOptionsProvider<KerasModelOptions>
 {
-    private readonly IOptions<KerasModelOptions> _options;
     private readonly ITextProcessOptionsProvider _optionsProvider;
+    
+    private KerasModelOptions _options;
 
-    public KerasModelOptionsProvider(IOptions<KerasModelOptions> options, ITextProcessOptionsProvider optionsProvider)
+    public KerasModelOptionsProvider(
+        IOptionsMonitor<KerasModelOptions> options,
+        ITextProcessOptionsProvider optionsProvider)
     {
-        _options = options;
+        _options = options.CurrentValue;
         _optionsProvider = optionsProvider;
+        options.OnChange(o => _options = o);
     }
     
     public KerasModelOptions GetOptions()
     {
-        var options = _options.Value;
-        options.TokenizeRegex = _optionsProvider.GetOptions().TokenizeRegex;
-        return options;
+        _options.TokenizeRegex = _optionsProvider.GetOptions().TokenizeRegex;
+        return _options;
     }
 }

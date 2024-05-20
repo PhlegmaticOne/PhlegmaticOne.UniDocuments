@@ -91,6 +91,11 @@ public class DocumentNeuralModelKeras : IDocumentsNeuralModel
         var options = _optionsProvider.GetOptions();
         return _customManagedModel!.InferDocumentAsync(request, options);
     }
+    
+    public bool IsSuspicious(double similarity)
+    {
+        return similarity >= _optionsProvider.GetOptions().BaseLine;
+    }
 
     private async Task<object> GetLoadedVocabAsync()
     {

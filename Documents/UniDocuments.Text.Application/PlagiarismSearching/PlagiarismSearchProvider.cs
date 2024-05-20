@@ -17,11 +17,8 @@ public class PlagiarismSearchProvider : IPlagiarismSearchProvider
     public async Task<PlagiarismSearchResponse> SearchAsync(
         PlagiarismSearchRequest request, CancellationToken cancellationToken)
     {
-        var response = new PlagiarismSearchResponse(request.Document.Id)
-        {
-            SuspiciousParagraphs = await _networkPlagiarismSearcher.SearchAsync(request, cancellationToken)
-        };
-
+        var suspiciousParagraphs = await _networkPlagiarismSearcher.SearchAsync(request);
+        var response = new PlagiarismSearchResponse(request.Document.Id, suspiciousParagraphs);
         return response;
     }
 }

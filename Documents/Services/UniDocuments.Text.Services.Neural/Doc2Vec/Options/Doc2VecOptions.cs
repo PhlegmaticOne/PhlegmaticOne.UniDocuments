@@ -19,6 +19,7 @@ public class Doc2VecOptions : INeuralOptions, IInferOptions
     public int WorkersCount { get; set; }
     public int MinWordsCount { get; set; }
     public int DefaultTopN { get; set; }
+    public double BaseLine { get; set; }
 
     public int GetTopN(int topN)
     {

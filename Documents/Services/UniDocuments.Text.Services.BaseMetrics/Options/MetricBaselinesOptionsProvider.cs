@@ -5,15 +5,16 @@ namespace UniDocuments.Text.Services.BaseMetrics.Options;
 
 public class MetricBaselinesOptionsProvider : IMetricBaselinesOptionsProvider
 {
-    private readonly IOptions<MetricBaselines> _options;
+    private MetricBaselines _options;
 
-    public MetricBaselinesOptionsProvider(IOptions<MetricBaselines> options)
+    public MetricBaselinesOptionsProvider(IOptionsMonitor<MetricBaselines> options)
     {
-        _options = options;
+        _options = options.CurrentValue;
+        options.OnChange(o => _options = o);
     }
     
     public MetricBaselines GetOptions()
     {
-        return _options.Value;
+        return _options;
     }
 }

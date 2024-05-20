@@ -16,6 +16,7 @@ public class KerasModelOptions : INeuralOptions, IInferOptions
     public int MaxInferEpochs { get; set; }
     public int DefaultInferEpochs { get; set; }
     public double LearningRate { get; set; }
+    public double BaseLine { get; set; }
     public bool IsPlotResults { get; set; }
     public int Verbose { get; set; }
     public string Loss { get; set; } = null!;

@@ -6,21 +6,21 @@ namespace UniDocuments.Text.Services.Neural.Doc2Vec.Options;
 
 public class Doc2VecOptionsProvider : INeuralOptionsProvider<Doc2VecOptions>
 {
-    private readonly IOptionsMonitor<Doc2VecOptions> _optionsSnapshot;
     private readonly ITextProcessOptionsProvider _textProcessOptionsProvider;
+    private Doc2VecOptions _options;
 
     public Doc2VecOptionsProvider(
-        IOptionsMonitor<Doc2VecOptions> optionsSnapshot, 
+        IOptionsMonitor<Doc2VecOptions> options, 
         ITextProcessOptionsProvider textProcessOptionsProvider)
     {
-        _optionsSnapshot = optionsSnapshot;
+        _options = options.CurrentValue;
         _textProcessOptionsProvider = textProcessOptionsProvider;
+        options.OnChange(o => _options = o);
     }
     
     public Doc2VecOptions GetOptions()
     {
-        var options = _optionsSnapshot.CurrentValue;
-        options.TokenizeRegex = _textProcessOptionsProvider.GetOptions().TokenizeRegex;
-        return options;
+        _options.TokenizeRegex = _textProcessOptionsProvider.GetOptions().TokenizeRegex;
+        return _options;
     }
 }

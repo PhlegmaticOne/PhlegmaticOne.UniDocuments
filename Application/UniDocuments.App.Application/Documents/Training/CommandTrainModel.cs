@@ -67,7 +67,7 @@ public class CommandTrainModelHandler : IOperationResultCommandHandler<CommandTr
         }
     }
 
-    private OperationResult ModelNotFound()
+    private static OperationResult ModelNotFound()
     {
         return OperationResult.Failed<NeuralModelTrainResult>(TrainDocumentModelNotFoundError,
             new NeuralModelTrainResult

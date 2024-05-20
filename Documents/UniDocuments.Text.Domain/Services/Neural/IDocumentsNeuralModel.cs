@@ -13,4 +13,5 @@ public interface IDocumentsNeuralModel
     Task SaveAsync();
     Task<NeuralModelTrainResult> TrainAsync(IDocumentsTrainDatasetSource source, NeuralTrainOptionsBase options);
     Task<InferVectorOutput[]> FindSimilarAsync(PlagiarismSearchRequest request);
+    bool IsSuspicious(double similarity);
 }
