@@ -8,7 +8,6 @@ using UniDocuments.App.Domain.Models;
 using UniDocuments.App.Domain.Models.Base;
 using UniDocuments.App.Domain.Services.Profiles;
 using UniDocuments.App.Shared.Users;
-using StudyRole = UniDocuments.App.Shared.Users.Enums.StudyRole;
 
 namespace UniDocuments.App.Application.App.Login.Queries;
 
@@ -46,20 +45,21 @@ public class QueryLoginHandler : IOperationResultQueryHandler<QueryLogin, Profil
 
     public async Task<OperationResult<ProfileObject>> Handle(QueryLogin request, CancellationToken cancellationToken)
     {
-        var login = request.LoginObject;
-        
         try
         {
-            var profile = login.StudyRole switch
-            {
-                StudyRole.Student => await GetProfileAsync<Student>(request, cancellationToken),
-                StudyRole.Teacher => await GetProfileAsync<Teacher>(request, cancellationToken),
-                _ => throw new ArgumentOutOfRangeException(nameof(login.StudyRole))
-            };
+            var password = _passwordHasher.Hash(request.LoginObject.Password);
+            var student = await GetProfileAsync<Student>(request, password, cancellationToken);
 
-            return profile is null ? 
+            if (student is not null)
+            {
+                return OperationResult.Successful(student);
+            }
+
+            var teacher = await GetProfileAsync<Teacher>(request, password, cancellationToken);
+
+            return teacher is null ? 
                 OperationResult.Failed<ProfileObject>(AuthorizeProfileNotExist) :
-                OperationResult.Successful(profile);
+                OperationResult.Successful(teacher);
         }
         catch (Exception e)
         {
@@ -69,16 +69,18 @@ public class QueryLoginHandler : IOperationResultQueryHandler<QueryLogin, Profil
     }
 
     private async Task<ProfileObject?> GetProfileAsync<T>(
-        QueryLogin request, CancellationToken cancellationToken) where T : Person, new()
+        QueryLogin request, string password, CancellationToken cancellationToken) where T : Person, new()
     {
         var login = request.LoginObject;
         var repository = _dbContext.Set<T>();
-        var password = _passwordHasher.Hash(login.Password);
-
         var person = await repository.FirstOrDefaultAsync(
-            predicate: p => p.UserName == login.UserName && p.Password == password,
-            cancellationToken: cancellationToken);
+            p => p.UserName.ToLower() == login.UserName, cancellationToken);
 
-        return person is null ? null : _profileSetuper.SetupFrom(person);
+        if (person is null || password != person.Password)
+        {
+            return null;
+        }
+
+        return _profileSetuper.SetupFrom(person);
     }
 }

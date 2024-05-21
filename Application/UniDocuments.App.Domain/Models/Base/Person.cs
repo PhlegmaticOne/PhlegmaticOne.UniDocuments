@@ -11,6 +11,11 @@ public class Person : EntityBase
     public ApplicationRole Role { get; set; }
     public DateTime JoinDate { get; set; }
     
+    public T Map<T>() where T : Person, new()
+    {
+        return With<T>(Password, JoinDate);
+    }
+    
     public T With<T>(string password, DateTime joinDate) where T : Person, new()
     {
         return new T

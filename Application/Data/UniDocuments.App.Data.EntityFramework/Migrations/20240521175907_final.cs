@@ -6,21 +6,43 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UniDocuments.App.Data.EntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Groups",
+                name: "Students",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teachers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,51 +53,39 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudyActivities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
+                        name: "FK_StudyActivities_Teachers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupStudyActivity",
+                name: "StudentStudyActivity",
                 columns: table => new
                 {
                     ActivitiesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GroupsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    StudentsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupStudyActivity", x => new { x.ActivitiesId, x.GroupsId });
+                    table.PrimaryKey("PK_StudentStudyActivity", x => new { x.ActivitiesId, x.StudentsId });
                     table.ForeignKey(
-                        name: "FK_GroupStudyActivity_Groups_GroupsId",
-                        column: x => x.GroupsId,
-                        principalTable: "Groups",
+                        name: "FK_StudentStudyActivity_Students_StudentsId",
+                        column: x => x.StudentsId,
+                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupStudyActivity_StudyActivities_ActivitiesId",
+                        name: "FK_StudentStudyActivity_StudyActivities_ActivitiesId",
                         column: x => x.ActivitiesId,
                         principalTable: "StudyActivities",
                         principalColumn: "Id",
@@ -87,10 +97,12 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     DateLoaded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fingerprint = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ValuableParagraphsCount = table.Column<int>(type: "int", nullable: false),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WinnowingData = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,43 +122,39 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudyDocumentReports",
+                name: "StudyDocumentFiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    StudyDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudyDocumentReports", x => x.Id);
+                    table.PrimaryKey("PK_StudyDocumentFiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StudyDocumentReports_StudyDocuments_DocumentId",
-                        column: x => x.DocumentId,
+                        name: "FK_StudyDocumentFiles_StudyDocuments_StudyDocumentId",
+                        column: x => x.StudyDocumentId,
                         principalTable: "StudyDocuments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_Name",
-                table: "Groups",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupStudyActivity_GroupsId",
-                table: "GroupStudyActivity",
-                column: "GroupsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_GroupId",
+                name: "IX_Students_UserName",
                 table: "Students",
-                column: "GroupId");
+                column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_LastName",
-                table: "Students",
-                column: "LastName");
+                name: "IX_StudentStudyActivity_StudentsId",
+                table: "StudentStudyActivity",
+                column: "StudentsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudyActivities_CreatorId",
+                table: "StudyActivities",
+                column: "CreatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudyActivities_Name",
@@ -154,9 +162,9 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudyDocumentReports_DocumentId",
-                table: "StudyDocumentReports",
-                column: "DocumentId");
+                name: "IX_StudyDocumentFiles_StudyDocumentId",
+                table: "StudyDocumentFiles",
+                column: "StudyDocumentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudyDocuments_ActivityId",
@@ -164,19 +172,29 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudyDocuments_Name",
+                table: "StudyDocuments",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudyDocuments_StudentId",
                 table: "StudyDocuments",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teachers_UserName",
+                table: "Teachers",
+                column: "UserName");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GroupStudyActivity");
+                name: "StudentStudyActivity");
 
             migrationBuilder.DropTable(
-                name: "StudyDocumentReports");
+                name: "StudyDocumentFiles");
 
             migrationBuilder.DropTable(
                 name: "StudyDocuments");
@@ -188,7 +206,7 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 name: "StudyActivities");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "Teachers");
         }
     }
 }

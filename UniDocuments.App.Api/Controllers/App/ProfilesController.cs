@@ -38,7 +38,7 @@ public class ProfilesController : IdentityController
     [HttpPost("MakeAdmin")]
     [RequireAppRoles(Shared.Users.Enums.AppRole.Admin)]
     public async Task<IActionResult> MakeAdmin(
-        [FromBody] CommandMakeAdmin command, CancellationToken cancellationToken)
+        [FromBody] CommandUpdateRole command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
 

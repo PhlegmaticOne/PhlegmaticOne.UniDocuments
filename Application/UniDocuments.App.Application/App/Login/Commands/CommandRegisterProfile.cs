@@ -10,7 +10,6 @@ using UniDocuments.App.Domain.Models.Enums;
 using UniDocuments.App.Domain.Services.Common;
 using UniDocuments.App.Domain.Services.Profiles;
 using UniDocuments.App.Shared.Users;
-using UniDocuments.App.Shared.Users.Enums;
 
 namespace UniDocuments.App.Application.App.Login.Commands;
 
@@ -55,12 +54,7 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
         
         try
         {
-            return register.StudyRole switch
-            {
-                StudyRole.Student => await CreateProfileAsync<Student>(register, cancellationToken),
-                StudyRole.Teacher => await CreateProfileAsync<Teacher>(register, cancellationToken),
-                _ => throw new ArgumentOutOfRangeException(nameof(register.StudyRole))
-            };
+            return await CreateProfileAsync<Student>(register, cancellationToken);
         }
         catch (Exception e)
         {
@@ -74,7 +68,8 @@ public class CommandRegisterProfileHandler : IOperationResultCommandHandler<Comm
     {
         var repository = _dbContext.Set<T>();
 
-        if (await HasUserWithUserName<T>(registerObject.UserName.ToLower(), cancellationToken))
+        if (await HasUserWithUserName<Student>(registerObject.UserName.ToLower(), cancellationToken) ||
+            await HasUserWithUserName<Teacher>(registerObject.UserName.ToLower(), cancellationToken))
         {
             return OperationResult.Failed<ProfileObject>(RegisterProfileUserExistsError);
         }

@@ -12,8 +12,8 @@ using UniDocuments.App.Data.EntityFramework.Context;
 namespace UniDocuments.App.Data.EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240417201536_student-passwords")]
-    partial class studentpasswords
+    [Migration("20240521175907_final")]
+    partial class final
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,37 +25,19 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GroupStudyActivity", b =>
+            modelBuilder.Entity("StudentStudyActivity", b =>
                 {
                     b.Property<Guid>("ActivitiesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GroupsId")
+                    b.Property<Guid>("StudentsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ActivitiesId", "GroupsId");
+                    b.HasKey("ActivitiesId", "StudentsId");
 
-                    b.HasIndex("GroupsId");
+                    b.HasIndex("StudentsId");
 
-                    b.ToTable("GroupStudyActivity");
-                });
-
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.Group", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("StudentStudyActivity");
                 });
 
             modelBuilder.Entity("UniDocuments.App.Domain.Models.Student", b =>
@@ -69,8 +51,8 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -81,11 +63,18 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("LastName");
+                    b.HasIndex("UserName");
 
                     b.ToTable("Students", (string)null);
                 });
@@ -94,6 +83,12 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -113,6 +108,8 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.HasIndex("Name");
 
                     b.ToTable("StudyActivities", (string)null);
@@ -130,43 +127,97 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     b.Property<DateTime>("DateLoaded")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Fingerprint")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("WinnowingData")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<int>("ValuableParagraphsCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityId");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudyDocuments", (string)null);
                 });
 
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentReport", b =>
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentFile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
+                    b.Property<byte[]>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<Guid>("DocumentId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("StudyDocumentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
+                    b.HasIndex("StudyDocumentId");
 
-                    b.ToTable("StudyDocumentReports", (string)null);
+                    b.ToTable("StudyDocumentFiles", (string)null);
                 });
 
-            modelBuilder.Entity("GroupStudyActivity", b =>
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.Teacher", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserName");
+
+                    b.ToTable("Teachers", (string)null);
+                });
+
+            modelBuilder.Entity("StudentStudyActivity", b =>
                 {
                     b.HasOne("UniDocuments.App.Domain.Models.StudyActivity", null)
                         .WithMany()
@@ -174,22 +225,22 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UniDocuments.App.Domain.Models.Group", null)
+                    b.HasOne("UniDocuments.App.Domain.Models.Student", null)
                         .WithMany()
-                        .HasForeignKey("GroupsId")
+                        .HasForeignKey("StudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.Student", b =>
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyActivity", b =>
                 {
-                    b.HasOne("UniDocuments.App.Domain.Models.Group", "Group")
-                        .WithMany("Students")
-                        .HasForeignKey("GroupId")
+                    b.HasOne("UniDocuments.App.Domain.Models.Teacher", "Creator")
+                        .WithMany("Activities")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Group");
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocument", b =>
@@ -211,20 +262,15 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentReport", b =>
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocumentFile", b =>
                 {
-                    b.HasOne("UniDocuments.App.Domain.Models.StudyDocument", "Document")
-                        .WithMany("Reports")
-                        .HasForeignKey("DocumentId")
+                    b.HasOne("UniDocuments.App.Domain.Models.StudyDocument", "StudyDocument")
+                        .WithMany()
+                        .HasForeignKey("StudyDocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Document");
-                });
-
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.Group", b =>
-                {
-                    b.Navigation("Students");
+                    b.Navigation("StudyDocument");
                 });
 
             modelBuilder.Entity("UniDocuments.App.Domain.Models.Student", b =>
@@ -237,9 +283,9 @@ namespace UniDocuments.App.Data.EntityFramework.Migrations
                     b.Navigation("Documents");
                 });
 
-            modelBuilder.Entity("UniDocuments.App.Domain.Models.StudyDocument", b =>
+            modelBuilder.Entity("UniDocuments.App.Domain.Models.Teacher", b =>
                 {
-                    b.Navigation("Reports");
+                    b.Navigation("Activities");
                 });
 #pragma warning restore 612, 618
         }
