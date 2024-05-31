@@ -88,7 +88,6 @@ public class CommandUpdateProfileHandler : IOperationResultCommandHandler<Comman
         profile.FirstName = GetNewValueOrExisting(updateProfileObject.FirstName, profile.FirstName);
         profile.LastName = GetNewValueOrExisting(updateProfileObject.LastName, profile.LastName);
         profile.Password = ProcessPassword(profile.Password, updateProfileObject.NewPassword);
-        profile.Role = (ApplicationRole)updateProfileObject.AppRole;
     }
     
     private string ProcessPassword(string oldPassword, string newPassword)

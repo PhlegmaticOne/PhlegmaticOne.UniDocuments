@@ -15,4 +15,9 @@ public class ParagraphPlagiarismData
     public int ParagraphId { get; set; }
     [JsonProperty]
     public List<ParagraphSearchData> SuspiciousParagraphs { get; set; }
+
+    public HashSet<Guid> SelectUniqueIds()
+    {
+        return SuspiciousParagraphs.Select(x => x.DocumentId).ToHashSet();
+    }
 }

@@ -59,7 +59,7 @@ public class ReportDataBuilder : IReportDataBuilder
     }
 
     private List<ReportParagraphsData> BuildParagraphsData(
-        ReportDataBuildRequest buildRequest, Dictionary<Guid, ReportLoadData> documentData)
+        ReportDataBuildRequest buildRequest, IReadOnlyDictionary<Guid, ReportLoadData> documentData)
     {
         var result = new List<ReportParagraphsData>();
         var paragraphsCount = buildRequest.Document.Content.Paragraphs.Count;
@@ -77,7 +77,8 @@ public class ReportDataBuilder : IReportDataBuilder
         return result;
     }
 
-    private ReportLoadData GetSourceData(ReportDataBuildRequest request, Dictionary<Guid, ReportLoadData> loaded)
+    private ReportLoadData GetSourceData(
+        ReportDataBuildRequest request, IReadOnlyDictionary<Guid, ReportLoadData> loaded)
     {
         if (request.Document.Id != Guid.Empty)
         {
@@ -97,7 +98,7 @@ public class ReportDataBuilder : IReportDataBuilder
     }
 
     private ReportParagraphsData BuildReportParagraphsData(
-        ReportDataBuildRequest buildRequest, Dictionary<Guid, ReportLoadData> documentData, int index)
+        ReportDataBuildRequest buildRequest, IReadOnlyDictionary<Guid, ReportLoadData> documentData, int index)
     {
         var metric = buildRequest.BaseMetric;
         var sourceParagraphs = buildRequest.Document.Content.Paragraphs;

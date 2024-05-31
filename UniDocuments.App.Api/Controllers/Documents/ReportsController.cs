@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.Documents.Reports;
+using UniDocuments.App.Application.Documents.Search;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
 
@@ -56,25 +57,29 @@ public class ReportsController : ControllerBase
     
     [HttpGet("BuildForExistingDocumentDefault")]
     [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
-    public async Task<IActionResult> BuildForExistingDocumentDefault(
+    public Task<IActionResult> BuildForExistingDocumentDefault(
         [FromQuery] Guid documentId, CancellationToken cancellationToken)
     {
-        var request = new QueryBuildPlagiarismExistingDocumentReport
+        return BuildForExistingDocument(new QueryBuildPlagiarismExistingDocumentReport
         {
             BaseMetric = "cosine",
             ModelName = "doc2vec",
             DocumentId = documentId
-        };
-        
-        var response = await _mediator.Send(request, cancellationToken);
-        
-        if (!response.IsSuccess)
+        }, cancellationToken);
+    }
+
+    [HttpPost("Search")]
+    public async Task<IActionResult> Search(
+        [FromBody] QuerySearchSimilarDocuments query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
         {
-            return BadRequest(response);
+            return BadRequest();
         }
 
-        var result = response.Result!;
-        return File(result.ResponseStream, result.ContentType, result.Name);
+        return Ok(result);
     }
 }
 

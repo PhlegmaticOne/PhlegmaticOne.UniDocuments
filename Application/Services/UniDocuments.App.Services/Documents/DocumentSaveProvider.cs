@@ -73,7 +73,7 @@ public class DocumentSaveProvider : IDocumentSaveProvider
         }, cancellationToken);
     }
     
-    private Task<Guid> SaveDocumentFileAsync(
+    private Task SaveDocumentFileAsync(
         Guid id, DocumentSaveRequest request, CancellationToken cancellationToken)
     {
         var stream = request.DocumentStream;

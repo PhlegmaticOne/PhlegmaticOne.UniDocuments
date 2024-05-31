@@ -35,7 +35,7 @@ public class StreamContentReaderWordDocument : IStreamContentReader
 
     private UniDocumentContent ReadAsyncPrivate(Stream stream)
     {
-        var result = new UniDocumentContent();
+        var paragraphs = new List<string>();
         var options = _textProcessOptionsProvider.GetOptions();
         var breakTexts = options.BreakTexts.ToHashSet(new StringComparerOrdinalIgnoreCase());
         stream.SeekToZero();
@@ -59,11 +59,11 @@ public class StreamContentReaderWordDocument : IStreamContentReader
                 
             if (wordsCount >= options.MinWordsCount)
             {
-                result.AddParagraph(text!);
+                paragraphs.Add(text!);
             }
         }
 
-        return result;
+        return new UniDocumentContent(paragraphs);
     }
 
     private static bool TryGetParagraphText(OpenXmlElement xmlElement, out string? text)

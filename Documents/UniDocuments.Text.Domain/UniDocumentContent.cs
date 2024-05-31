@@ -1,28 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿namespace UniDocuments.Text.Domain;
 
-namespace UniDocuments.Text.Domain;
-
-[Serializable]
 public class UniDocumentContent
 {
     private const char Space = ' ';
-    public List<string> Paragraphs { get; } = new();
+    public IReadOnlyList<string> Paragraphs { get; }
 
-    [JsonIgnore]
     public int ParagraphsCount => Paragraphs.Count;
+
+    public UniDocumentContent(IReadOnlyList<string> paragraphs)
+    {
+        Paragraphs = paragraphs;
+    }
 
     public static UniDocumentContent FromString(string value)
     {
-        var result = new UniDocumentContent();
-        result.AddParagraph(value);
+        var paragraphs = new List<string>
+        {
+            value
+        };
+        var result = new UniDocumentContent(paragraphs);
         return result;
     }
-
-    public void AddParagraph(string content)
-    {
-        Paragraphs.Add(content);
-    }
-
+    
     public string ToRawText(char separator = Space)
     {
         return string.Join(separator, Paragraphs);

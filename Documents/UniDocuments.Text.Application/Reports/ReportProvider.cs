@@ -24,7 +24,7 @@ public class ReportProvider : IReportProvider
     public async Task<ReportResponse> BuildReportAsync(ReportRequest request, CancellationToken cancellationToken)
     {
         var p = request.PlagiarismSearchRequest;
-        var plagiarismResponse = await _plagiarismSearchProvider.SearchAsync(p, cancellationToken);
+        var plagiarismResponse = await _plagiarismSearchProvider.SearchAsync(p);
         var reportDataRequest = new ReportDataBuildRequest(p.Document, plagiarismResponse, request.BaseMetric);
         var reportData = await _reportDataBuilder.BuildReportDataAsync(reportDataRequest, cancellationToken);
         return await _reportCreator.BuildReportAsync(reportData, cancellationToken);
