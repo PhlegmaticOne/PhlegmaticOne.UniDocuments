@@ -6,7 +6,7 @@ using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
 namespace UniDocuments.App.Application.Documents.Loading.Queries;
 
-public class QueryGetDocumentById : IOperationResultQuery<DocumentLoadResponse>
+public class QueryGetDocumentById : IOperationResultQuery<IDocumentLoadResponse>
 {
     public QueryGetDocumentById(Guid id)
     {
@@ -16,7 +16,7 @@ public class QueryGetDocumentById : IOperationResultQuery<DocumentLoadResponse>
     public Guid Id { get; }
 }
 
-public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGetDocumentById, DocumentLoadResponse>
+public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGetDocumentById, IDocumentLoadResponse>
 {
     private const string ErrorMessage = "GetDocumentById.InternalError";
     private const string ErrorMessageNotFound = "GetDocumentById.NotFound";
@@ -30,7 +30,7 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
         _logger = logger;
     }
     
-    public async Task<OperationResult<DocumentLoadResponse>> Handle(
+    public async Task<OperationResult<IDocumentLoadResponse>> Handle(
         QueryGetDocumentById request, CancellationToken cancellationToken)
     {
         try
@@ -38,13 +38,13 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
             var response = await _documentsStorage.LoadAsync(request.Id, cancellationToken);
             
             return response is null ? 
-                OperationResult.Failed<DocumentLoadResponse>(ErrorMessageNotFound) :
+                OperationResult.Failed<IDocumentLoadResponse>(ErrorMessageNotFound) :
                 OperationResult.Successful(response);
         }
         catch(Exception e)
         {
             _logger.LogCritical(e, ErrorMessage);
-            return OperationResult.Failed<DocumentLoadResponse>(ErrorMessage, e.Message);
+            return OperationResult.Failed<IDocumentLoadResponse>(ErrorMessage, e.Message);
         }
     }
 }

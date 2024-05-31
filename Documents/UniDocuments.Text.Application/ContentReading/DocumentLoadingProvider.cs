@@ -63,7 +63,9 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             return result;
         }
         
-        await foreach (var response in _documentsStorage.LoadAsync(finding, cancellationToken))
+        await foreach (var response in _documentsStorage.LoadAsync(finding)
+                           .WithCancellation(cancellationToken)
+                           .ConfigureAwait(false))
         {
             result.Add(response.Id, CreateDocument(response, cache));
         }
@@ -71,7 +73,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
         return result;
     }
 
-    private UniDocument CreateDocument(DocumentLoadResponse loadResponse, bool cache)
+    private UniDocument CreateDocument(IDocumentLoadResponse loadResponse, bool cache)
     {
         var stream = loadResponse.ToStream();
         var content = _streamContentReader.Read(stream);
