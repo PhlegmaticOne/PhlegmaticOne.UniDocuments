@@ -16851,8 +16851,8 @@
     </schema>
     <schema id="5568" parent="5510" name="dbo">
       <Current>1</Current>
-      <IntrospectionTimestamp>2024-03-21.01:43:31.497</IntrospectionTimestamp>
-      <LastIntrospectionLocalTimestamp>2024-03-20.19:43:31</LastIntrospectionLocalTimestamp>
+      <IntrospectionTimestamp>2024-06-01.18:45:03.130</IntrospectionTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-06-01.12:45:03</LastIntrospectionLocalTimestamp>
       <ObjectId>1</ObjectId>
     </schema>
     <schema id="5569" parent="5510" name="guest">
@@ -16861,69 +16861,69 @@
     <schema id="5570" parent="5510" name="sys">
       <ObjectId>4</ObjectId>
     </schema>
-    <table id="5571" parent="5568" name="GroupStudyActivity">
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
+    <table id="5571" parent="5568" name="StudentStudyActivity">
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-01-03.14:09:51.197</ModifiedTimestamp>
-      <ObjectId>1061578820</ObjectId>
+      <ModifiedTimestamp>2024-05-21.23:59:14.343</ModifiedTimestamp>
+      <ObjectId>1019150676</ObjectId>
       <LedgerViewId>0</LedgerViewId>
       <LobDataSpaceId>0</LobDataSpaceId>
     </table>
-    <table id="5572" parent="5568" name="Groups">
-      <CreatedTimestamp>2024-01-03.14:09:51.187</CreatedTimestamp>
+    <table id="5572" parent="5568" name="Students">
+      <CreatedTimestamp>2024-05-21.23:59:14.330</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-01-03.14:09:51.200</ModifiedTimestamp>
-      <ObjectId>917578307</ObjectId>
-      <LedgerViewId>0</LedgerViewId>
-      <LobDataSpaceId>0</LobDataSpaceId>
-    </table>
-    <table id="5573" parent="5568" name="Students">
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
-      <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-01-03.14:09:51.200</ModifiedTimestamp>
-      <ObjectId>1013578649</ObjectId>
-      <LedgerViewId>0</LedgerViewId>
-      <LobDataSpaceId>0</LobDataSpaceId>
-    </table>
-    <table id="5574" parent="5568" name="StudyActivities">
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
-      <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-01-03.14:09:51.200</ModifiedTimestamp>
-      <ObjectId>949578421</ObjectId>
+      <ModifiedTimestamp>2024-05-21.23:59:14.343</ModifiedTimestamp>
+      <ObjectId>875150163</ObjectId>
       <LedgerViewId>0</LedgerViewId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
-    <table id="5575" parent="5568" name="StudyDocumentReports">
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
+    <table id="5573" parent="5568" name="StudyActivities">
+      <CreatedTimestamp>2024-05-21.23:59:14.333</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-03-21.01:40:12.637</ModifiedTimestamp>
-      <ObjectId>981578535</ObjectId>
+      <ModifiedTimestamp>2024-05-21.23:59:14.347</ModifiedTimestamp>
+      <ObjectId>971150505</ObjectId>
       <LedgerViewId>0</LedgerViewId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
-    <table id="5576" parent="5568" name="StudyDocuments">
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
+    <table id="5574" parent="5568" name="StudyDocumentFiles">
+      <CreatedTimestamp>2024-05-21.23:59:14.340</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-03-21.01:40:12.637</ModifiedTimestamp>
-      <ObjectId>1125579048</ObjectId>
+      <ModifiedTimestamp>2024-05-21.23:59:14.343</ModifiedTimestamp>
+      <ObjectId>1147151132</ObjectId>
       <LedgerViewId>0</LedgerViewId>
       <LobDataSpaceId>1</LobDataSpaceId>
     </table>
-    <table id="5577" parent="5568" name="StudyDocumentsContent">
-      <CreatedTimestamp>2024-01-03.15:06:40.720</CreatedTimestamp>
+    <table id="5575" parent="5568" name="StudyDocuments">
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-01-03.20:42:30.860</ModifiedTimestamp>
-      <ObjectId>1253579504</ObjectId>
+      <ModifiedTimestamp>2024-05-21.23:59:14.353</ModifiedTimestamp>
+      <ObjectId>1083150904</ObjectId>
+      <LedgerViewId>0</LedgerViewId>
+      <LobDataSpaceId>1</LobDataSpaceId>
+    </table>
+    <table id="5576" parent="5568" name="StudyDocumentsContent">
+      <CreatedTimestamp>2024-04-18.01:18:43.127</CreatedTimestamp>
+      <DataRetentionPeriod>-1</DataRetentionPeriod>
+      <ModifiedTimestamp>2024-06-01.18:23:40.777</ModifiedTimestamp>
+      <ObjectId>370100359</ObjectId>
       <FileStreamDataSpaceId>2</FileStreamDataSpaceId>
       <LedgerViewId>0</LedgerViewId>
       <LobDataSpaceId>0</LobDataSpaceId>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </table>
-    <table id="5578" parent="5568" name="__EFMigrationsHistory">
-      <CreatedTimestamp>2024-01-03.14:09:51.130</CreatedTimestamp>
+    <table id="5577" parent="5568" name="Teachers">
+      <CreatedTimestamp>2024-05-21.23:59:14.333</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2024-01-03.14:09:51.130</ModifiedTimestamp>
-      <ObjectId>885578193</ObjectId>
+      <ModifiedTimestamp>2024-05-21.23:59:14.347</ModifiedTimestamp>
+      <ObjectId>923150334</ObjectId>
+      <LedgerViewId>0</LedgerViewId>
+      <LobDataSpaceId>1</LobDataSpaceId>
+    </table>
+    <table id="5578" parent="5568" name="__EFMigrationsHistory">
+      <CreatedTimestamp>2024-05-21.23:54:17.477</CreatedTimestamp>
+      <DataRetentionPeriod>-1</DataRetentionPeriod>
+      <ModifiedTimestamp>2024-05-21.23:54:17.477</ModifiedTimestamp>
+      <ObjectId>523148909</ObjectId>
       <LedgerViewId>0</LedgerViewId>
       <LobDataSpaceId>0</LobDataSpaceId>
     </table>
@@ -16932,429 +16932,498 @@
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="5580" parent="5571" name="GroupsId">
+    <column id="5580" parent="5571" name="StudentsId">
       <DasType>uniqueidentifier|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <foreign-key id="5581" parent="5571" name="FK_GroupStudyActivity_StudyActivities_ActivitiesId">
+    <foreign-key id="5581" parent="5571" name="FK_StudentStudyActivity_StudyActivities_ActivitiesId">
       <ColNames>ActivitiesId</ColNames>
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.193</ModifiedTimestamp>
-      <ObjectId>1109578991</ObjectId>
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.337</ModifiedTimestamp>
+      <ObjectId>1067150847</ObjectId>
       <OnDelete>cascade</OnDelete>
       <RefColNames>Id</RefColNames>
-      <RefTableId>949578421</RefTableId>
+      <RefTableId>971150505</RefTableId>
       <RefTableName>StudyActivities</RefTableName>
     </foreign-key>
-    <foreign-key id="5582" parent="5571" name="FK_GroupStudyActivity_Groups_GroupsId">
-      <ColNames>GroupsId</ColNames>
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.193</ModifiedTimestamp>
-      <ObjectId>1093578934</ObjectId>
+    <foreign-key id="5582" parent="5571" name="FK_StudentStudyActivity_Students_StudentsId">
+      <ColNames>StudentsId</ColNames>
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.337</ModifiedTimestamp>
+      <ObjectId>1051150790</ObjectId>
       <OnDelete>cascade</OnDelete>
       <RefColNames>Id</RefColNames>
-      <RefTableId>917578307</RefTableId>
-      <RefTableName>Groups</RefTableName>
+      <RefTableId>875150163</RefTableId>
+      <RefTableName>Students</RefTableName>
     </foreign-key>
-    <index id="5583" parent="5571" name="PK_GroupStudyActivity">
+    <index id="5583" parent="5571" name="PK_StudentStudyActivity">
       <Clustering>1</Clustering>
       <ColNames>ActivitiesId
-GroupsId</ColNames>
+StudentsId</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5584" parent="5571" name="IX_GroupStudyActivity_GroupsId">
-      <ColNames>GroupsId</ColNames>
+    <index id="5584" parent="5571" name="IX_StudentStudyActivity_StudentsId">
+      <ColNames>StudentsId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5585" parent="5571" name="PK_GroupStudyActivity">
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.193</ModifiedTimestamp>
-      <ObjectId>1077578877</ObjectId>
+    <key id="5585" parent="5571" name="PK_StudentStudyActivity">
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.337</ModifiedTimestamp>
+      <ObjectId>1035150733</ObjectId>
       <Primary>1</Primary>
-      <UnderlyingIndexName>PK_GroupStudyActivity</UnderlyingIndexName>
+      <UnderlyingIndexName>PK_StudentStudyActivity</UnderlyingIndexName>
     </key>
     <column id="5586" parent="5572" name="Id">
       <DasType>uniqueidentifier|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="5587" parent="5572" name="Name">
+    <column id="5587" parent="5572" name="FirstName">
       <DasType>nvarchar(100 char)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <index id="5588" parent="5572" name="PK_Groups">
-      <Clustering>1</Clustering>
-      <ColNames>Id</ColNames>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <index id="5589" parent="5572" name="IX_Groups_Name">
-      <ColNames>Name</ColNames>
-      <Position>2</Position>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5590" parent="5572" name="PK_Groups">
-      <CreatedTimestamp>2024-01-03.14:09:51.187</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.187</ModifiedTimestamp>
-      <ObjectId>933578364</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK_Groups</UnderlyingIndexName>
-    </key>
-    <column id="5591" parent="5573" name="Id">
-      <DasType>uniqueidentifier|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="5592" parent="5573" name="FirstName">
-      <DasType>nvarchar(100 char)|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-    </column>
-    <column id="5593" parent="5573" name="LastName">
+    <column id="5588" parent="5572" name="LastName">
       <DasType>nvarchar(100 char)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="5594" parent="5573" name="GroupId">
-      <DasType>uniqueidentifier|0s</DasType>
+    <column id="5589" parent="5572" name="UserName">
+      <DasType>nvarchar(450 char)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <foreign-key id="5595" parent="5573" name="FK_Students_Groups_GroupId">
-      <ColNames>GroupId</ColNames>
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.190</ModifiedTimestamp>
-      <ObjectId>1045578763</ObjectId>
-      <OnDelete>cascade</OnDelete>
-      <RefColNames>Id</RefColNames>
-      <RefTableId>917578307</RefTableId>
-      <RefTableName>Groups</RefTableName>
-    </foreign-key>
-    <index id="5596" parent="5573" name="PK_Students">
+    <column id="5590" parent="5572" name="Password">
+      <DasType>nvarchar(max)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="5591" parent="5572" name="Role">
+      <DasType>int|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <DefaultConstraintId>907150277</DefaultConstraintId>
+      <DefaultConstraintName>DF__Students__Role__361203C5</DefaultConstraintName>
+    </column>
+    <column id="5592" parent="5572" name="JoinDate">
+      <DasType>datetime2|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <default id="5593" parent="5572" name="DF__Students__Role__361203C5">
+      <ColNames>Role</ColNames>
+      <DefaultExpression>0</DefaultExpression>
+      <ModifiedTimestamp>2024-05-21.23:59:14.333</ModifiedTimestamp>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>907150277</ObjectId>
+    </default>
+    <index id="5594" parent="5572" name="PK_Students">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5597" parent="5573" name="IX_Students_GroupId">
-      <ColNames>GroupId</ColNames>
+    <index id="5595" parent="5572" name="IX_Students_UserName">
+      <ColNames>UserName</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5598" parent="5573" name="IX_Students_LastName">
-      <ColNames>LastName</ColNames>
-      <Position>3</Position>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5599" parent="5573" name="PK_Students">
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.190</ModifiedTimestamp>
-      <ObjectId>1029578706</ObjectId>
+    <key id="5596" parent="5572" name="PK_Students">
+      <CreatedTimestamp>2024-05-21.23:59:14.333</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.333</ModifiedTimestamp>
+      <ObjectId>891150220</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_Students</UnderlyingIndexName>
     </key>
-    <column id="5600" parent="5574" name="Id">
+    <column id="5597" parent="5573" name="Id">
       <DasType>uniqueidentifier|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="5601" parent="5574" name="Name">
+    <column id="5598" parent="5573" name="Name">
       <DasType>nvarchar(100 char)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="5602" parent="5574" name="Description">
+    <column id="5599" parent="5573" name="Description">
       <DasType>nvarchar(max)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="5603" parent="5574" name="StartDate">
+    <column id="5600" parent="5573" name="StartDate">
       <DasType>datetime2|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="5604" parent="5574" name="EndDate">
+    <column id="5601" parent="5573" name="EndDate">
       <DasType>datetime2|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <index id="5605" parent="5574" name="PK_StudyActivities">
+    <column id="5602" parent="5573" name="CreationDate">
+      <DasType>datetime2|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <column id="5603" parent="5573" name="CreatorId">
+      <DasType>uniqueidentifier|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <foreign-key id="5604" parent="5573" name="FK_StudyActivities_Teachers_CreatorId">
+      <ColNames>CreatorId</ColNames>
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.337</ModifiedTimestamp>
+      <ObjectId>1003150619</ObjectId>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>923150334</RefTableId>
+      <RefTableName>Teachers</RefTableName>
+    </foreign-key>
+    <index id="5605" parent="5573" name="PK_StudyActivities">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5606" parent="5574" name="IX_StudyActivities_Name">
-      <ColNames>Name</ColNames>
+    <index id="5606" parent="5573" name="IX_StudyActivities_CreatorId">
+      <ColNames>CreatorId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5607" parent="5574" name="PK_StudyActivities">
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.190</ModifiedTimestamp>
-      <ObjectId>965578478</ObjectId>
+    <index id="5607" parent="5573" name="IX_StudyActivities_Name">
+      <ColNames>Name</ColNames>
+      <Position>3</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5608" parent="5573" name="PK_StudyActivities">
+      <CreatedTimestamp>2024-05-21.23:59:14.333</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.333</ModifiedTimestamp>
+      <ObjectId>987150562</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_StudyActivities</UnderlyingIndexName>
     </key>
-    <column id="5608" parent="5575" name="Id">
+    <column id="5609" parent="5574" name="Id">
       <DasType>uniqueidentifier|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="5609" parent="5575" name="Description">
-      <DasType>nvarchar(max)|0s</DasType>
+    <column id="5610" parent="5574" name="StudyDocumentId">
+      <DasType>uniqueidentifier|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="5610" parent="5575" name="DocumentId">
-      <DasType>uniqueidentifier|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <DefaultConstraintId>1861581670</DefaultConstraintId>
-      <DefaultConstraintName>DF__StudyDocu__Docum__6EF57B66</DefaultConstraintName>
-    </column>
-    <default id="5611" parent="5575" name="DF__StudyDocu__Docum__6EF57B66">
-      <ColNames>DocumentId</ColNames>
-      <DefaultExpression>&apos;00000000-0000-0000-0000-000000000000&apos;</DefaultExpression>
-      <ModifiedTimestamp>2024-03-21.01:40:12.630</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>1861581670</ObjectId>
-    </default>
-    <foreign-key id="5612" parent="5575" name="FK_StudyDocumentReports_StudyDocuments_DocumentId">
-      <ColNames>DocumentId</ColNames>
-      <CreatedTimestamp>2024-03-21.01:40:12.637</CreatedTimestamp>
-      <ModifiedTimestamp>2024-03-21.01:40:12.637</ModifiedTimestamp>
-      <ObjectId>1877581727</ObjectId>
-      <OnDelete>cascade</OnDelete>
-      <RefColNames>Id</RefColNames>
-      <RefTableId>1125579048</RefTableId>
-      <RefTableName>StudyDocuments</RefTableName>
-    </foreign-key>
-    <index id="5613" parent="5575" name="PK_StudyDocumentReports">
-      <Clustering>1</Clustering>
-      <ColNames>Id</ColNames>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <index id="5614" parent="5575" name="IX_StudyDocumentReports_DocumentId">
-      <ColNames>DocumentId</ColNames>
-      <Position>2</Position>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5615" parent="5575" name="PK_StudyDocumentReports">
-      <CreatedTimestamp>2024-01-03.14:09:51.190</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.190</ModifiedTimestamp>
-      <ObjectId>997578592</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK_StudyDocumentReports</UnderlyingIndexName>
-    </key>
-    <column id="5616" parent="5576" name="Id">
-      <DasType>uniqueidentifier|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="5617" parent="5576" name="DateLoaded">
-      <DasType>datetime2|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-    </column>
-    <column id="5618" parent="5576" name="StudentId">
-      <DasType>uniqueidentifier|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-    </column>
-    <column id="5619" parent="5576" name="ActivityId">
-      <DasType>uniqueidentifier|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-    </column>
-    <column id="5620" parent="5576" name="WinnowingData">
+    <column id="5611" parent="5574" name="Content">
       <DasType>varbinary(max)|0s</DasType>
       <NotNull>1</NotNull>
-      <Position>7</Position>
-      <DefaultConstraintId>1845581613</DefaultConstraintId>
-      <DefaultConstraintName>DF__StudyDocu__Winno__6E01572D</DefaultConstraintName>
+      <Position>3</Position>
     </column>
-    <default id="5621" parent="5576" name="DF__StudyDocu__Winno__6E01572D">
-      <ColNames>WinnowingData</ColNames>
-      <DefaultExpression>0x</DefaultExpression>
-      <ModifiedTimestamp>2024-03-21.01:40:12.630</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>1845581613</ObjectId>
-    </default>
-    <foreign-key id="5622" parent="5576" name="FK_StudyDocuments_Students_StudentId">
-      <ColNames>StudentId</ColNames>
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.193</ModifiedTimestamp>
-      <ObjectId>1157579162</ObjectId>
+    <column id="5612" parent="5574" name="Name">
+      <DasType>nvarchar(100 char)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <foreign-key id="5613" parent="5574" name="FK_StudyDocumentFiles_StudyDocuments_StudyDocumentId">
+      <ColNames>StudyDocumentId</ColNames>
+      <CreatedTimestamp>2024-05-21.23:59:14.340</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.340</ModifiedTimestamp>
+      <ObjectId>1179151246</ObjectId>
       <OnDelete>cascade</OnDelete>
       <RefColNames>Id</RefColNames>
-      <RefTableId>1013578649</RefTableId>
-      <RefTableName>Students</RefTableName>
+      <RefTableId>1083150904</RefTableId>
+      <RefTableName>StudyDocuments</RefTableName>
     </foreign-key>
-    <foreign-key id="5623" parent="5576" name="FK_StudyDocuments_StudyActivities_ActivityId">
-      <ColNames>ActivityId</ColNames>
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.193</ModifiedTimestamp>
-      <ObjectId>1173579219</ObjectId>
-      <OnDelete>cascade</OnDelete>
-      <RefColNames>Id</RefColNames>
-      <RefTableId>949578421</RefTableId>
-      <RefTableName>StudyActivities</RefTableName>
-    </foreign-key>
-    <index id="5624" parent="5576" name="PK_StudyDocuments">
+    <index id="5614" parent="5574" name="PK_StudyDocumentFiles">
       <Clustering>1</Clustering>
       <ColNames>Id</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5625" parent="5576" name="IX_StudyDocuments_ActivityId">
+    <index id="5615" parent="5574" name="IX_StudyDocumentFiles_StudyDocumentId">
+      <ColNames>StudyDocumentId</ColNames>
+      <Position>2</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5616" parent="5574" name="PK_StudyDocumentFiles">
+      <CreatedTimestamp>2024-05-21.23:59:14.340</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.340</ModifiedTimestamp>
+      <ObjectId>1163151189</ObjectId>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PK_StudyDocumentFiles</UnderlyingIndexName>
+    </key>
+    <column id="5617" parent="5575" name="Id">
+      <DasType>uniqueidentifier|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="5618" parent="5575" name="Name">
+      <DasType>nvarchar(100 char)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="5619" parent="5575" name="DateLoaded">
+      <DasType>datetime2|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="5620" parent="5575" name="Fingerprint">
+      <DasType>nvarchar(max)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="5621" parent="5575" name="ValuableParagraphsCount">
+      <DasType>int|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="5622" parent="5575" name="StudentId">
+      <DasType>uniqueidentifier|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <column id="5623" parent="5575" name="ActivityId">
+      <DasType>uniqueidentifier|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <foreign-key id="5624" parent="5575" name="FK_StudyDocuments_Students_StudentId">
+      <ColNames>StudentId</ColNames>
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.337</ModifiedTimestamp>
+      <ObjectId>1115151018</ObjectId>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>875150163</RefTableId>
+      <RefTableName>Students</RefTableName>
+    </foreign-key>
+    <foreign-key id="5625" parent="5575" name="FK_StudyDocuments_StudyActivities_ActivityId">
+      <ColNames>ActivityId</ColNames>
+      <CreatedTimestamp>2024-05-21.23:59:14.340</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.340</ModifiedTimestamp>
+      <ObjectId>1131151075</ObjectId>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>Id</RefColNames>
+      <RefTableId>971150505</RefTableId>
+      <RefTableName>StudyActivities</RefTableName>
+    </foreign-key>
+    <index id="5626" parent="5575" name="PK_StudyDocuments">
+      <Clustering>1</Clustering>
+      <ColNames>Id</ColNames>
+      <Position>1</Position>
+      <Unique>1</Unique>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5627" parent="5575" name="IX_StudyDocuments_ActivityId">
       <ColNames>ActivityId</ColNames>
       <Position>2</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <index id="5626" parent="5576" name="IX_StudyDocuments_StudentId">
+    <index id="5628" parent="5575" name="IX_StudyDocuments_Name">
+      <ColNames>Name</ColNames>
+      <Position>3</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5629" parent="5575" name="IX_StudyDocuments_StudentId">
       <ColNames>StudentId</ColNames>
       <Position>4</Position>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5627" parent="5576" name="PK_StudyDocuments">
-      <CreatedTimestamp>2024-01-03.14:09:51.193</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.193</ModifiedTimestamp>
-      <ObjectId>1141579105</ObjectId>
+    <key id="5630" parent="5575" name="PK_StudyDocuments">
+      <CreatedTimestamp>2024-05-21.23:59:14.337</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.337</ModifiedTimestamp>
+      <ObjectId>1099150961</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK_StudyDocuments</UnderlyingIndexName>
     </key>
-    <column id="5628" parent="5577" name="Id">
+    <column id="5631" parent="5576" name="Id">
       <DasType>uniqueidentifier|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <RowGuid>1</RowGuid>
     </column>
-    <column id="5629" parent="5577" name="Content">
+    <column id="5632" parent="5576" name="Content">
       <DasType>varbinary(max)|0s</DasType>
       <Filestream>1</Filestream>
       <Position>2</Position>
     </column>
-    <column id="5630" parent="5577" name="FileName">
-      <DasType>nvarchar(100 char)|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-    </column>
-    <index id="5631" parent="5577" name="UQ__StudyDoc__3214EC068A4190BD">
+    <index id="5633" parent="5576" name="UQ__StudyDoc__3214EC06A67E2B15">
       <ColNames>Id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Position>2</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5632" parent="5577" name="UQ__StudyDoc__3214EC068A4190BD">
-      <CreatedTimestamp>2024-01-03.15:06:40.723</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.15:06:40.723</ModifiedTimestamp>
+    <key id="5634" parent="5576" name="UQ__StudyDoc__3214EC06A67E2B15">
+      <CreatedTimestamp>2024-04-18.01:18:43.130</CreatedTimestamp>
+      <ModifiedTimestamp>2024-04-18.01:18:43.130</ModifiedTimestamp>
       <NameSurrogate>1</NameSurrogate>
-      <ObjectId>1269579561</ObjectId>
-      <UnderlyingIndexName>UQ__StudyDoc__3214EC068A4190BD</UnderlyingIndexName>
+      <ObjectId>386100416</ObjectId>
+      <UnderlyingIndexName>UQ__StudyDoc__3214EC06A67E2B15</UnderlyingIndexName>
     </key>
-    <partition id="5633" parent="5577">
-      <ObjectId>72057594044219392</ObjectId>
+    <partition id="5635" parent="5576">
+      <ObjectId>72057594045399040</ObjectId>
       <Position>1</Position>
     </partition>
-    <column id="5634" parent="5578" name="MigrationId">
+    <column id="5636" parent="5577" name="Id">
+      <DasType>uniqueidentifier|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="5637" parent="5577" name="FirstName">
+      <DasType>nvarchar(100 char)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="5638" parent="5577" name="LastName">
+      <DasType>nvarchar(100 char)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="5639" parent="5577" name="UserName">
+      <DasType>nvarchar(450 char)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="5640" parent="5577" name="Password">
+      <DasType>nvarchar(max)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="5641" parent="5577" name="Role">
+      <DasType>int|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <DefaultConstraintId>955150448</DefaultConstraintId>
+      <DefaultConstraintName>DF__Teachers__Role__38EE7070</DefaultConstraintName>
+    </column>
+    <column id="5642" parent="5577" name="JoinDate">
+      <DasType>datetime2|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <default id="5643" parent="5577" name="DF__Teachers__Role__38EE7070">
+      <ColNames>Role</ColNames>
+      <DefaultExpression>0</DefaultExpression>
+      <ModifiedTimestamp>2024-05-21.23:59:14.333</ModifiedTimestamp>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>955150448</ObjectId>
+    </default>
+    <index id="5644" parent="5577" name="PK_Teachers">
+      <Clustering>1</Clustering>
+      <ColNames>Id</ColNames>
+      <Position>1</Position>
+      <Unique>1</Unique>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <index id="5645" parent="5577" name="IX_Teachers_UserName">
+      <ColNames>UserName</ColNames>
+      <Position>2</Position>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </index>
+    <key id="5646" parent="5577" name="PK_Teachers">
+      <CreatedTimestamp>2024-05-21.23:59:14.333</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:59:14.333</ModifiedTimestamp>
+      <ObjectId>939150391</ObjectId>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PK_Teachers</UnderlyingIndexName>
+    </key>
+    <column id="5647" parent="5578" name="MigrationId">
       <DasType>nvarchar(150 char)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="5635" parent="5578" name="ProductVersion">
+    <column id="5648" parent="5578" name="ProductVersion">
       <DasType>nvarchar(32 char)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <index id="5636" parent="5578" name="PK___EFMigrationsHistory">
+    <index id="5649" parent="5578" name="PK___EFMigrationsHistory">
       <Clustering>1</Clustering>
       <ColNames>MigrationId</ColNames>
       <Position>1</Position>
       <Unique>1</Unique>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </index>
-    <key id="5637" parent="5578" name="PK___EFMigrationsHistory">
-      <CreatedTimestamp>2024-01-03.14:09:51.133</CreatedTimestamp>
-      <ModifiedTimestamp>2024-01-03.14:09:51.133</ModifiedTimestamp>
-      <ObjectId>901578250</ObjectId>
+    <key id="5650" parent="5578" name="PK___EFMigrationsHistory">
+      <CreatedTimestamp>2024-05-21.23:54:17.477</CreatedTimestamp>
+      <ModifiedTimestamp>2024-05-21.23:54:17.477</ModifiedTimestamp>
+      <ObjectId>539148966</ObjectId>
       <Primary>1</Primary>
       <UnderlyingIndexName>PK___EFMigrationsHistory</UnderlyingIndexName>
     </key>
-    <partition id="5638" parent="5583">
-      <ObjectId>72057594043498496</ObjectId>
+    <partition id="5651" parent="5583">
+      <ObjectId>72057594048086016</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5639" parent="5584">
-      <ObjectId>72057594043695104</ObjectId>
+    <partition id="5652" parent="5584">
+      <ObjectId>72057594048348160</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5640" parent="5588">
-      <ObjectId>72057594043236352</ObjectId>
+    <partition id="5653" parent="5594">
+      <ObjectId>72057594047889408</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5641" parent="5589">
-      <ObjectId>72057594043629568</ObjectId>
+    <partition id="5654" parent="5595">
+      <ObjectId>72057594048282624</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5642" parent="5596">
-      <ObjectId>72057594043432960</ObjectId>
+    <partition id="5655" parent="5605">
+      <ObjectId>72057594048020480</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5643" parent="5597">
-      <ObjectId>72057594043760640</ObjectId>
+    <partition id="5656" parent="5606">
+      <ObjectId>72057594048413696</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5644" parent="5598">
-      <ObjectId>72057594043826176</ObjectId>
+    <partition id="5657" parent="5607">
+      <ObjectId>72057594048479232</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5645" parent="5605">
-      <ObjectId>72057594043301888</ObjectId>
+    <partition id="5658" parent="5614">
+      <ObjectId>72057594048217088</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5646" parent="5606">
-      <ObjectId>72057594043891712</ObjectId>
+    <partition id="5659" parent="5615">
+      <ObjectId>72057594048544768</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5647" parent="5613">
-      <ObjectId>72057594043367424</ObjectId>
+    <partition id="5660" parent="5626">
+      <ObjectId>72057594048151552</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5648" parent="5614">
-      <ObjectId>72057594044481536</ObjectId>
+    <partition id="5661" parent="5627">
+      <ObjectId>72057594048610304</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5649" parent="5624">
-      <ObjectId>72057594043564032</ObjectId>
+    <partition id="5662" parent="5628">
+      <ObjectId>72057594048675840</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5650" parent="5625">
-      <ObjectId>72057594043957248</ObjectId>
+    <partition id="5663" parent="5629">
+      <ObjectId>72057594048741376</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5651" parent="5626">
-      <ObjectId>72057594044088320</ObjectId>
+    <partition id="5664" parent="5633">
+      <ObjectId>72057594045464576</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5652" parent="5631">
-      <ObjectId>72057594044284928</ObjectId>
+    <partition id="5665" parent="5644">
+      <ObjectId>72057594047954944</ObjectId>
       <Position>1</Position>
     </partition>
-    <partition id="5653" parent="5636">
-      <ObjectId>72057594043170816</ObjectId>
+    <partition id="5666" parent="5645">
+      <ObjectId>72057594048806912</ObjectId>
+      <Position>1</Position>
+    </partition>
+    <partition id="5667" parent="5649">
+      <ObjectId>72057594047430656</ObjectId>
       <Position>1</Position>
     </partition>
   </database-model>

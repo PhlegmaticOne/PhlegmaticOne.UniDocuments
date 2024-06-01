@@ -1,6 +1,8 @@
 ﻿using System.Data;
+using System.Runtime.CompilerServices;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlTypes;
+using UniDocuments.Text.Domain.Extensions;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Requests;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
@@ -19,9 +21,9 @@ public class DocumentsStorageSqlFilestream : IDocumentsStorage
     
     public async Task<IDocumentLoadResponse?> LoadAsync(Guid id, CancellationToken cancellationToken)
     {
-        await using var sqlConnection = _dbConnectionFactory.CreateConnection();
-        await using var command = FileSqlCommands.CreateSelectFileCommand(sqlConnection, id);
-        await using var transaction = sqlConnection.BeginTransaction(IsolationLevel.ReadCommitted);
+        await using var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+        await using var command = FileSqlCommands.Select(connection, id);
+        await using var transaction = connection.BeginTransaction();
         command.Transaction = transaction;
         
         var transactionContext = Array.Empty<byte>();
@@ -42,21 +44,28 @@ public class DocumentsStorageSqlFilestream : IDocumentsStorage
             return IDocumentLoadResponse.NoContent();
         }
 
-        var stream = new SqlFileStream(path, transactionContext, FileAccess.Read);
-        return new DocumentLoadResponseFromStream(stream, id, transaction);
+        var memoryStream = new MemoryStream();
+        
+        await using (var stream = new SqlFileStream(path, transactionContext, FileAccess.Read))
+        {
+            await stream.CopyToAsync(memoryStream, cancellationToken);
+        }
+        
+        await transaction.CommitAsync(cancellationToken);
+        return new DocumentLoadResponseFromStream(memoryStream, id);
     }
 
-    public async IAsyncEnumerable<IDocumentLoadResponse> LoadAsync(IList<Guid> ids)
+    public async IAsyncEnumerable<IDocumentLoadResponse> LoadAsync(
+        IList<Guid> ids, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        await using var connection = _dbConnectionFactory.CreateConnection();
-        await using var sqlConnection = _dbConnectionFactory.CreateConnection();
+        await using var sqlConnection = await _dbConnectionFactory.CreateConnection(cancellationToken);
         await using var command = FileSqlCommands.CreateSelectFilesCommand(sqlConnection, ids);
         await using var transaction = sqlConnection.BeginTransaction();
         command.Transaction = transaction;
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         
-        while (await reader.ReadAsync())
+        while (await reader.ReadAsync(cancellationToken))
         {
             var transactionContext = ReadTransactionContext(reader);
             var path = ReadFilePath(reader);
@@ -65,19 +74,21 @@ public class DocumentsStorageSqlFilestream : IDocumentsStorage
             yield return new DocumentLoadResponseFromStream(stream, id);
         }
 
-        await transaction.CommitAsync();
+        await transaction.CommitAsync(cancellationToken);
     }
 
     public async Task<Guid> SaveAsync(StorageSaveRequest saveRequest, CancellationToken cancellationToken)
     {
-        await using var sqlConnection = _dbConnectionFactory.CreateConnection();
+        saveRequest.Stream.SeekToZero();
+        await using var sqlConnection = await _dbConnectionFactory.CreateConnection(cancellationToken);
 
         var command = await CheckFileExistsAsync(sqlConnection, saveRequest.Id, cancellationToken)
-            ? FileSqlCommands.CreateUpdateFileCommand(sqlConnection, saveRequest.Id)
-            : FileSqlCommands.CreateInsertFileCommand(sqlConnection, saveRequest.Id);
+            ? FileSqlCommands.Update(sqlConnection, saveRequest.Id)
+            : FileSqlCommands.Insert(sqlConnection, saveRequest.Id);
 
         await HandleFileWithCommand(sqlConnection, command, saveRequest, cancellationToken);
-        
+
+        await command.DisposeAsync();
         return saveRequest.Id;
     }
 
@@ -105,8 +116,7 @@ public class DocumentsStorageSqlFilestream : IDocumentsStorage
             await source.CopyToAsync(destination, cancellationToken);
         }
 
-        await command.Transaction.CommitAsync(cancellationToken);
-        await command.DisposeAsync();
+        await transaction.CommitAsync(cancellationToken);
     }
     
     private static async Task<bool> CheckFileExistsAsync(

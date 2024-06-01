@@ -36,7 +36,6 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             }
 
             var loadResponse = await _documentsStorage.LoadAsync(documentId, cancellationToken);
-
             return loadResponse is null ? null : CreateDocument(loadResponse, cache);
         }
     }
@@ -63,9 +62,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             return result;
         }
         
-        await foreach (var response in _documentsStorage.LoadAsync(finding)
-                           .WithCancellation(cancellationToken)
-                           .ConfigureAwait(false))
+        await foreach (var response in _documentsStorage.LoadAsync(finding, cancellationToken).ConfigureAwait(false))
         {
             result.Add(response.Id, CreateDocument(response, cache));
         }
@@ -84,7 +81,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             _documentsCache.Cache(result);
         }
 
-        loadResponse.Dispose();
+        stream.Dispose();
         return result;
     }
 }

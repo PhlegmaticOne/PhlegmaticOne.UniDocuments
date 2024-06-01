@@ -43,17 +43,17 @@ internal static class FileSqlCommands
         return CreateCommandWithFileId(sqlConnection, CheckFileExistsCommandText, id);
     }
     
-    internal static SqlCommand CreateUpdateFileCommand(SqlConnection sqlConnection, Guid id)
+    internal static SqlCommand Update(SqlConnection sqlConnection, Guid id)
     {
         return CreateCommandWithFileId(sqlConnection, UpdateFileCommandText, id);
     }
 
-    internal static SqlCommand CreateSelectFileCommand(SqlConnection sqlConnection, Guid id)
+    internal static SqlCommand Select(SqlConnection sqlConnection, Guid id)
     {
         return CreateCommandWithFileId(sqlConnection, SelectFileCommandText, id);
     }
 
-    internal static SqlCommand CreateInsertFileCommand(SqlConnection sqlConnection, Guid id)
+    internal static SqlCommand Insert(SqlConnection sqlConnection, Guid id)
     {
         return CreateCommandWithFileId(sqlConnection, InsertFileCommandText, id);
     }

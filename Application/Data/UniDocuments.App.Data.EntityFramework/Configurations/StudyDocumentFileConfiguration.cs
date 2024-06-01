@@ -9,11 +9,6 @@ public class StudyDocumentFileConfiguration : IEntityTypeConfiguration<StudyDocu
     public void Configure(EntityTypeBuilder<StudyDocumentFile> builder)
     {
         builder.ToTable(ConfigurationConstants.StudyDocumentFilesTableName);
-
-        builder.Property(x => x.Name)
-            .IsRequired()
-            .HasMaxLength(ConfigurationConstants.NamePropertyMaxLength);
-
         builder.Property(x => x.Content).IsRequired();
     }
 }

@@ -55,7 +55,10 @@ public static class ApplicationDocumentsInstaller
 
             appBuilder.UseDocumentsCache<UniDocumentsCache>();
 
-            appBuilder.UseFileStorage<DocumentsStorageEntityFramework>();
+            appBuilder.UseDocumentStorage<DocumentsStorageSqlFilestream>(b =>
+            {
+                b.AddSqlConnectionFactory(configuration.GetConnectionString("DbConnection")!);
+            });
 
             appBuilder.UseFingerprint(b =>
             {
@@ -71,7 +74,6 @@ public static class ApplicationDocumentsInstaller
                 b.UseNeuralModel<DocumentNeuralModelKeras>();
                 b.UseNeuralModel<DocumentNeuralModelDoc2Vec>();
 
-                b.UseVocabProvider<DocumentsVocabProvider>();
                 b.UseVocabProvider<DocumentsVocabProvider>();
                 
                 b.UsePlagiarismSearcher<NeuralNetworkPlagiarismSearcher>();

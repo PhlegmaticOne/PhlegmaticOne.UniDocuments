@@ -10,9 +10,4 @@ public class DocumentLoadResponseFromBytes : IDocumentLoadResponse
     {
         return new MemoryStream(Bytes!);
     }
-
-    public void Dispose()
-    {
-        
-    }
 }

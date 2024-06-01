@@ -45,9 +45,12 @@ public class DocumentApplicationBuilder
         _serviceCollection.AddSingleton<IUniDocumentsCache, T>();
     }
         
-    public void UseFileStorage<T>() where T : class, IDocumentsStorage
+    public void UseDocumentStorage<T>(Action<DocumentStorageInstallBuilder> builderAction) 
+        where T : class, IDocumentsStorage
     {
+        var builder = new DocumentStorageInstallBuilder(_serviceCollection);
         _serviceCollection.AddScoped<IDocumentsStorage, T>();
+        builderAction(builder);
     }
 
     public void UseFingerprint(Action<FingerprintingInstallBuilder> builderAction)

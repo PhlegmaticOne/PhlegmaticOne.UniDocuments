@@ -1,6 +1,6 @@
 ﻿namespace UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
-public interface IDocumentLoadResponse : IDisposable
+public interface IDocumentLoadResponse
 {
     Guid Id { get; }
     string Name { get; set; }

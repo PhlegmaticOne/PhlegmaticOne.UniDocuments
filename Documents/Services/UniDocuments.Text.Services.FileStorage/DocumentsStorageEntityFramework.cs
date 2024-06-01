@@ -24,7 +24,6 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
             .Select(x => new DocumentLoadResponseFromBytes
             {
                 Id = id,
-                Name = x.Name,
                 Bytes = x.Content
             })
             .FirstOrDefaultAsync(cancellationToken);
@@ -32,15 +31,14 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         return result;
     }
 
-    public IAsyncEnumerable<IDocumentLoadResponse> LoadAsync(IList<Guid> ids)
+    public IAsyncEnumerable<IDocumentLoadResponse> LoadAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
         return _dbContext.Set<StudyDocumentFile>()
             .Where(x => ids.Contains(x.Id))
             .Select(x => new DocumentLoadResponseFromBytes
             {
                 Id = x.Id,
-                Bytes = x.Content,
-                Name = x.Name
+                Bytes = x.Content
             })
             .AsAsyncEnumerable();
     }

@@ -4,5 +4,5 @@ namespace UniDocuments.Text.Services.FileStorage.Connection;
 
 public interface IDbConnectionFactory
 {
-    SqlConnection CreateConnection();
+    Task<SqlConnection> CreateConnection(CancellationToken cancellationToken);
 }

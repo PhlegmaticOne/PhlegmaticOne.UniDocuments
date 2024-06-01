@@ -11,8 +11,10 @@ public class DbConnectionFactory : IDbConnectionFactory
         _connectionString = connectionString;
     }
     
-    public SqlConnection CreateConnection()
+    public async Task<SqlConnection> CreateConnection(CancellationToken cancellationToken)
     {
-        return new SqlConnection(_connectionString);
+        var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync(cancellationToken);
+        return connection;
     }
 }
