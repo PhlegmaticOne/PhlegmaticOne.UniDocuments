@@ -1,10 +1,9 @@
 ﻿namespace UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
-public interface IDocumentLoadResponse
+public interface IDocumentLoadResponse : IDisposable
 {
-    Guid Id { get; set; }
+    Guid Id { get; }
     string Name { get; set; }
-    byte[]? Bytes { get; set; }
     Stream ToStream();
     
     static IDocumentLoadResponse NoContent()

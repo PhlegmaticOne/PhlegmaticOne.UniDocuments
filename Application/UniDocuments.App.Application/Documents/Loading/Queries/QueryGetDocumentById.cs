@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PhlegmaticOne.OperationResults;
 using PhlegmaticOne.OperationResults.Mediatr;
+using UniDocuments.App.Data.EntityFramework.Context;
+using UniDocuments.App.Domain.Models;
 using UniDocuments.Text.Domain.Services.DocumentsStorage;
 using UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
@@ -22,11 +25,16 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
     private const string ErrorMessageNotFound = "GetDocumentById.NotFound";
     
     private readonly IDocumentsStorage _documentsStorage;
+    private readonly ApplicationDbContext _dbContext;
     private readonly ILogger<QueryGetDocumentByIdHandler> _logger;
 
-    public QueryGetDocumentByIdHandler(IDocumentsStorage documentsStorage, ILogger<QueryGetDocumentByIdHandler> logger)
+    public QueryGetDocumentByIdHandler(
+        IDocumentsStorage documentsStorage, 
+        ApplicationDbContext dbContext, 
+        ILogger<QueryGetDocumentByIdHandler> logger)
     {
         _documentsStorage = documentsStorage;
+        _dbContext = dbContext;
         _logger = logger;
     }
     
@@ -35,11 +43,19 @@ public class QueryGetDocumentByIdHandler : IOperationResultQueryHandler<QueryGet
     {
         try
         {
-            var response = await _documentsStorage.LoadAsync(request.Id, cancellationToken);
+            var fileName = await _dbContext.Set<StudyDocument>()
+                .Where(x => x.Id == request.Id)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return OperationResult.Failed<IDocumentLoadResponse>(ErrorMessageNotFound);
+            }
             
-            return response is null ? 
-                OperationResult.Failed<IDocumentLoadResponse>(ErrorMessageNotFound) :
-                OperationResult.Successful(response);
+            var response = await _documentsStorage.LoadAsync(request.Id, cancellationToken);
+            response!.Name = fileName;
+            return OperationResult.Successful(response);
         }
         catch(Exception e)
         {

@@ -57,7 +57,7 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
 
         if (file is not null)
         {
-            return UpdateExisting(file, memoryStream, saveRequest);
+            return UpdateExisting(file, memoryStream);
         }
 
         return await CreateNew(memoryStream, saveRequest, cancellationToken);
@@ -70,17 +70,14 @@ public class DocumentsStorageEntityFramework : IDocumentsStorage
         {
             Id = saveRequest.Id,
             Content = memoryStream.ToArray(),
-            Name = saveRequest.Name
         }, cancellationToken);
         
         return entry.Entity.Id;
     }
 
-    private Guid UpdateExisting(
-        StudyDocumentFile file, MemoryStream memoryStream, StorageSaveRequest saveRequest)
+    private Guid UpdateExisting(StudyDocumentFile file, MemoryStream memoryStream)
     {
         file.Content = memoryStream.ToArray();
-        file.Name = saveRequest.Name;
         _dbContext.Update(file);
         return file.Id;
     }

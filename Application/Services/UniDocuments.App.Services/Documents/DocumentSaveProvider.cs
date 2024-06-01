@@ -77,7 +77,7 @@ public class DocumentSaveProvider : IDocumentSaveProvider
         Guid id, DocumentSaveRequest request, CancellationToken cancellationToken)
     {
         var stream = request.DocumentStream;
-        var saveRequest = new StorageSaveRequest(id, request.FileName, stream);
+        var saveRequest = new StorageSaveRequest(id, stream);
         return _documentsStorage.SaveAsync(saveRequest, cancellationToken);
     }
     

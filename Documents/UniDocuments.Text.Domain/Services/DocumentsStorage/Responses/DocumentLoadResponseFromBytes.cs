@@ -2,12 +2,17 @@
 
 public class DocumentLoadResponseFromBytes : IDocumentLoadResponse
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     public string Name { get; set; } = null!;
-    public byte[]? Bytes { get; set; }
+    public byte[]? Bytes { get; init; }
 
     public Stream ToStream()
     {
         return new MemoryStream(Bytes!);
+    }
+
+    public void Dispose()
+    {
+        
     }
 }

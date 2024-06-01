@@ -84,7 +84,7 @@ public class DocumentLoadingProvider : IDocumentLoadingProvider
             _documentsCache.Cache(result);
         }
 
-        stream.Dispose();
+        loadResponse.Dispose();
         return result;
     }
 }

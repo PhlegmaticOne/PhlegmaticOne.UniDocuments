@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using UniDocuments.App.Api.Infrastructure.Roles;
 using UniDocuments.App.Application.Documents.Reports;
 using UniDocuments.App.Application.Documents.Search;
+using UniDocuments.App.Shared.Users.Enums;
 
 namespace UniDocuments.App.Api.Controllers.Documents;
 
@@ -23,7 +24,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("BuildForDocument")]
-    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
+    [RequireStudyRoles(StudyRole.Teacher)]
     public async Task<IActionResult> BuildForDocument(
         [FromForm] DocumentBuildReportRequest request, CancellationToken cancellationToken)
     {
@@ -40,7 +41,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("BuildForExistingDocument")]
-    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
+    [RequireStudyRoles(StudyRole.Teacher)]
     public async Task<IActionResult> BuildForExistingDocument(
         [FromQuery] QueryBuildPlagiarismExistingDocumentReport request, CancellationToken cancellationToken)
     {
@@ -56,7 +57,7 @@ public class ReportsController : ControllerBase
     }
     
     [HttpGet("BuildForExistingDocumentDefault")]
-    [RequireStudyRoles(Shared.Users.Enums.StudyRole.Teacher)]
+    [RequireStudyRoles(StudyRole.Teacher)]
     public Task<IActionResult> BuildForExistingDocumentDefault(
         [FromQuery] Guid documentId, CancellationToken cancellationToken)
     {
@@ -69,6 +70,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("Search")]
+    [RequireStudyRoles(StudyRole.Teacher)]
     public async Task<IActionResult> Search(
         [FromBody] QuerySearchSimilarDocuments query, CancellationToken cancellationToken)
     {

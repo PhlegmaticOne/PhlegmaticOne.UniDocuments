@@ -10,13 +10,12 @@ internal static class FileSqlCommands
                     OUTPUT 
                         GET_FILESTREAM_TRANSACTION_CONTEXT() AS transactionContext, 
                         inserted.Content.PathName() AS filePath
-                    SELECT @fileId, 0x, @fileName";
+                    SELECT @fileId, 0x";
 
     private const string SelectFileCommandText = @"
-                    SELECT
+                    SELECT Top(1)
                         Content.PathName() AS filePath,
-                        GET_FILESTREAM_TRANSACTION_CONTEXT() as transactionContext,
-                        FileName as fileName
+                        GET_FILESTREAM_TRANSACTION_CONTEXT() as transactionContext
                     FROM [uni_documents_db].[dbo].[StudyDocumentsContent]
                     WHERE Id = @fileId";
 
@@ -24,47 +23,39 @@ internal static class FileSqlCommands
                     SELECT
                         [Content].PathName() AS filePath,
                         GET_FILESTREAM_TRANSACTION_CONTEXT() as transactionContext,
-                        FileName as fileName,
                         Id as id
                     FROM [uni_documents_db].[dbo].[StudyDocumentsContent]
                     WHERE Id IN ({0})";
 
-    internal static SqlCommand CreateInsertFileCommand(SqlConnection sqlConnection, string fileName, Guid id)
+    private const string UpdateFileCommandText = @"
+                    SELECT TOP(1)
+                        Content.PathName() AS filePath,
+                        GET_FILESTREAM_TRANSACTION_CONTEXT() as transactionContext
+                    FROM [uni_documents_db].[dbo].[StudyDocumentsContent]
+                    WHERE Id = @fileId";
+
+    private const string CheckFileExistsCommandText = @"
+                    SELECT COUNT(*) FROM [uni_documents_db].[dbo].[StudyDocumentsContent]
+                    WHERE Id = @fileId";
+
+    internal static SqlCommand CreateCheckFileCommand(SqlConnection sqlConnection, Guid id)
     {
-        return new SqlCommand(InsertFileCommandText, sqlConnection)
-        {
-            Parameters =
-            {
-                new SqlParameter
-                {
-                    ParameterName = "@fileName",
-                    SqlDbType = SqlDbType.NVarChar,
-                    Value = fileName
-                },
-                new SqlParameter
-                {
-                    ParameterName = "@fileId",
-                    SqlDbType = SqlDbType.UniqueIdentifier,
-                    Value = id
-                }
-            }
-        };
+        return CreateCommandWithFileId(sqlConnection, CheckFileExistsCommandText, id);
+    }
+    
+    internal static SqlCommand CreateUpdateFileCommand(SqlConnection sqlConnection, Guid id)
+    {
+        return CreateCommandWithFileId(sqlConnection, UpdateFileCommandText, id);
     }
 
-    internal static SqlCommand CreateSelectFileCommand(SqlConnection sqlConnection, Guid fileId)
+    internal static SqlCommand CreateSelectFileCommand(SqlConnection sqlConnection, Guid id)
     {
-        return new SqlCommand(SelectFileCommandText, sqlConnection)
-        {
-            Parameters =
-            {
-                new SqlParameter
-                {
-                    ParameterName = "@fileId",
-                    SqlDbType = SqlDbType.UniqueIdentifier,
-                    Value = fileId
-                }
-            }
-        };
+        return CreateCommandWithFileId(sqlConnection, SelectFileCommandText, id);
+    }
+
+    internal static SqlCommand CreateInsertFileCommand(SqlConnection sqlConnection, Guid id)
+    {
+        return CreateCommandWithFileId(sqlConnection, InsertFileCommandText, id);
     }
 
     internal static SqlCommand CreateSelectFilesCommand(SqlConnection sqlConnection, IList<Guid> ids)
@@ -83,4 +74,20 @@ internal static class FileSqlCommands
 
         return command;
     }
+    
+    private static SqlCommand CreateCommandWithFileId(SqlConnection sqlConnection, string commandText, Guid fileId)
+    {
+        return new SqlCommand(commandText, sqlConnection)
+        {
+            Parameters =
+            {
+                new SqlParameter
+                {
+                    ParameterName = "@fileId",
+                    SqlDbType = SqlDbType.UniqueIdentifier,
+                    Value = fileId
+                }
+            }
+        };
+    } 
 }

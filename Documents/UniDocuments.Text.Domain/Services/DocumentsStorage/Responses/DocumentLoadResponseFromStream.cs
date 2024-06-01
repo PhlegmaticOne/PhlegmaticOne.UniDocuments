@@ -1,34 +1,35 @@
-﻿using UniDocuments.Text.Domain.Extensions;
+﻿using Microsoft.Data.SqlClient;
 
 namespace UniDocuments.Text.Domain.Services.DocumentsStorage.Responses;
 
-public class DocumentLoadResponseFromStream : IDocumentLoadResponse
+public class DocumentLoadResponseFromStream : IDocumentLoadResponse, IAsyncDisposable
 {
     private readonly Stream _stream;
+    private readonly SqlTransaction? _transaction;
 
-    public DocumentLoadResponseFromStream(Stream stream)
+    public DocumentLoadResponseFromStream(Stream stream, Guid id, SqlTransaction? transaction = null)
     {
+        Id = id;
         _stream = stream;
+        _transaction = transaction;
     }
     
-    public Guid Id { get; set; }
+    public Guid Id { get; }
     public string Name { get; set; } = null!;
-    public byte[]? Bytes
-    {
-        get => LoadBytes();
-        set { }
-    }
-
+    
     public Stream ToStream()
     {
         return _stream;
     }
 
-    private byte[] LoadBytes()
+    public void Dispose()
     {
-        using var memoryStream = new MemoryStream();
-        _stream.SeekToZero();
-        _stream.CopyTo(memoryStream);
-        return memoryStream.ToArray();
+        _stream.Dispose();
+        _transaction?.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_transaction != null) await _transaction.DisposeAsync();
     }
 }
